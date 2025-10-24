@@ -6,23 +6,68 @@ from rxconfig import config
 class State(rx.State):
     """The app state."""
 
+    theme_mode: str = "dark"
 
-# Professional developer color palette
-ACCENT = "#00ff88"
-ACCENT_HOVER = "#00cc6a"
-ACCENT_SOFT = "rgba(0, 255, 136, 0.08)"
-ACCENT_GLOW = "rgba(0, 255, 136, 0.25)"
-PRIMARY_BG = "#0a0e14"
-SURFACE = "rgba(15, 20, 28, 0.6)"
-SURFACE_HOVER = "rgba(20, 28, 38, 0.8)"
-SURFACE_BRIGHT = "rgba(25, 35, 48, 0.9)"
-CODE_BG = "#0d1117"
-TEXT_PRIMARY = "#e6edf3"
-TEXT_MUTED = "#8b949e"
-TEXT_ACCENT = "#58a6ff"
-BORDER_COLOR = "rgba(48, 54, 61, 0.6)"
-BORDER_BRIGHT = "rgba(72, 80, 90, 0.8)"
+    def toggle_theme(self):
+        """Toggle between light and dark theme."""
+        self.theme_mode = "light" if self.theme_mode == "dark" else "dark"
+
+
+# Dark mode color palette
+DARK_ACCENT = "#00ff88"
+DARK_ACCENT_HOVER = "#00cc6a"
+DARK_ACCENT_SOFT = "rgba(0, 255, 136, 0.08)"
+DARK_ACCENT_GLOW = "rgba(0, 255, 136, 0.25)"
+DARK_PRIMARY_BG = "#0a0e14"
+DARK_SURFACE = "rgba(15, 20, 28, 0.6)"
+DARK_SURFACE_HOVER = "rgba(20, 28, 38, 0.8)"
+DARK_SURFACE_BRIGHT = "rgba(25, 35, 48, 0.9)"
+DARK_CODE_BG = "#0d1117"
+DARK_TEXT_PRIMARY = "#e6edf3"
+DARK_TEXT_MUTED = "#8b949e"
+DARK_TEXT_ACCENT = "#58a6ff"
+DARK_BORDER_COLOR = "rgba(48, 54, 61, 0.6)"
+DARK_BORDER_BRIGHT = "rgba(72, 80, 90, 0.8)"
+
+# Light mode color palette
+LIGHT_ACCENT = "#00b35c"
+LIGHT_ACCENT_HOVER = "#008f4a"
+LIGHT_ACCENT_SOFT = "rgba(0, 179, 92, 0.08)"
+LIGHT_ACCENT_GLOW = "rgba(0, 179, 92, 0.25)"
+LIGHT_PRIMARY_BG = "#ffffff"
+LIGHT_SURFACE = "rgba(248, 249, 250, 0.8)"
+LIGHT_SURFACE_HOVER = "rgba(241, 243, 245, 0.9)"
+LIGHT_SURFACE_BRIGHT = "rgba(255, 255, 255, 0.95)"
+LIGHT_CODE_BG = "#f6f8fa"
+LIGHT_TEXT_PRIMARY = "#1f2937"
+LIGHT_TEXT_MUTED = "#6b7280"
+LIGHT_TEXT_ACCENT = "#0066cc"
+LIGHT_BORDER_COLOR = "rgba(209, 213, 219, 0.6)"
+LIGHT_BORDER_BRIGHT = "rgba(156, 163, 175, 0.8)"
+
 MAX_CONTENT_WIDTH = "1200px"
+
+
+def get_color(light_color: str, dark_color: str) -> str:
+    """Get color based on current theme."""
+    return rx.cond(State.theme_mode == "light", light_color, dark_color)
+
+
+# Theme-aware color getters
+ACCENT = rx.cond(State.theme_mode == "light", LIGHT_ACCENT, DARK_ACCENT)
+ACCENT_HOVER = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_HOVER, DARK_ACCENT_HOVER)
+ACCENT_SOFT = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_SOFT, DARK_ACCENT_SOFT)
+ACCENT_GLOW = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_GLOW, DARK_ACCENT_GLOW)
+PRIMARY_BG = rx.cond(State.theme_mode == "light", LIGHT_PRIMARY_BG, DARK_PRIMARY_BG)
+SURFACE = rx.cond(State.theme_mode == "light", LIGHT_SURFACE, DARK_SURFACE)
+SURFACE_HOVER = rx.cond(State.theme_mode == "light", LIGHT_SURFACE_HOVER, DARK_SURFACE_HOVER)
+SURFACE_BRIGHT = rx.cond(State.theme_mode == "light", LIGHT_SURFACE_BRIGHT, DARK_SURFACE_BRIGHT)
+CODE_BG = rx.cond(State.theme_mode == "light", LIGHT_CODE_BG, DARK_CODE_BG)
+TEXT_PRIMARY = rx.cond(State.theme_mode == "light", LIGHT_TEXT_PRIMARY, DARK_TEXT_PRIMARY)
+TEXT_MUTED = rx.cond(State.theme_mode == "light", LIGHT_TEXT_MUTED, DARK_TEXT_MUTED)
+TEXT_ACCENT = rx.cond(State.theme_mode == "light", LIGHT_TEXT_ACCENT, DARK_TEXT_ACCENT)
+BORDER_COLOR = rx.cond(State.theme_mode == "light", LIGHT_BORDER_COLOR, DARK_BORDER_COLOR)
+BORDER_BRIGHT = rx.cond(State.theme_mode == "light", LIGHT_BORDER_BRIGHT, DARK_BORDER_BRIGHT)
 
 NAV_LINKS = [
     {"label": "Home", "href": "/"},
@@ -147,6 +192,34 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     return rx.box(*children, id=id_val, style=style, **kwargs)
 
 
+def theme_toggle() -> rx.Component:
+    """Theme toggle button with sun/moon icons."""
+    return rx.box(
+        rx.button(
+            rx.cond(
+                State.theme_mode == "dark",
+                rx.text("☀️", size="5"),
+                rx.text("🌙", size="5"),
+            ),
+            on_click=State.toggle_theme,
+            size="3",
+            variant="ghost",
+            cursor="pointer",
+            border_radius="8px",
+            padding="0.75rem",
+            background_color=ACCENT_SOFT,
+            border=f"1px solid {BORDER_COLOR}",
+            _hover={
+                "backgroundColor": SURFACE_HOVER,
+                "borderColor": ACCENT,
+            },
+            style={
+                "transition": "all 0.2s ease",
+            },
+        ),
+    )
+
+
 def nav_link(link: dict[str, str]) -> rx.Component:
     """Navigation link with proper spacing."""
     return rx.link(
@@ -198,9 +271,14 @@ def nav_bar() -> rx.Component:
                     _hover={"textDecoration": "none"},
                 ),
                 rx.flex(
-                    *[nav_link(link) for link in NAV_LINKS],
-                    gap="0.5rem",
-                    display={"base": "none", "md": "flex"},
+                    rx.flex(
+                        *[nav_link(link) for link in NAV_LINKS],
+                        gap="0.5rem",
+                        display={"base": "none", "md": "flex"},
+                    ),
+                    theme_toggle(),
+                    gap="1rem",
+                    align_items="center",
                 ),
                 align_items="center",
                 justify="between",
@@ -213,11 +291,16 @@ def nav_bar() -> rx.Component:
         position="sticky",
         top="0",
         z_index="100",
-        background_color="rgba(10, 14, 20, 0.95)",
+        background_color=rx.cond(
+            State.theme_mode == "light",
+            "rgba(255, 255, 255, 0.95)",
+            "rgba(10, 14, 20, 0.95)",
+        ),
         backdrop_filter="blur(20px)",
         border_bottom=f"1px solid {BORDER_COLOR}",
         padding="1.25rem 0",
         width="100%",
+        style={"transition": "background-color 0.3s ease"},
     )
 
 
@@ -228,7 +311,7 @@ def code_block(code: str) -> rx.Component:
             code,
             font_family="'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace",
             size="2",
-            color="#c9d1d9",
+            color=rx.cond(State.theme_mode == "light", "#1f2937", "#c9d1d9"),
             white_space="pre",
             line_height="1.6",
         ),
@@ -238,6 +321,7 @@ def code_block(code: str) -> rx.Component:
         padding="1.5rem",
         overflow_x="auto",
         width="100%",
+        style={"transition": "all 0.3s ease"},
     )
 
 
@@ -586,7 +670,7 @@ def footer() -> rx.Component:
                 ),
                 rx.box(
                     rx.text(
-                        "© 2024 Xian Technology Foundation. Built for the Xian Network community.",
+                        "© 2025 Xian Technology Foundation. Built for the Xian Network community.",
                         size="2",
                         color=TEXT_MUTED,
                         text_align="center",
@@ -604,6 +688,7 @@ def footer() -> rx.Component:
         ),
         background_color=CODE_BG,
         width="100%",
+        style={"transition": "background-color 0.3s ease"},
     )
 
 
@@ -619,6 +704,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
         background=PRIMARY_BG,
         color=TEXT_PRIMARY,
         min_height="100vh",
+        style={"transition": "background-color 0.3s ease, color 0.3s ease"},
     )
 
 
@@ -678,6 +764,129 @@ def technology_card_detailed(track: dict) -> rx.Component:
     )
 
 
+def roadmap_section() -> rx.Component:
+    """Roadmap section with GitHub board integration."""
+    return section(
+        rx.vstack(
+            rx.vstack(
+                rx.heading("Development Roadmap", size="7", color=TEXT_PRIMARY, weight="bold"),
+                rx.text(
+                    "Track our progress in real-time. See what we're building, what's in progress, and what's coming next.",
+                    size="4",
+                    color=TEXT_MUTED,
+                    max_width="700px",
+                    text_align="center",
+                    line_height="1.7",
+                ),
+                spacing="4",
+                align_items="center",
+                width="100%",
+            ),
+            rx.link(
+                rx.box(
+                    rx.vstack(
+                        rx.flex(
+                            rx.text("📋", size="9", line_height="1"),
+                            rx.vstack(
+                                rx.heading("Public Project Board", size="6", color=TEXT_PRIMARY, weight="bold"),
+                                rx.text(
+                                    "View our GitHub project board to see active development, planned features, and completed milestones",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                    line_height="1.7",
+                                ),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            gap="2rem",
+                            align_items="start",
+                            width="100%",
+                            direction={"base": "column", "md": "row"},
+                        ),
+                        rx.grid(
+                            rx.box(
+                                rx.vstack(
+                                    rx.text("🎯", size="7", line_height="1"),
+                                    rx.text("In Progress", size="4", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text("Active development tasks", size="2", color=TEXT_MUTED, text_align="center"),
+                                    spacing="3",
+                                    align_items="center",
+                                ),
+                                padding="2rem",
+                                background=SURFACE_BRIGHT,
+                                border=f"1px solid {BORDER_BRIGHT}",
+                                border_radius="10px",
+                            ),
+                            rx.box(
+                                rx.vstack(
+                                    rx.text("⏱️", size="7", line_height="1"),
+                                    rx.text("Planned", size="4", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text("Upcoming features", size="2", color=TEXT_MUTED, text_align="center"),
+                                    spacing="3",
+                                    align_items="center",
+                                ),
+                                padding="2rem",
+                                background=SURFACE_BRIGHT,
+                                border=f"1px solid {BORDER_BRIGHT}",
+                                border_radius="10px",
+                            ),
+                            rx.box(
+                                rx.vstack(
+                                    rx.text("✅", size="7", line_height="1"),
+                                    rx.text("Completed", size="4", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text("Shipped improvements", size="2", color=TEXT_MUTED, text_align="center"),
+                                    spacing="3",
+                                    align_items="center",
+                                ),
+                                padding="2rem",
+                                background=SURFACE_BRIGHT,
+                                border=f"1px solid {BORDER_BRIGHT}",
+                                border_radius="10px",
+                            ),
+                            template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
+                            gap="1.5rem",
+                            width="100%",
+                        ),
+                        rx.flex(
+                            rx.flex(
+                                rx.text("View Full Roadmap on GitHub", size="4", weight="medium", color=ACCENT),
+                                rx.text("→", size="5", weight="bold", color=ACCENT),
+                                gap="1rem",
+                                align_items="center",
+                            ),
+                            justify="center",
+                            width="100%",
+                        ),
+                        spacing="7",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    padding="3.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                    width="100%",
+                    transition="all 0.3s ease",
+                    cursor="pointer",
+                    _hover={
+                        "borderColor": ACCENT,
+                        "backgroundColor": SURFACE_HOVER,
+                        "transform": "translateY(-4px)",
+                        "boxShadow": f"0 20px 40px {ACCENT_SOFT}",
+                    },
+                ),
+                href="https://github.com/orgs/xian-technology/projects/1",
+                is_external=True,
+                _hover={"textDecoration": "none"},
+                width="100%",
+            ),
+            spacing="8",
+            align_items="center",
+            width="100%",
+        )
+    )
+
+
 def technology_page() -> rx.Component:
     """Technology page."""
     return page_layout(
@@ -717,6 +926,7 @@ def technology_page() -> rx.Component:
             ),
             style={"paddingTop": "0"},
         ),
+        roadmap_section(),
         section(
             rx.box(
                 rx.vstack(
