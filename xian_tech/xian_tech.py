@@ -193,30 +193,27 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
 
 
 def theme_toggle() -> rx.Component:
-    """Theme toggle button with sun/moon icons."""
-    return rx.box(
-        rx.button(
-            rx.cond(
-                State.theme_mode == "dark",
-                rx.text("☀️", size="5"),
-                rx.text("🌙", size="5"),
-            ),
-            on_click=State.toggle_theme,
-            size="3",
-            variant="ghost",
-            cursor="pointer",
-            border_radius="8px",
-            padding="0.75rem",
-            background_color=ACCENT_SOFT,
-            border=f"1px solid {BORDER_COLOR}",
-            _hover={
-                "backgroundColor": SURFACE_HOVER,
-                "borderColor": ACCENT,
-            },
-            style={
-                "transition": "all 0.2s ease",
-            },
+    """Theme toggle button with minimalist icons."""
+    return rx.button(
+        rx.cond(
+            State.theme_mode == "dark",
+            rx.text("◐", size="6", line_height="1"),
+            rx.text("◑", size="6", line_height="1"),
         ),
+        on_click=State.toggle_theme,
+        variant="ghost",
+        cursor="pointer",
+        padding="0.5rem",
+        background_color="transparent",
+        color=TEXT_MUTED,
+        _hover={
+            "color": ACCENT,
+            "transform": "rotate(180deg)",
+        },
+        style={
+            "transition": "all 0.3s ease",
+            "border": "none",
+        },
     )
 
 
