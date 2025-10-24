@@ -1,0 +1,7 @@
+.claude
+.states
+.web
+.idea
+*.db
+__pycache__/
+*.py[cod]
