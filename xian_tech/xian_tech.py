@@ -177,17 +177,13 @@ def nav_bar() -> rx.Component:
             rx.flex(
                 rx.link(
                     rx.flex(
-                        rx.box(
-                            rx.text(
-                                ">_",
-                                size="5",
-                                weight="bold",
-                                color=ACCENT,
-                            ),
-                            padding="0.625rem 0.875rem",
-                            background=CODE_BG,
-                            border=f"2px solid {BORDER_BRIGHT}",
+                        rx.image(
+                            src="/xian.jpg",
+                            alt="Xian Technology Logo",
+                            width="3.5rem",
+                            height="3.5rem",
                             border_radius="8px",
+                            object_fit="cover",
                         ),
                         rx.vstack(
                             rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
