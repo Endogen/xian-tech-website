@@ -6,7 +6,7 @@ from rxconfig import config
 class State(rx.State):
     """The app state."""
 
-    theme_mode: str = "dark"
+    theme_mode: str = "light"
 
     def toggle_theme(self):
         """Toggle between light and dark theme."""
