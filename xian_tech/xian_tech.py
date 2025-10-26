@@ -6,7 +6,13 @@ from .pages.home import home_page
 from .pages.technology import technology_page
 
 
-app = rx.App(theme=rx.theme(appearance="light"))
+app = rx.App(
+    theme=rx.theme(appearance="light"),
+    head_components=[
+        rx.el.link(rel="icon", type="image/png", href="/favicon.png"),
+        rx.el.link(rel="shortcut icon", type="image/png", href="/favicon.png"),
+    ],
+)
 
 app.add_page(home_page, route="/")
 app.add_page(technology_page, route="/technology")
