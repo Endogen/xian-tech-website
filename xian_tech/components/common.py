@@ -105,8 +105,8 @@ def nav_bar() -> rx.Component:
                         rx.image(
                             src="/xian.jpg",
                             alt="Xian Technology Logo",
-                            width="3.5rem",
-                            height="3.5rem",
+                            width="3rem",
+                            height="3rem",
                             border_radius="8px",
                             object_fit="cover",
                         ),
@@ -147,7 +147,7 @@ def nav_bar() -> rx.Component:
         backdrop_filter="blur(20px)",
         border_bottom=border_color,
         box_shadow=box_shadow,
-        padding="1.25rem 0",
+        padding="0.85rem 0",
         width="100%",
         style={"transition": "background-color 0.3s ease"},
     )
