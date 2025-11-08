@@ -397,33 +397,39 @@ def command_palette() -> rx.Component:
                             rx.box(
                                 rx.cond(
                                     State.command_palette_empty,
-                                    rx.box(
+                                    rx.flex(
                                         rx.text("No matches found.", size="2", color=TEXT_MUTED),
-                                        padding="1.25rem",
-                                        border=f"1px dashed {BORDER_COLOR}",
-                                        border_radius="12px",
+                                        align="center",
+                                        justify="center",
+                                        height="100%",
                                         width="100%",
                                     ),
-                                    rx.box(
-                                        rx.vstack(
-                                            rx.foreach(
-                                                State.command_palette_sections,
-                                                lambda entry: palette_list_entry(entry),
-                                            ),
-                                            spacing="2",
-                                            width="100%",
+                                    rx.vstack(
+                                        rx.foreach(
+                                            State.command_palette_sections,
+                                            lambda entry: palette_list_entry(entry),
                                         ),
-                                        max_height="360px",
-                                        overflow_y="auto",
+                                        spacing="2",
                                         width="100%",
                                     ),
                                 ),
                                 width="100%",
+                                max_height="360px",
+                                overflow_y="auto",
+                                border=f"1px solid {BORDER_COLOR}",
+                                border_radius="12px",
+                                padding="0.75rem",
+                                background=rx.cond(
+                                    State.theme_mode == "light",
+                                    "rgba(248, 249, 250, 0.7)",
+                                    "rgba(13, 17, 23, 0.8)",
+                                ),
                             ),
                             spacing="4",
                             width="100%",
                         ),
-                        width={"base": "92%", "md": "860px", "lg": "960px"},
+                        width="min(960px, 92vw)",
+                        max_width="960px",
                         background=PRIMARY_BG,
                         border_radius="20px",
                         border=f"1px solid {BORDER_COLOR}",
