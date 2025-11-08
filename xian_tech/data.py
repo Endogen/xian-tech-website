@@ -5,6 +5,41 @@ NAV_LINKS = [
     {"label": "Community", "href": "/community"},
 ]
 
+COMMAND_ACTIONS = [
+    {
+        "label": link["label"],
+        "href": link["href"],
+        "description": f"Navigate to the {link['label']} page",
+        "badge": "Page",
+        "external": False,
+    }
+    for link in NAV_LINKS
+]
+
+COMMAND_ACTIONS += [
+    {
+        "label": "View Documentation",
+        "href": "https://xian.org",
+        "description": "Open the official Xian documentation",
+        "badge": "Docs",
+        "external": True,
+    },
+    {
+        "label": "GitHub Organization",
+        "href": "https://github.com/xian-network",
+        "description": "Review repositories on GitHub",
+        "badge": "Code",
+        "external": True,
+    },
+    {
+        "label": "Email the Foundation",
+        "href": "mailto:foundation@xian.technology",
+        "description": "Reach out to the Xian Technology Foundation",
+        "badge": "Contact",
+        "external": True,
+    },
+]
+
 TECHNOLOGY_TRACKS = [
     {
         "title": "Pure Python Contracts",
@@ -125,6 +160,7 @@ COMMUNITY_STREAMS = [
 ]
 
 __all__ = [
+    "COMMAND_ACTIONS",
     "NAV_LINKS",
     "TECHNOLOGY_TRACKS",
     "ECOSYSTEM_INITIATIVES",

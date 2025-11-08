@@ -5,7 +5,6 @@ from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
-    ACCENT_HOVER,
     ACCENT_SOFT,
     BORDER_BRIGHT,
     BORDER_COLOR,
@@ -85,6 +84,36 @@ def nav_link(link: dict[str, str]) -> rx.Component:
     )
 
 
+def command_palette_button() -> rx.Component:
+    """Compact trigger for the global command palette."""
+    return rx.button(
+        rx.hstack(
+            rx.text("Search", size="2", color=TEXT_MUTED),
+            rx.box("⌘K", font_size="0.75rem", color=TEXT_MUTED, padding="0.1rem 0.4rem", border=f"1px solid {BORDER_COLOR}", border_radius="0.5rem"),
+            align_items="center",
+            gap="0.5rem",
+        ),
+        on_click=State.open_command_palette,
+        variant="ghost",
+        cursor="pointer",
+        padding="0.4rem 0.85rem",
+        border_radius="999px",
+        border=f"1px solid {BORDER_COLOR}",
+        background_color=rx.cond(
+            State.theme_mode == "light",
+            "rgba(255, 255, 255, 0.65)",
+            "rgba(12, 18, 26, 0.6)",
+        ),
+        backdrop_filter="blur(16px)",
+        color=TEXT_PRIMARY,
+        _hover={
+            "borderColor": ACCENT,
+            "color": ACCENT,
+        },
+        style={"transition": "all 0.2s ease"},
+    )
+
+
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
     border_color = rx.cond(
@@ -128,6 +157,7 @@ def nav_bar() -> rx.Component:
                         gap="0.5rem",
                         display={"base": "none", "md": "flex"},
                     ),
+                    command_palette_button(),
                     theme_toggle(),
                     gap="1rem",
                     align_items="center",
@@ -201,6 +231,167 @@ def feature_card(title: str, description: str, icon: str) -> rx.Component:
             "boxShadow": f"0 20px 40px {ACCENT_SOFT}",
         },
         height="100%",
+    )
+
+
+COMMAND_SCRIPT = """
+(() => {
+  if (window.__xianCommandHotkeys) return;
+  window.__xianCommandHotkeys = true;
+  const trigger = () => document.getElementById("command-palette-trigger")?.click();
+  const close = () => document.getElementById("command-palette-close")?.click();
+  window.addEventListener("keydown", (event) => {
+    const key = event.key?.toLowerCase();
+    if ((event.metaKey || event.ctrlKey) && key === "k") {
+      event.preventDefault();
+      trigger();
+    }
+    if (key === "escape") {
+      close();
+    }
+  });
+})();
+"""
+
+
+def command_palette() -> rx.Component:
+    """Global command palette with CMD/CTRL + K shortcut."""
+
+    def action_row(action: dict[str, str]) -> rx.Component:
+        arrow = rx.cond(
+            action["external"],
+            rx.text("↗", size="3", color=TEXT_MUTED),
+            rx.text("↩", size="3", color=TEXT_MUTED),
+        )
+
+        return rx.link(
+            rx.hstack(
+                rx.box(
+                    action["badge"],
+                    font_size="0.75rem",
+                    color=ACCENT,
+                    background=ACCENT_SOFT,
+                    padding="0.15rem 0.5rem",
+                    border_radius="999px",
+                ),
+                rx.vstack(
+                    rx.text(action["label"], size="3", weight="medium", color=TEXT_PRIMARY),
+                    rx.text(action["description"], size="2", color=TEXT_MUTED),
+                    spacing="1",
+                    align_items="start",
+                ),
+                rx.spacer(),
+                arrow,
+                align_items="center",
+                width="100%",
+            ),
+            href=action["href"],
+            is_external=action["external"],
+            on_click=State.close_command_palette,
+            style={
+                "padding": "0.85rem 1rem",
+                "borderRadius": "12px",
+                "border": f"1px solid {BORDER_COLOR}",
+                "transition": "all 0.2s ease",
+            },
+            _hover={
+                "borderColor": ACCENT,
+                "backgroundColor": SURFACE,
+                "textDecoration": "none",
+            },
+            width="100%",
+        )
+
+    return rx.fragment(
+        rx.button(on_click=State.open_command_palette, id="command-palette-trigger", display="none"),
+        rx.button(on_click=State.close_command_palette, id="command-palette-close", display="none"),
+        rx.script(COMMAND_SCRIPT),
+        rx.cond(
+            State.command_palette_open,
+            rx.fragment(
+                rx.box(
+                    position="fixed",
+                    top="0",
+                    left="0",
+                    width="100%",
+                    height="100vh",
+                    background="rgba(6, 11, 17, 0.65)",
+                    backdrop_filter="blur(12px)",
+                    z_index="1000",
+                    on_click=State.close_command_palette,
+                ),
+                rx.center(
+                    rx.box(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text("Quick Search", size="3", weight="bold", color=TEXT_PRIMARY),
+                                rx.spacer(),
+                                rx.text("CMD + K / CTRL + K", size="2", color=TEXT_MUTED),
+                                align_items="center",
+                                width="100%",
+                            ),
+                            rx.box(
+                                rx.input(
+                                    value=State.command_query,
+                                    on_change=State.set_command_query,
+                                    placeholder="Search pages, docs, or contacts...",
+                                    auto_focus=True,
+                                    border="none",
+                                    background="transparent",
+                                    color=TEXT_PRIMARY,
+                                    font_size="1rem",
+                                    padding="0.25rem 0",
+                                ),
+                                padding="0.5rem 0.75rem",
+                                border=f"1px solid {BORDER_COLOR}",
+                                border_radius="10px",
+                                background=rx.cond(
+                                    State.theme_mode == "light",
+                                    "rgba(248, 249, 250, 0.85)",
+                                    "rgba(15, 20, 28, 0.85)",
+                                ),
+                            ),
+                            rx.cond(
+                                State.command_palette_empty,
+                                rx.box(
+                                    rx.text("No matches found.", size="2", color=TEXT_MUTED),
+                                    padding="1.25rem",
+                                    border=f"1px dashed {BORDER_COLOR}",
+                                    border_radius="12px",
+                                    width="100%",
+                                ),
+                                rx.vstack(
+                                    rx.foreach(State.command_palette_actions, lambda action: action_row(action)),
+                                    spacing="3",
+                                    width="100%",
+                                    max_height="360px",
+                                    overflow_y="auto",
+                                ),
+                            ),
+                            spacing="4",
+                            width="100%",
+                        ),
+                        width={"base": "92%", "md": "600px"},
+                        background=PRIMARY_BG,
+                        border_radius="20px",
+                        border=f"1px solid {BORDER_COLOR}",
+                        box_shadow=rx.cond(
+                            State.theme_mode == "light",
+                            "0 30px 120px rgba(15, 23, 42, 0.25)",
+                            "0 30px 120px rgba(0, 0, 0, 0.8)",
+                        ),
+                        padding="1.75rem",
+                        z_index="1001",
+                    ),
+                    position="fixed",
+                    top="0",
+                    left="0",
+                    width="100%",
+                    height="100vh",
+                    z_index="1001",
+                ),
+            ),
+        ),
     )
 
 
@@ -298,6 +489,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
     )
     return rx.box(
         gradient_overlay,
+        command_palette(),
         rx.box(
             nav_bar(),
             rx.box(
