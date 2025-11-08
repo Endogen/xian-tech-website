@@ -379,7 +379,7 @@ def command_palette() -> rx.Component:
                                 placeholder="Try “deterministic python”, “research guild”, or “foundation contact”",
                                 auto_focus=True,
                                 width="100%",
-                                padding="0.85rem 1rem",
+                                padding="1.1rem 1rem",
                                 border=f"1.5px solid {BORDER_COLOR}",
                                 border_radius="8px",
                                 background=rx.cond(
@@ -388,8 +388,8 @@ def command_palette() -> rx.Component:
                                     "rgba(15, 20, 28, 0.9)",
                                 ),
                                 color=TEXT_PRIMARY,
-                                font_size="1rem",
-                                style={"boxShadow": "none"},
+                                font_size="1.1rem",
+                                style={"boxShadow": "none", "lineHeight": "1.5", "height": "64px"},
                                 _focus={
                                     "borderColor": ACCENT,
                                     "outline": "none",
