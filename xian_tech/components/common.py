@@ -1,3 +1,5 @@
+from typing import Any
+
 import reflex as rx
 
 from ..data import NAV_LINKS
@@ -88,8 +90,15 @@ def command_palette_button() -> rx.Component:
     """Compact trigger for the global command palette."""
     return rx.button(
         rx.hstack(
-            rx.text("Search", size="2", color=TEXT_MUTED),
-            rx.box("⌘K", font_size="0.75rem", color=TEXT_MUTED, padding="0.1rem 0.4rem", border=f"1px solid {BORDER_COLOR}", border_radius="0.5rem"),
+            rx.text("Search the site", size="2", color=TEXT_MUTED),
+            rx.box(
+                "⌘K",
+                font_size="0.75rem",
+                color=TEXT_MUTED,
+                padding="0.1rem 0.4rem",
+                border=f"1px solid {BORDER_COLOR}",
+                border_radius="0.4rem",
+            ),
             align_items="center",
             gap="0.5rem",
         ),
@@ -97,7 +106,7 @@ def command_palette_button() -> rx.Component:
         variant="ghost",
         cursor="pointer",
         padding="0.4rem 0.85rem",
-        border_radius="999px",
+        border_radius="12px",
         border=f"1px solid {BORDER_COLOR}",
         background_color=rx.cond(
             State.theme_mode == "light",
@@ -152,19 +161,22 @@ def nav_bar() -> rx.Component:
                     _hover={"textDecoration": "none"},
                 ),
                 rx.flex(
-                    rx.flex(
-                        *[nav_link(link) for link in NAV_LINKS],
-                        gap="0.5rem",
-                        display={"base": "none", "md": "flex"},
-                    ),
+                    *[nav_link(link) for link in NAV_LINKS],
+                    gap="0.75rem",
+                    justify="center",
+                    align_items="center",
+                    flex="1",
+                    display={"base": "none", "md": "flex"},
+                ),
+                rx.flex(
                     command_palette_button(),
                     theme_toggle(),
-                    gap="1rem",
+                    gap="1.5rem",
                     align_items="center",
                 ),
                 align_items="center",
-                justify="between",
                 width="100%",
+                gap="1rem",
             ),
             max_width=MAX_CONTENT_WIDTH,
             margin="0 auto",
@@ -257,12 +269,13 @@ COMMAND_SCRIPT = """
 def command_palette() -> rx.Component:
     """Global command palette with CMD/CTRL + K shortcut."""
 
-    def action_row(action: dict[str, str]) -> rx.Component:
+    def action_row(action: dict[str, Any]) -> rx.Component:
         arrow = rx.cond(
             action["external"],
             rx.text("↗", size="3", color=TEXT_MUTED),
             rx.text("↩", size="3", color=TEXT_MUTED),
         )
+        is_active = action["id"] == State.command_palette_active_id
 
         return rx.link(
             rx.hstack(
@@ -275,8 +288,8 @@ def command_palette() -> rx.Component:
                     border_radius="999px",
                 ),
                 rx.vstack(
-                    rx.text(action["label"], size="3", weight="medium", color=TEXT_PRIMARY),
-                    rx.text(action["description"], size="2", color=TEXT_MUTED),
+                    rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
+                    rx.text(action["subtitle"], size="2", color=TEXT_MUTED),
                     spacing="1",
                     align_items="start",
                 ),
@@ -288,18 +301,39 @@ def command_palette() -> rx.Component:
             href=action["href"],
             is_external=action["external"],
             on_click=State.close_command_palette,
+            on_mouse_enter=State.set_command_palette_selection(action["id"]),
             style={
                 "padding": "0.85rem 1rem",
                 "borderRadius": "12px",
                 "border": f"1px solid {BORDER_COLOR}",
                 "transition": "all 0.2s ease",
+                "background": rx.cond(is_active, ACCENT_SOFT, "transparent"),
+                "borderColor": rx.cond(is_active, ACCENT, BORDER_COLOR),
             },
             _hover={
                 "borderColor": ACCENT,
-                "backgroundColor": SURFACE,
+                "backgroundColor": ACCENT_SOFT,
                 "textDecoration": "none",
             },
             width="100%",
+        )
+
+    def palette_list_entry(entry: dict[str, Any]) -> rx.Component:
+        header = rx.box(
+            rx.text(
+                entry["category"],
+                size="2",
+                color=TEXT_MUTED,
+                text_transform="uppercase",
+                letter_spacing="0.2em",
+            ),
+            padding_top="0.5rem",
+        )
+
+        return rx.cond(
+            entry["type"] == "header",
+            header,
+            action_row(entry),
         )
 
     return rx.fragment(
@@ -324,9 +358,18 @@ def command_palette() -> rx.Component:
                     rx.box(
                         rx.vstack(
                             rx.hstack(
-                                rx.text("Quick Search", size="3", weight="bold", color=TEXT_PRIMARY),
+                                rx.vstack(
+                                    rx.text("Search Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text(
+                                        "Every line of copy across the site is indexed — inspired by the Reflex.dev palette.",
+                                        size="2",
+                                        color=TEXT_MUTED,
+                                    ),
+                                    spacing="1",
+                                    align_items="start",
+                                ),
                                 rx.spacer(),
-                                rx.text("CMD + K / CTRL + K", size="2", color=TEXT_MUTED),
+                                rx.text("⌘K / CTRL + K", size="2", color=TEXT_MUTED),
                                 align_items="center",
                                 width="100%",
                             ),
@@ -342,36 +385,45 @@ def command_palette() -> rx.Component:
                                     font_size="1rem",
                                     padding="0.25rem 0",
                                 ),
-                                padding="0.5rem 0.75rem",
+                                padding="0.65rem 0.85rem",
                                 border=f"1px solid {BORDER_COLOR}",
-                                border_radius="10px",
+                                border_radius="12px",
                                 background=rx.cond(
                                     State.theme_mode == "light",
-                                    "rgba(248, 249, 250, 0.85)",
-                                    "rgba(15, 20, 28, 0.85)",
+                                    "rgba(248, 249, 250, 0.95)",
+                                    "rgba(15, 20, 28, 0.9)",
                                 ),
                             ),
-                            rx.cond(
-                                State.command_palette_empty,
-                                rx.box(
-                                    rx.text("No matches found.", size="2", color=TEXT_MUTED),
-                                    padding="1.25rem",
-                                    border=f"1px dashed {BORDER_COLOR}",
-                                    border_radius="12px",
-                                    width="100%",
+                            rx.box(
+                                rx.cond(
+                                    State.command_palette_empty,
+                                    rx.box(
+                                        rx.text("No matches found.", size="2", color=TEXT_MUTED),
+                                        padding="1.25rem",
+                                        border=f"1px dashed {BORDER_COLOR}",
+                                        border_radius="12px",
+                                        width="100%",
+                                    ),
+                                    rx.box(
+                                        rx.vstack(
+                                            rx.foreach(
+                                                State.command_palette_sections,
+                                                lambda entry: palette_list_entry(entry),
+                                            ),
+                                            spacing="2",
+                                            width="100%",
+                                        ),
+                                        max_height="360px",
+                                        overflow_y="auto",
+                                        width="100%",
+                                    ),
                                 ),
-                                rx.vstack(
-                                    rx.foreach(State.command_palette_actions, lambda action: action_row(action)),
-                                    spacing="3",
-                                    width="100%",
-                                    max_height="360px",
-                                    overflow_y="auto",
-                                ),
+                                width="100%",
                             ),
                             spacing="4",
                             width="100%",
                         ),
-                        width={"base": "92%", "md": "600px"},
+                        width={"base": "92%", "md": "860px", "lg": "960px"},
                         background=PRIMARY_BG,
                         border_radius="20px",
                         border=f"1px solid {BORDER_COLOR}",
@@ -380,7 +432,7 @@ def command_palette() -> rx.Component:
                             "0 30px 120px rgba(15, 23, 42, 0.25)",
                             "0 30px 120px rgba(0, 0, 0, 0.8)",
                         ),
-                        padding="1.75rem",
+                        padding="2rem",
                         z_index="1001",
                     ),
                     position="fixed",
@@ -509,6 +561,8 @@ def page_layout(*children: rx.Component) -> rx.Component:
 
 
 __all__ = [
+    "command_palette",
+    "command_palette_button",
     "code_block",
     "feature_card",
     "nav_bar",
