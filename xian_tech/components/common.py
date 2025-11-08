@@ -101,7 +101,7 @@ def nav_bar() -> rx.Component:
                         ),
                         rx.vstack(
                             rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
-                            rx.text("Python-native blockchain", size="2", color=TEXT_MUTED),
+                            rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
                             align_items="start",
                             spacing="0",
                         ),

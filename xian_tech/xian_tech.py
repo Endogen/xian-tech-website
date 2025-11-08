@@ -14,7 +14,7 @@ app = rx.App(
     ],
 )
 
-app.add_page(home_page, route="/")
+app.add_page(home_page, route="/", title="Xian Technology")
 app.add_page(technology_page, route="/technology")
 app.add_page(ecosystem_page, route="/ecosystem")
 app.add_page(community_page, route="/community")
