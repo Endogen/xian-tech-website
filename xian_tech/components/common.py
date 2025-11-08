@@ -373,26 +373,27 @@ def command_palette() -> rx.Component:
                                 align_items="center",
                                 width="100%",
                             ),
-                            rx.box(
-                                rx.input(
-                                    value=State.command_query,
-                                    on_change=State.set_command_query,
-                                    placeholder="Search pages, docs, or contacts...",
-                                    auto_focus=True,
-                                    border="none",
-                                    background="transparent",
-                                    color=TEXT_PRIMARY,
-                                    font_size="1rem",
-                                    padding="0.25rem 0",
-                                ),
-                                padding="0.65rem 0.85rem",
-                                border=f"1px solid {BORDER_COLOR}",
-                                border_radius="12px",
+                            rx.input(
+                                value=State.command_query,
+                                on_change=State.set_command_query,
+                                placeholder="Try “deterministic python”, “research guild”, or “foundation contact”",
+                                auto_focus=True,
+                                width="100%",
+                                padding="0.85rem 1rem",
+                                border=f"1.5px solid {BORDER_COLOR}",
+                                border_radius="8px",
                                 background=rx.cond(
                                     State.theme_mode == "light",
                                     "rgba(248, 249, 250, 0.95)",
                                     "rgba(15, 20, 28, 0.9)",
                                 ),
+                                color=TEXT_PRIMARY,
+                                font_size="1rem",
+                                style={"boxShadow": "none"},
+                                _focus={
+                                    "borderColor": ACCENT,
+                                    "outline": "none",
+                                },
                             ),
                             rx.box(
                                 rx.cond(
