@@ -17,6 +17,7 @@ from ..theme import (
     SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
+    TOP_GRADIENT,
 )
 
 
@@ -86,6 +87,16 @@ def nav_link(link: dict[str, str]) -> rx.Component:
 
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
+    border_color = rx.cond(
+        State.theme_mode == "light",
+        "1px solid rgba(15, 23, 42, 0.08)",
+        "1px solid rgba(255, 255, 255, 0.12)",
+    )
+    box_shadow = rx.cond(
+        State.theme_mode == "light",
+        "0 1px 20px rgba(15, 23, 42, 0.08)",
+        "0 1px 20px rgba(0, 0, 0, 0.35)",
+    )
     return rx.box(
         rx.box(
             rx.flex(
@@ -132,13 +143,10 @@ def nav_bar() -> rx.Component:
         position="sticky",
         top="0",
         z_index="100",
-        background_color=rx.cond(
-            State.theme_mode == "light",
-            "rgba(255, 255, 255, 0.95)",
-            "rgba(10, 14, 20, 0.95)",
-        ),
+        background_color="transparent",
         backdrop_filter="blur(20px)",
-        border_bottom=f"1px solid {BORDER_COLOR}",
+        border_bottom=border_color,
+        box_shadow=box_shadow,
         padding="1.25rem 0",
         width="100%",
         style={"transition": "background-color 0.3s ease"},
@@ -278,13 +286,29 @@ def footer() -> rx.Component:
 
 def page_layout(*children: rx.Component) -> rx.Component:
     """Base layout wrapper for all pages."""
+    gradient_overlay = rx.box(
+        background=TOP_GRADIENT,
+        position="absolute",
+        top="0",
+        left="0",
+        right="0",
+        height="520px",
+        pointer_events="none",
+        z_index="0",
+    )
     return rx.box(
-        nav_bar(),
+        gradient_overlay,
         rx.box(
-            *children,
-            min_height="calc(100vh - 200px)",
+            nav_bar(),
+            rx.box(
+                *children,
+                min_height="calc(100vh - 200px)",
+            ),
+            footer(),
+            position="relative",
+            z_index="1",
         ),
-        footer(),
+        position="relative",
         background=PRIMARY_BG,
         color=TEXT_PRIMARY,
         min_height="100vh",

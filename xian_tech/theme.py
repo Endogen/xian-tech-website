@@ -17,6 +17,7 @@ DARK_TEXT_MUTED = "#8b949e"
 DARK_TEXT_ACCENT = "#58a6ff"
 DARK_BORDER_COLOR = "rgba(48, 54, 61, 0.6)"
 DARK_BORDER_BRIGHT = "rgba(72, 80, 90, 0.8)"
+DARK_TOP_GRADIENT = "linear-gradient(180deg, rgba(0, 255, 136, 0.2), rgba(10, 14, 20, 0))"
 
 # Light palette
 LIGHT_ACCENT = "#00b35c"
@@ -33,6 +34,7 @@ LIGHT_TEXT_MUTED = "#6b7280"
 LIGHT_TEXT_ACCENT = "#0066cc"
 LIGHT_BORDER_COLOR = "rgba(209, 213, 219, 0.6)"
 LIGHT_BORDER_BRIGHT = "rgba(156, 163, 175, 0.8)"
+LIGHT_TOP_GRADIENT = "linear-gradient(180deg, rgba(0, 179, 92, 0.28), rgba(255, 255, 255, 0))"
 
 MAX_CONTENT_WIDTH = "1200px"
 
@@ -51,6 +53,7 @@ TEXT_MUTED = rx.cond(State.theme_mode == "light", LIGHT_TEXT_MUTED, DARK_TEXT_MU
 TEXT_ACCENT = rx.cond(State.theme_mode == "light", LIGHT_TEXT_ACCENT, DARK_TEXT_ACCENT)
 BORDER_COLOR = rx.cond(State.theme_mode == "light", LIGHT_BORDER_COLOR, DARK_BORDER_COLOR)
 BORDER_BRIGHT = rx.cond(State.theme_mode == "light", LIGHT_BORDER_BRIGHT, DARK_BORDER_BRIGHT)
+TOP_GRADIENT = rx.cond(State.theme_mode == "light", LIGHT_TOP_GRADIENT, DARK_TOP_GRADIENT)
 
 __all__ = [
     "ACCENT",
@@ -68,4 +71,5 @@ __all__ = [
     "TEXT_ACCENT",
     "TEXT_MUTED",
     "TEXT_PRIMARY",
+    "TOP_GRADIENT",
 ]
