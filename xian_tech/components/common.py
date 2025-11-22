@@ -360,11 +360,6 @@ def command_palette() -> rx.Component:
                             rx.hstack(
                                 rx.vstack(
                                     rx.text("Search Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
-                                    rx.text(
-                                        "Every line of copy across the site is indexed — inspired by the Reflex.dev palette.",
-                                        size="2",
-                                        color=TEXT_MUTED,
-                                    ),
                                     spacing="1",
                                     align_items="start",
                                 ),
