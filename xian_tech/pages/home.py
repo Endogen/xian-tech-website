@@ -112,15 +112,15 @@ def stack_overview() -> rx.Component:
     """Stack overview grid."""
     return section(
         rx.vstack(
-            rx.heading("The Xian Technology stack consists mainly of:", size="6", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
                 "A streamlined stack that pairs CometBFT consensus with a pure Python execution layer and tooling.",
                 size="4",
                 color=TEXT_MUTED,
                 max_width="820px",
                 line_height="1.7",
+                text_align="center",
             ),
-            rx.grid(
+            rx.flex(
                 *[
                     rx.link(
                         rx.box(
@@ -137,6 +137,8 @@ def stack_overview() -> rx.Component:
                             border_radius="14px",
                             transition="all 0.3s ease",
                             height="100%",
+                            min_width="260px",
+                            max_width="260px",
                             _hover={
                                 "borderColor": ACCENT,
                                 "backgroundColor": SURFACE_HOVER,
@@ -149,12 +151,13 @@ def stack_overview() -> rx.Component:
                     )
                     for item in STACK_COMPONENTS
                 ],
-                template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
-                gap="1.5rem",
+                spacing="4",
                 width="100%",
+                wrap="nowrap",
+                overflow_x="auto",
             ),
             spacing="6",
-            align_items="start",
+            align_items="center",
         ),
         style={"paddingTop": "3rem", "paddingBottom": "3rem"},
     )
