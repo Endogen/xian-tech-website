@@ -582,14 +582,14 @@ test = ["pytest", "pytest-instafail", "pytest-subtests", "pytest-xdist", "pywin3
 
 [[package]]
 name = "pydantic"
-version = "2.12.4"
+version = "2.12.5"
 description = "Data validation using Python type hints"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pydantic-2.12.4-py3-none-any.whl", hash = "sha256:92d3d202a745d46f9be6df459ac5a064fdaa3c1c4cd8adcfa332ccf3c05f871e"},
-    {file = "pydantic-2.12.4.tar.gz", hash = "sha256:0f8cb9555000a4b5b617f66bfd2566264c4984b27589d3b845685983e8ea85ac"},
+    {file = "pydantic-2.12.5-py3-none-any.whl", hash = "sha256:e561593fccf61e8a20fc46dfc2dfe075b8be7d0188df33f221ad1f0139180f9d"},
+    {file = "pydantic-2.12.5.tar.gz", hash = "sha256:4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49"},
 ]
 
 [package.dependencies]
@@ -828,14 +828,14 @@ ocsp = ["cryptography (>=36.0.1)", "pyopenssl (>=20.0.1)", "requests (>=2.31.0)"
 
 [[package]]
 name = "reflex"
-version = "0.8.20"
+version = "0.8.21"
 description = "Web apps in pure Python."
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "reflex-0.8.20-py3-none-any.whl", hash = "sha256:6af2b2ad2f2a97ebeb45370dfbbe76dd4ca24c8cd51227fe4cbe7f15fb672ed5"},
-    {file = "reflex-0.8.20.tar.gz", hash = "sha256:793fa9132e40564784df898b58162e5346fb17dfb7f9f87f7ba1999eadba8349"},
+    {file = "reflex-0.8.21-py3-none-any.whl", hash = "sha256:c11e1d532928dfbd38958999ad86d6beb963adad2b98de83186b5deace964819"},
+    {file = "reflex-0.8.21.tar.gz", hash = "sha256:59c9154bef318d0feefc3c334d267dea7054b60990329f80cef0bc5b5a18a09c"},
 ]
 
 [package.dependencies]
@@ -1348,4 +1348,4 @@ h11 = ">=0.16.0,<1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "3732a90eaa70da7bad99a95bf39dadbbf97f49679f137c22ddfb022c3f2a1522"
+content-hash = "8496f86793e03371d389db138708343f58217de4dafcc774c3bd31f3e81655a9"
