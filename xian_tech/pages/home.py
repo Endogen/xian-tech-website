@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
+from ..data import STACK_COMPONENTS
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -35,7 +36,7 @@ def hero_section() -> rx.Component:
                 border_radius="8px",
             ),
             rx.heading(
-                "Python-Native Blockchain Infrastructure",
+                "Python-Native Contracting on a CometBFT Backbone.",
                 size="9",
                 line_height="1.1",
                 color=TEXT_PRIMARY,
@@ -44,8 +45,8 @@ def hero_section() -> rx.Component:
                 weight="bold",
             ),
             rx.text(
-                "Advancing the contracting library and node that power Xian Network. "
-                "Production-ready, pure Python smart contracts with deterministic execution.",
+                "Xian is a CometBFT-backed blockchain with a pure Python contracting engine. "
+                "Write native Python contracts—no transpilers—while combining fast consensus with the simplicity and power of Python.",
                 size="5",
                 color=TEXT_MUTED,
                 max_width="700px",
@@ -104,6 +105,58 @@ def hero_section() -> rx.Component:
             width="100%",
         ),
         style={"paddingTop": "8rem", "paddingBottom": "8rem"},
+    )
+
+
+def stack_overview() -> rx.Component:
+    """Stack overview grid."""
+    return section(
+        rx.vstack(
+            rx.heading("The Xian Technology stack consists mainly of:", size="6", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "A streamlined stack that pairs CometBFT consensus with a pure Python execution layer and tooling.",
+                size="4",
+                color=TEXT_MUTED,
+                max_width="820px",
+                line_height="1.7",
+            ),
+            rx.grid(
+                *[
+                    rx.link(
+                        rx.box(
+                            rx.vstack(
+                                rx.text(item["icon"], size="8", line_height="1"),
+                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                                spacing="3",
+                                align_items="start",
+                            ),
+                            padding="2.5rem",
+                            background=SURFACE,
+                            border=f"1px solid {BORDER_COLOR}",
+                            border_radius="14px",
+                            transition="all 0.3s ease",
+                            height="100%",
+                            _hover={
+                                "borderColor": ACCENT,
+                                "backgroundColor": SURFACE_HOVER,
+                                "transform": "translateY(-4px)",
+                                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+                            },
+                        ),
+                        href=item["href"],
+                        _hover={"textDecoration": "none"},
+                    )
+                    for item in STACK_COMPONENTS
+                ],
+                template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
+                gap="1.5rem",
+                width="100%",
+            ),
+            spacing="6",
+            align_items="start",
+        ),
+        style={"paddingTop": "3rem", "paddingBottom": "3rem"},
     )
 
 
@@ -282,6 +335,7 @@ def home_page() -> rx.Component:
     """Landing page entry point."""
     return page_layout(
         hero_section(),
+        stack_overview(),
         stats_grid(),
         quick_features(),
         cta_section(),

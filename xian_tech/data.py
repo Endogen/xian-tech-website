@@ -15,6 +15,33 @@ NAV_LINKS = [
     {"label": "Community", "href": "/community"},
 ]
 
+STACK_COMPONENTS = [
+    {
+        "title": "CometBFT Consensus Engine",
+        "description": "Byzantine fault-tolerant, deterministic state machine replication securing every block.",
+        "href": "/consensus",
+        "icon": "🛰️",
+    },
+    {
+        "title": "Python Smart Contract Engine",
+        "description": "Pure Python contracts with deterministic execution—no transpilers or alternate languages.",
+        "href": "/contracts",
+        "icon": "🐍",
+    },
+    {
+        "title": "Python ABCI for CometBFT",
+        "description": "ABCI application in Python bridging consensus with the contracting runtime and state patches.",
+        "href": "/abci",
+        "icon": "🔗",
+    },
+    {
+        "title": "Tooling & Interfaces",
+        "description": "xian-py SDK plus BDS GraphQL for querying chain data and building integrations.",
+        "href": "/tooling",
+        "icon": "🛠️",
+    },
+]
+
 TECHNOLOGY_TRACKS = [
     {
         "title": "Pure Python Contracts",
@@ -327,6 +354,21 @@ def _build_search_entries() -> list[dict[str, str]]:
         },
     ]
 
+    # Stack components
+    for component in STACK_COMPONENTS:
+        entries.append(
+            {
+                "id": f"stack-{_slugify(component['title'])}",
+                "title": component["title"],
+                "subtitle": component["description"],
+                "category": "Stack",
+                "badge": "Component",
+                "href": component["href"],
+                "external": False,
+                "keywords": [component["title"], component["description"]],
+            }
+        )
+
     return entries
 
 
@@ -334,6 +376,7 @@ SEARCH_ENTRIES = _build_search_entries()
 
 
 __all__ = [
+    "STACK_COMPONENTS",
     "COMMUNITY_STREAMS",
     "ECOSYSTEM_INITIATIVES",
     "NAV_LINKS",
