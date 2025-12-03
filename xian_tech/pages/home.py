@@ -348,6 +348,41 @@ def why_another_blockchain() -> rx.Component:
     )
 
 
+def why_python() -> rx.Component:
+    """Explain the Python-first choice."""
+    return section(
+        rx.grid(
+            rx.vstack(
+                rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                rx.text(
+                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based.",
+                    size="4",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
+                spacing="4",
+                align_items="start",
+            ),
+            rx.box(
+                rx.image(
+                    src="/languages.png",
+                    alt="Programming languages",
+                    width="100%",
+                    max_width="520px",
+                    border_radius="14px",
+                    object_fit="cover",
+                    box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                ),
+                display="flex",
+                justify_content="center",
+            ),
+            template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
+            gap="2rem",
+        ),
+        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+    )
+
+
 def stats_grid() -> rx.Component:
     """Stats snapshot for the foundation."""
     return section(
@@ -526,6 +561,7 @@ def home_page() -> rx.Component:
         stack_overview(),
         mission_section(),
         why_another_blockchain(),
+        why_python(),
         stats_grid(),
         quick_features(),
         cta_section(),
