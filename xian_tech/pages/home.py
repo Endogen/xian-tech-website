@@ -168,6 +168,91 @@ def stack_overview() -> rx.Component:
     )
 
 
+def mission_section() -> rx.Component:
+    """Mission overview for the foundation."""
+    def bullet(text: str) -> rx.Component:
+        return rx.flex(
+            rx.text("→", color=ACCENT, size="3"),
+            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.6"),
+            gap="0.65rem",
+            align_items="flex-start",
+        )
+
+    return section(
+        rx.vstack(
+            rx.heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "The Xian Technology Foundation advances the Xian blockchain stack—pairing CometBFT consensus with a pure Python contracting engine—to keep it simple, powerful, and production-ready.",
+                size="4",
+                color=TEXT_MUTED,
+                max_width="860px",
+                line_height="1.7",
+            ),
+            rx.grid(
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Keep it simple & powerful", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        bullet("Keep ABCI and the contracting engine clean, deterministic, and auditable."),
+                        bullet("Maintain compatibility with new Python interpreters without breaking contracts."),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Extend functionality", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        bullet("Evolve node features and operational insight."),
+                        bullet("Ship and maintain high-value system contracts."),
+                        bullet("Deliver tools (CLI, SDKs, services) to interface easily with Xian."),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        bullet("Smooth setup for local nodes and multi-node devnets."),
+                        bullet("Documented patterns for distributed production networks."),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        bullet("Explain how the stack works and how to build on it."),
+                        bullet("Keep upgrade paths, examples, and reference guides current."),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
+                gap="1.5rem",
+                width="100%",
+            ),
+            spacing="6",
+            align_items="start",
+        ),
+        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+    )
+
+
 def stats_grid() -> rx.Component:
     """Stats snapshot for the foundation."""
     return section(
@@ -344,6 +429,7 @@ def home_page() -> rx.Component:
     return page_layout(
         hero_section(),
         stack_overview(),
+        mission_section(),
         stats_grid(),
         quick_features(),
         cta_section(),
