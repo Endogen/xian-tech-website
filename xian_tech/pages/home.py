@@ -2,6 +2,7 @@ import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
 from ..data import STACK_COMPONENTS
+from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -293,9 +294,13 @@ def why_another_blockchain() -> rx.Component:
                     ),
                     gap="1rem",
                     padding="1.5rem",
-                    background=ACCENT_SOFT,
+                    background=rx.cond(
+                        State.theme_mode == "light",
+                        "rgba(0, 179, 92, 0.14)",
+                        ACCENT_SOFT,
+                    ),
                     border_radius="14px",
-                    box_shadow=f"0 12px 28px {ACCENT_SOFT}",
+                    box_shadow=f"0 0 18px {ACCENT_SOFT}",
                 ),
                 rx.box(
                     rx.heading("Why not just use GCUL?", size="5", color=TEXT_PRIMARY, weight="bold"),
