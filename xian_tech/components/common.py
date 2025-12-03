@@ -1,3 +1,5 @@
+from typing import Any
+
 import reflex as rx
 
 from ..data import NAV_LINKS
@@ -5,7 +7,6 @@ from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
-    ACCENT_HOVER,
     ACCENT_SOFT,
     BORDER_BRIGHT,
     BORDER_COLOR,
@@ -85,6 +86,43 @@ def nav_link(link: dict[str, str]) -> rx.Component:
     )
 
 
+def command_palette_button() -> rx.Component:
+    """Compact trigger for the global command palette."""
+    return rx.button(
+        rx.hstack(
+            rx.text("Search the site", size="2", color=TEXT_MUTED),
+            rx.box(
+                "⌘K",
+                font_size="0.75rem",
+                color=TEXT_MUTED,
+                padding="0.1rem 0.4rem",
+                border=f"1px solid {BORDER_COLOR}",
+                border_radius="0.4rem",
+            ),
+            align_items="center",
+            gap="0.5rem",
+        ),
+        on_click=State.open_command_palette,
+        variant="ghost",
+        cursor="pointer",
+        padding="0.4rem 0.85rem",
+        border_radius="12px",
+        border=f"1px solid {BORDER_COLOR}",
+        background_color=rx.cond(
+            State.theme_mode == "light",
+            "rgba(255, 255, 255, 0.65)",
+            "rgba(12, 18, 26, 0.6)",
+        ),
+        backdrop_filter="blur(16px)",
+        color=TEXT_PRIMARY,
+        _hover={
+            "borderColor": ACCENT,
+            "color": ACCENT,
+        },
+        style={"transition": "all 0.2s ease"},
+    )
+
+
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
     border_color = rx.cond(
@@ -123,18 +161,22 @@ def nav_bar() -> rx.Component:
                     _hover={"textDecoration": "none"},
                 ),
                 rx.flex(
-                    rx.flex(
-                        *[nav_link(link) for link in NAV_LINKS],
-                        gap="0.5rem",
-                        display={"base": "none", "md": "flex"},
-                    ),
+                    *[nav_link(link) for link in NAV_LINKS],
+                    gap="0.75rem",
+                    justify="center",
+                    align_items="center",
+                    flex="1",
+                    display={"base": "none", "md": "flex"},
+                ),
+                rx.flex(
+                    command_palette_button(),
                     theme_toggle(),
-                    gap="1rem",
+                    gap="1.5rem",
                     align_items="center",
                 ),
                 align_items="center",
-                justify="between",
                 width="100%",
+                gap="1rem",
             ),
             max_width=MAX_CONTENT_WIDTH,
             margin="0 auto",
@@ -201,6 +243,209 @@ def feature_card(title: str, description: str, icon: str) -> rx.Component:
             "boxShadow": f"0 20px 40px {ACCENT_SOFT}",
         },
         height="100%",
+    )
+
+
+COMMAND_SCRIPT = """
+(() => {
+  if (window.__xianCommandHotkeys) return;
+  window.__xianCommandHotkeys = true;
+  const trigger = () => document.getElementById("command-palette-trigger")?.click();
+  const close = () => document.getElementById("command-palette-close")?.click();
+  window.addEventListener("keydown", (event) => {
+    const key = event.key?.toLowerCase();
+    if ((event.metaKey || event.ctrlKey) && key === "k") {
+      event.preventDefault();
+      trigger();
+    }
+    if (key === "escape") {
+      close();
+    }
+  });
+})();
+"""
+
+
+def command_palette() -> rx.Component:
+    """Global command palette with CMD/CTRL + K shortcut."""
+
+    def action_row(action: dict[str, Any]) -> rx.Component:
+        arrow = rx.cond(
+            action["external"],
+            rx.text("↗", size="3", color=TEXT_MUTED),
+            rx.text("↩", size="3", color=TEXT_MUTED),
+        )
+        is_active = action["id"] == State.command_palette_active_id
+
+        return rx.link(
+            rx.hstack(
+                rx.box(
+                    action["badge"],
+                    font_size="0.75rem",
+                    color=ACCENT,
+                    background=ACCENT_SOFT,
+                    padding="0.15rem 0.5rem",
+                    border_radius="999px",
+                ),
+                rx.vstack(
+                    rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
+                    rx.text(action["subtitle"], size="2", color=TEXT_MUTED),
+                    spacing="1",
+                    align_items="start",
+                ),
+                rx.spacer(),
+                arrow,
+                align_items="center",
+                width="100%",
+            ),
+            href=action["href"],
+            is_external=action["external"],
+            on_click=State.close_command_palette,
+            on_mouse_enter=State.set_command_palette_selection(action["id"]),
+            style={
+                "padding": "0.85rem 1rem",
+                "borderRadius": "12px",
+                "border": f"1px solid {BORDER_COLOR}",
+                "transition": "all 0.2s ease",
+                "background": rx.cond(is_active, ACCENT_SOFT, "transparent"),
+                "borderColor": rx.cond(is_active, ACCENT, BORDER_COLOR),
+            },
+            _hover={
+                "borderColor": ACCENT,
+                "backgroundColor": ACCENT_SOFT,
+                "textDecoration": "none",
+            },
+            width="100%",
+        )
+
+    def palette_list_entry(entry: dict[str, Any]) -> rx.Component:
+        header = rx.box(
+            rx.text(
+                entry["category"],
+                size="2",
+                color=TEXT_MUTED,
+                text_transform="uppercase",
+                letter_spacing="0.2em",
+            ),
+            padding_top="0.5rem",
+        )
+
+        return rx.cond(
+            entry["type"] == "header",
+            header,
+            action_row(entry),
+        )
+
+    return rx.fragment(
+        rx.button(on_click=State.open_command_palette, id="command-palette-trigger", display="none"),
+        rx.button(on_click=State.close_command_palette, id="command-palette-close", display="none"),
+        rx.script(COMMAND_SCRIPT),
+        rx.cond(
+            State.command_palette_open,
+            rx.fragment(
+                rx.box(
+                    position="fixed",
+                    top="0",
+                    left="0",
+                    width="100%",
+                    height="100vh",
+                    background="rgba(6, 11, 17, 0.65)",
+                    backdrop_filter="blur(12px)",
+                    z_index="1000",
+                    on_click=State.close_command_palette,
+                ),
+                rx.center(
+                    rx.box(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.vstack(
+                                    rx.text("Search Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
+                                    spacing="1",
+                                    align_items="start",
+                                ),
+                                rx.spacer(),
+                                rx.text("⌘K / CTRL + K", size="2", color=TEXT_MUTED),
+                                align_items="center",
+                                width="100%",
+                            ),
+                            rx.input(
+                                value=State.command_query,
+                                on_change=State.set_command_query,
+                                placeholder="Try “deterministic python”, “research guild”, or “foundation contact”",
+                                auto_focus=True,
+                                width="100%",
+                                padding="1.1rem 1rem",
+                                border=f"1.5px solid {BORDER_COLOR}",
+                                border_radius="8px",
+                                background=rx.cond(
+                                    State.theme_mode == "light",
+                                    "rgba(248, 249, 250, 0.95)",
+                                    "rgba(15, 20, 28, 0.9)",
+                                ),
+                                color=TEXT_PRIMARY,
+                                font_size="1.1rem",
+                                style={"boxShadow": "none", "lineHeight": "1.5", "height": "64px"},
+                                _focus={
+                                    "borderColor": ACCENT,
+                                    "outline": "none",
+                                },
+                            ),
+                            rx.box(
+                                rx.cond(
+                                    State.command_palette_empty,
+                                    rx.flex(
+                                        rx.text("No matches found.", size="2", color=TEXT_MUTED),
+                                        align="center",
+                                        justify="center",
+                                        height="100%",
+                                        width="100%",
+                                    ),
+                                    rx.vstack(
+                                        rx.foreach(
+                                            State.command_palette_sections,
+                                            lambda entry: palette_list_entry(entry),
+                                        ),
+                                        spacing="2",
+                                        width="100%",
+                                    ),
+                                ),
+                                width="100%",
+                                max_height="360px",
+                                overflow_y="auto",
+                                border=f"1px solid {BORDER_COLOR}",
+                                border_radius="12px",
+                                padding="0.75rem",
+                                background=rx.cond(
+                                    State.theme_mode == "light",
+                                    "rgba(248, 249, 250, 0.7)",
+                                    "rgba(13, 17, 23, 0.8)",
+                                ),
+                            ),
+                            spacing="4",
+                            width="100%",
+                        ),
+                        width="min(960px, 92vw)",
+                        max_width="960px",
+                        background=PRIMARY_BG,
+                        border_radius="20px",
+                        border=f"1px solid {BORDER_COLOR}",
+                        box_shadow=rx.cond(
+                            State.theme_mode == "light",
+                            "0 30px 120px rgba(15, 23, 42, 0.25)",
+                            "0 30px 120px rgba(0, 0, 0, 0.8)",
+                        ),
+                        padding="2rem",
+                        z_index="1001",
+                    ),
+                    position="fixed",
+                    top="0",
+                    left="0",
+                    width="100%",
+                    height="100vh",
+                    z_index="1001",
+                ),
+            ),
+        ),
     )
 
 
@@ -298,6 +543,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
     )
     return rx.box(
         gradient_overlay,
+        command_palette(),
         rx.box(
             nav_bar(),
             rx.box(
@@ -317,6 +563,8 @@ def page_layout(*children: rx.Component) -> rx.Component:
 
 
 __all__ = [
+    "command_palette",
+    "command_palette_button",
     "code_block",
     "feature_card",
     "nav_bar",
