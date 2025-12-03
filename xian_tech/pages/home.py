@@ -274,7 +274,7 @@ def why_another_blockchain() -> rx.Component:
                 ),
                 rx.box(
                     rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
-                    rx.vstack(
+                    rx.box(
                         rx.text(
                             "Google Cloud Universal Ledger (GCUL) is a new platform to create innovative payments services and financial markets products... provided as a service and accessible through a single API.",
                             size="4",
@@ -282,15 +282,26 @@ def why_another_blockchain() -> rx.Component:
                             line_height="1.8",
                             style={"fontStyle": "italic"},
                         ),
-                        rx.link(
-                            "Source: Google Cloud Universal Ledger",
-                            href="https://cloud.google.com/application/web3/universal-ledger",
-                            is_external=True,
+                        rx.text(
+                            "”",
+                            size="9",
                             color=ACCENT,
-                            size="2",
+                            weight="bold",
+                            line_height="0.6",
+                            position="absolute",
+                            bottom="-0.35rem",
+                            right="0.5rem",
+                            opacity="0.7",
                         ),
-                        spacing="2",
-                        align_items="start",
+                        position="relative",
+                        width="100%",
+                    ),
+                    rx.link(
+                        "Source: Google Cloud Universal Ledger",
+                        href="https://cloud.google.com/application/web3/universal-ledger",
+                        is_external=True,
+                        color=ACCENT,
+                        size="2",
                     ),
                     gap="1rem",
                     padding="1.5rem",
@@ -301,6 +312,7 @@ def why_another_blockchain() -> rx.Component:
                     ),
                     border_radius="14px",
                     box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                    style={"position": "relative"},
                 ),
                 rx.box(
                     rx.heading("Why not just use GCUL?", size="5", color=TEXT_PRIMARY, weight="bold"),
