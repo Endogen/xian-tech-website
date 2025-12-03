@@ -293,18 +293,14 @@ def why_another_blockchain() -> rx.Component:
                     ),
                     gap="1rem",
                     padding="1.5rem",
-                    background=rx.cond(
-                        True,
-                        f"linear-gradient(135deg, {ACCENT_SOFT}, rgba(255,255,255,0))",
-                        "transparent",
-                    ),
+                    background=ACCENT_SOFT,
                     border_radius="14px",
-                    box_shadow=f"0 16px 40px {ACCENT_SOFT}",
+                    box_shadow=f"0 12px 28px {ACCENT_SOFT}",
                 ),
                 rx.box(
                     rx.heading("Why not just use GCUL?", size="5", color=TEXT_PRIMARY, weight="bold"),
                     rx.text(
-                        "GCUL is a proprietary, Google-controlled platform delivered as a service. Xian is public and free software: run it on-prem, private, or public, with full control of your consensus, contracts, and data.",
+                        "GCUL is a proprietary, Google-controlled platform delivered as a service. Xian is public and free software: run it on-prem, private, or public, with full control of your consensus, contracts, governance, fee structure, and data.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
