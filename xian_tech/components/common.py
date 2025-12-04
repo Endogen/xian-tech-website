@@ -529,7 +529,7 @@ def footer() -> rx.Component:
                 ),
                 rx.box(
                     rx.text(
-                        "© 2025 Xian Technology Foundation. Built for the Xian Network community.",
+                        "© 2025 Xian Technology Foundation. Built with ❤️ and 🐍.",
                         size="2",
                         color=TEXT_MUTED,
                         text_align="center",
