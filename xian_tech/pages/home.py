@@ -183,10 +183,9 @@ def mission_section() -> rx.Component:
         rx.vstack(
             rx.heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
-                "The Xian Technology Foundation advances the Xian blockchain stack—pairing CometBFT consensus with a pure Python contracting engine—to keep it simple, powerful, and production-ready.",
+                "The Xian Technology Foundation advances the technology stack behind Xian to keep it simple, powerful, and production-ready.",
                 size="4",
                 color=TEXT_MUTED,
-                max_width="860px",
                 line_height="1.7",
             ),
             rx.grid(
