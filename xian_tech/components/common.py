@@ -496,6 +496,28 @@ def footer() -> rx.Component:
                     rx.vstack(
                         rx.text("Contact", size="3", weight="bold", color=TEXT_PRIMARY),
                         rx.link("foundation@xian.technology", href="mailto:foundation@xian.technology", color=TEXT_MUTED, size="3"),
+                        rx.text("Follow", size="3", weight="bold", color=TEXT_PRIMARY),
+                        rx.hstack(
+                            rx.link(
+                                rx.icon(tag="github", size=20, color=TEXT_PRIMARY),
+                                href="https://github.com/xian-technology",
+                                is_external=True,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.icon(tag="send", size=20, color=TEXT_PRIMARY),
+                                href="https://t.me/xian_technology",
+                                is_external=True,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.icon(tag="mail", size=20, color=TEXT_PRIMARY),
+                                href="mailto:foundation@xian.technology",
+                                _hover={"color": ACCENT},
+                            ),
+                            spacing="3",
+                            align_items="center",
+                        ),
                         spacing="3",
                         align_items="start",
                     ),
