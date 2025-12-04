@@ -360,6 +360,21 @@ def why_python() -> rx.Component:
                     color=TEXT_MUTED,
                     line_height="1.7",
                 ),
+                rx.text(
+                    rx.fragment(
+                        "Explore current programming language trends over at ",
+                        rx.link(
+                            "Languish",
+                            href="https://tjpalmer.github.io/languish",
+                            is_external=True,
+                            color=ACCENT,
+                        ),
+                        " for a broader snapshot of the ecosystem.",
+                    ),
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
                 spacing="4",
                 align_items="start",
             ),
