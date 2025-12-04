@@ -94,7 +94,7 @@ def hero_section() -> rx.Component:
                         },
                         style={"transition": "all 0.2s ease"},
                     ),
-                    href="https://github.com/xian-network",
+                    href="https://github.com/xian-technology",
                     is_external=True,
                 ),
                 gap="1.5rem",
