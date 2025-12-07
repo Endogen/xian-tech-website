@@ -364,7 +364,7 @@ def command_palette() -> rx.Component:
                                     align_items="start",
                                 ),
                                 rx.spacer(),
-                                rx.text("⌘K / CTRL + K", size="2", color=TEXT_MUTED),
+                                rx.text("ESC to close", size="2", color=TEXT_MUTED),
                                 align_items="center",
                                 width="100%",
                             ),
