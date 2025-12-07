@@ -18,49 +18,124 @@ from ..theme import (
 )
 
 
-def technology_card_detailed(track: dict) -> rx.Component:
-    """Detailed technology card."""
+def architecture_card(title: str, description: str, badge: str) -> rx.Component:
+    """Reusable architecture card."""
     return rx.box(
         rx.vstack(
-            rx.flex(
-                rx.text(track["icon"], size="8", line_height="1"),
-                rx.heading(track["title"], size="6", color=TEXT_PRIMARY, weight="bold"),
-                gap="1.25rem",
-                align_items="center",
-            ),
+            rx.badge(badge, color_scheme="green", variant="soft", size="2"),
+            rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(description, size="3", color=TEXT_MUTED, line_height="1.7"),
+            spacing="3",
+            align_items="start",
+        ),
+        padding="2rem",
+        background=SURFACE,
+        border=f"1px solid {BORDER_COLOR}",
+        border_radius="14px",
+        height="100%",
+    )
+
+
+def architecture_overview() -> rx.Component:
+    """Stack architecture overview."""
+    return section(
+        rx.vstack(
+            rx.heading("How the stack fits together", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
-                track["description"],
+                "Consensus in Go, execution in Python: CometBFT handles node-to-node state replication, a Python ABCI bridges into the contracting engine, BDS streams indexed data into PostgreSQL, and HDF5 captures on-disk state snapshots. Tooling (xian-py) talks to both contracts and data services.",
                 size="4",
                 color=TEXT_MUTED,
                 line_height="1.7",
             ),
             rx.grid(
-                *[
-                    rx.flex(
-                        rx.text("→", color=ACCENT, size="4"),
-                        rx.text(point, size="3", color=TEXT_MUTED),
-                        gap="1rem",
-                        align_items="center",
-                    )
-                    for point in track["points"]
-                ],
-                template_columns={"base": "1fr", "md": "1fr"},
-                gap="1rem",
+                rx.vstack(
+                    architecture_card(
+                        "CometBFT Node",
+                        "Go-based consensus engine that gossips transactions, finalizes blocks, and replicates state across peers.",
+                        "Go • Consensus",
+                    ),
+                    rx.center(rx.text("↓", size="6", color=ACCENT, weight="bold")),
+                    architecture_card(
+                        "Custom ABCI (Python)",
+                        "Python ABCI app connects CometBFT to the execution layer: CheckTx, FinalizeBlock, Commit, and proposal hooks.",
+                        "Python • ABCI",
+                    ),
+                    rx.center(rx.text("↓", size="6", color=ACCENT, weight="bold")),
+                    architecture_card(
+                        "Contracting Engine",
+                        "Pure Python smart contract runtime embedded in the ABCI app for deterministic execution, metering, and state writes.",
+                        "Python • Runtime",
+                    ),
+                    spacing="3",
+                    width="100%",
+                ),
+                rx.vstack(
+                    architecture_card(
+                        "Blockchain Data Service (BDS)",
+                        "Python service integrated with the ABCI app to stream chain state into PostgreSQL and expose it via GraphQL.",
+                        "Python • Data",
+                    ),
+                    architecture_card(
+                        "PostgreSQL",
+                        "Durable database backing BDS for fast queries across blocks, contracts, and derived views.",
+                        "Storage",
+                    ),
+                    spacing="3",
+                    width="100%",
+                ),
+                rx.vstack(
+                    architecture_card(
+                        "HDF5 State Snapshots",
+                        "On-disk state persistence via HDF5 for fast local reads, backups, and operational recovery alongside live ABCI state.",
+                        "Storage",
+                    ),
+                    architecture_card(
+                        "xian-py SDK & Tooling",
+                        "Python SDK for deploying and interacting with contracts and querying data services; fits directly into Python apps and CLIs.",
+                        "Tools",
+                    ),
+                    spacing="3",
+                    width="100%",
+                ),
+                template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(3, 1fr)"},
+                gap="2rem",
+                width="100%",
             ),
-            code_block(track["code_sample"]),
-            spacing="6",
+            spacing="5",
             align_items="start",
         ),
-        padding="3.5rem",
-        background=SURFACE,
-        border=f"1px solid {BORDER_COLOR}",
-        border_radius="14px",
-        transition="all 0.3s ease",
-        _hover={
-            "borderColor": BORDER_BRIGHT,
-            "transform": "translateY(-4px)",
-        },
-        height="100%",
+        style={"paddingBottom": "3rem"},
+    )
+
+
+def architecture_diagram() -> rx.Component:
+    """Visual architecture diagram."""
+    return section(
+        rx.vstack(
+            rx.heading("Architecture diagram", size="6", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "High-level flow from consensus to execution, data services, and SDKs.",
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.6",
+            ),
+            rx.box(
+                rx.el.object(
+                    data="/architecture.svg",
+                    type="image/svg+xml",
+                    style={
+                        "width": "100%",
+                        "borderRadius": "14px",
+                        "background": "transparent",
+                        "display": "block",
+                    },
+                ),
+                width="100%",
+                padding_top="1.5rem",
+            ),
+            spacing="3",
+            align_items="start",
+        )
     )
 
 
@@ -160,84 +235,7 @@ def roadmap_section() -> rx.Component:
 def technology_page() -> rx.Component:
     """Technology route."""
     return page_layout(
-        section(
-            rx.vstack(
-                rx.box(
-                    rx.text("TECHNOLOGY", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
-                    padding="0.625rem 1.25rem",
-                    background=ACCENT_SOFT,
-                    border=f"1px solid {ACCENT_GLOW}",
-                    border_radius="8px",
-                ),
-                rx.heading(
-                    "Building the Future of Python Blockchain",
-                    size="9",
-                    color=TEXT_PRIMARY,
-                    line_height="1.2",
-                    weight="bold",
-                ),
-                rx.text(
-                    "Our teams extend the contracting library and node underpinning Xian Network, "
-                    "keeping Python-native infrastructure performant, observable, and secure.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    max_width="800px",
-                    line_height="1.7",
-                ),
-                spacing="6",
-                align_items="start",
-            ),
-            style={"paddingBottom": "3rem"},
-        ),
-        section(
-            rx.vstack(
-                *[technology_card_detailed(track) for track in TECHNOLOGY_TRACKS],
-                spacing="9",
-            ),
-            style={"paddingTop": "0"},
-        ),
-        roadmap_section(),
-        section(
-            rx.box(
-                rx.vstack(
-                    rx.heading("Get Started", size="7", color=TEXT_PRIMARY, weight="bold"),
-                    rx.text(
-                        "Deploy your first smart contract on Xian Network",
-                        size="4",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    rx.vstack(
-                        terminal_prompt("pip install xian-py"),
-                        terminal_prompt("xian init my-contract"),
-                        terminal_prompt("xian deploy"),
-                        spacing="3",
-                        width="100%",
-                    ),
-                    rx.link(
-                        rx.button(
-                            "View Documentation",
-                            size="4",
-                            background_color=ACCENT,
-                            color=PRIMARY_BG,
-                            border_radius="10px",
-                            padding="1.25rem 2rem",
-                            cursor="pointer",
-                            _hover={"backgroundColor": ACCENT_HOVER},
-                        ),
-                        href="https://xian.org",
-                        is_external=True,
-                    ),
-                    spacing="6",
-                    align_items="start",
-                    width="100%",
-                ),
-                padding="3.5rem",
-                background=SURFACE,
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="14px",
-            )
-        ),
+        architecture_diagram(),
     )
 
 
