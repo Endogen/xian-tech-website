@@ -120,15 +120,11 @@ def architecture_diagram() -> rx.Component:
                 line_height="1.6",
             ),
             rx.box(
-                rx.el.object(
-                    data="/architecture.svg",
-                    type="image/svg+xml",
-                    style={
-                        "width": "100%",
-                        "borderRadius": "14px",
-                        "background": "transparent",
-                        "display": "block",
-                    },
+                rx.image(
+                    src="/architecture.svg",
+                    alt="Xian architecture diagram",
+                    width="100%",
+                    border_radius="14px",
                 ),
                 width="100%",
                 padding_top="1.5rem",
