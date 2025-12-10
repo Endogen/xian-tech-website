@@ -190,11 +190,11 @@ def contracts_page() -> rx.Component:
                             background=SURFACE,
                             border=f"1px solid {BORDER_COLOR}",
                             border_radius="14px",
+                            border_left=f"4px solid {ACCENT}",
                             transition="all 0.3s ease",
                             _hover={
                                 "borderColor": BORDER_BRIGHT,
                                 "backgroundColor": SURFACE_HOVER,
-                                "transform": "translateY(-3px)",
                             },
                             height="100%",
                         )
