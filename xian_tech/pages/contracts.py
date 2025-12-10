@@ -5,6 +5,19 @@ from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
+    BORDER_BRIGHT,
+    BORDER_COLOR,
+    PRIMARY_BG,
+    SURFACE,
+    SURFACE_HOVER,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+)
+from ..theme import (
+    ACCENT,
+    ACCENT_GLOW,
+    ACCENT_SOFT,
+    BORDER_BRIGHT,
     BORDER_COLOR,
     PRIMARY_BG,
     SURFACE,
@@ -49,6 +62,42 @@ def add(a: int, b: int):
 def read_result():
     return result
 """
+
+HIGHLIGHTS = [
+    {
+        "title": "Python-first by design",
+        "icon": "🐍",
+        "body": (
+            "No custom DSLs or transpilers. Contracts are idiomatic Python, making audits and upgrades straightforward "
+            "and letting teams use the language they already know."
+        ),
+    },
+    {
+        "title": "Native value semantics",
+        "icon": "⚖️",
+        "body": (
+            "We avoid bespoke integer abstractions for balances. The engine stays Python-native rather than inventing "
+            "a special-purpose blockchain language."
+        ),
+    },
+    {
+        "title": "Standalone & portable",
+        "icon": "🔌",
+        "body": (
+            "The contracting library can run independently and could integrate with other node systems—not just CometBFT—"
+            "or power entirely different use cases."
+        ),
+    },
+    {
+        "title": "Upgradable patterns",
+        "icon": "🧩",
+        "body": (
+            "With the right design patterns, you can ship upgradable contracts when you need them—without forcing "
+            "complexity on contracts that don't."
+        ),
+    },
+]
+
 
 def contracts_page() -> rx.Component:
     """Python smart contract engine overview."""
@@ -121,6 +170,41 @@ def contracts_page() -> rx.Component:
                 ),
                 template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
                 gap="1.5rem",
+            ),
+            style={"paddingTop": "0"},
+        ),
+        section(
+            rx.vstack(
+                rx.heading("Why the Xian contracting model?", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.grid(
+                    *[
+                        rx.box(
+                            rx.vstack(
+                                rx.text(item["icon"], size="7", line_height="1"),
+                                rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
+                                rx.text(item["body"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                                spacing="3",
+                                align_items="start",
+                            ),
+                            padding="2.25rem",
+                            background=SURFACE,
+                            border=f"1px solid {BORDER_COLOR}",
+                            border_radius="14px",
+                            transition="all 0.3s ease",
+                            _hover={
+                                "borderColor": BORDER_BRIGHT,
+                                "backgroundColor": SURFACE_HOVER,
+                                "transform": "translateY(-3px)",
+                            },
+                            height="100%",
+                        )
+                        for item in HIGHLIGHTS
+                    ],
+                    template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
+                    gap="1.25rem",
+                ),
+                spacing="5",
+                align_items="start",
             ),
             style={"paddingTop": "0"},
         ),
