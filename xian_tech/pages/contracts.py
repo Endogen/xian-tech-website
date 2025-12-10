@@ -14,6 +14,42 @@ from ..theme import (
 )
 
 
+ALG_CONTRACT = """import beaker as bk
+import pyteal as pt
+
+class MyState:
+    result = bk.GlobalStateValue(pt.TealType.uint64)
+
+app = bk.Application("Calculator", state=MyState())
+
+@app.external
+def add(a: pt.abi.Uint64, b: pt.abi.Uint64, *, output: pt.abi.Uint64) -> pt.Expr:
+    add_result = a.get() + b.get()
+    return pt.Seq(
+        app.state.result.set(add_result),
+        output.set(add_result)
+    )
+
+@app.external(read_only=True)
+def read_result(*, output: pt.abi.Uint64) -> pt.Expr:
+    return output.set(app.state.result)
+
+if __name__ == "__main__":
+    spec = app.build()
+    spec.export("artifacts")
+"""
+
+XIAN_CONTRACT = """result = Variable()
+
+@export
+def add(a: int, b: int):
+    result.set(a + b)
+
+@export
+def read_result():
+    return result
+"""
+
 def contracts_page() -> rx.Component:
     """Python smart contract engine overview."""
     return page_layout(
@@ -28,16 +64,65 @@ def contracts_page() -> rx.Component:
                 ),
                 rx.heading("Pure Python Smart Contracts", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
                 rx.text(
-                    "Xian’s contracting engine runs native Python—no transpilers or alternate DSLs—making audits and upgrades faster. "
-                    "Deterministic execution, metered by stamps, keeps runtime predictable.",
+                    "The heart of Xian is a native Python contracting engine—no transpilers, no second-class runtimes. Deterministic, stamp-metered execution keeps performance predictable while making audits and upgrades straightforward.",
                     size="4",
                     color=TEXT_MUTED,
-                    max_width="850px",
+                    max_width="900px",
                     line_height="1.7",
                 ),
                 spacing="5",
                 align_items="start",
             )
+        ),
+        section(
+            rx.text(
+                "Let’s compare a simple add-and-read contract on Algorand versus Xian:",
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                style={"paddingBottom": "0.5rem"},
+            ),
+            rx.grid(
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Contract on Algorand", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        code_block(ALG_CONTRACT),
+                        rx.text(
+                            "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.heading("Contract on Xian", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        code_block(XIAN_CONTRACT),
+                        rx.text(
+                            "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                    ),
+                    padding="2.5rem",
+                    background=SURFACE,
+                    border=f"1px solid {BORDER_COLOR}",
+                    border_radius="14px",
+                ),
+                template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
+                gap="1.5rem",
+            ),
+            style={"paddingTop": "0"},
         ),
         section(
             rx.grid(
