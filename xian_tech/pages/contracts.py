@@ -85,7 +85,7 @@ def contracts_page() -> rx.Component:
             rx.grid(
                 rx.box(
                     rx.vstack(
-                        rx.heading("Contract on Algorand", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
                         code_block(ALG_CONTRACT),
                         rx.text(
                             "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
@@ -103,7 +103,7 @@ def contracts_page() -> rx.Component:
                 ),
                 rx.box(
                     rx.vstack(
-                        rx.heading("Contract on Xian", size="5", color=TEXT_PRIMARY, weight="bold"),
+                        rx.heading("Xian Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
                         code_block(XIAN_CONTRACT),
                         rx.text(
                             "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
@@ -123,87 +123,6 @@ def contracts_page() -> rx.Component:
                 gap="1.5rem",
             ),
             style={"paddingTop": "0"},
-        ),
-        section(
-            rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Deterministic runtime", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Sandboxed Executor enforces stamp budgets, restricted imports, and owner checks for predictable execution.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Simple developer flow", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Write @export functions in Python, submit via the submission contract, and interact with stateful variables and hashes directly.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Stamped economics", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Stamp consumption is debited per call; rewards route to validators, the foundation, and contract developers.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
-                ),
-                template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
-                gap="1.5rem",
-            ),
-            style={"paddingTop": "0"},
-        ),
-        section(
-            rx.vstack(
-                rx.heading("Tiny contract sketch", size="6", color=TEXT_PRIMARY, weight="bold"),
-                code_block(
-                    "@export\n"
-                    "def transfer(to: str, amount: int):\n"
-                    "    assert amount > 0\n"
-                    "    balances[to] += amount\n"
-                ),
-                rx.vstack(
-                    terminal_prompt("pip install xian-py"),
-                    terminal_prompt("xian init my-contract"),
-                    terminal_prompt("xian deploy"),
-                    spacing="3",
-                    width="100%",
-                ),
-                spacing="5",
-                align_items="start",
-            )
         ),
     )
 
