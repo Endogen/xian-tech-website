@@ -180,8 +180,12 @@ def contracts_page() -> rx.Component:
                     *[
                         rx.box(
                             rx.vstack(
-                                rx.text(item["icon"], size="7", line_height="1"),
-                                rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
+                                rx.hstack(
+                                    rx.text(item["icon"], size="7", line_height="1"),
+                                    rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
+                                    align_items="center",
+                                    gap="0.75rem",
+                                ),
                                 rx.text(item["body"], size="3", color=TEXT_MUTED, line_height="1.7"),
                                 spacing="3",
                                 align_items="start",
