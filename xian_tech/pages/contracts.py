@@ -132,41 +132,29 @@ def contracts_page() -> rx.Component:
                 style={"paddingBottom": "0.5rem"},
             ),
             rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        code_block(ALG_CONTRACT),
-                        rx.text(
-                            "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
+                rx.vstack(
+                    rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    code_block(ALG_CONTRACT),
+                    rx.text(
+                        "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
                     ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
+                    spacing="3",
+                    align_items="start",
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Xian Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        code_block(XIAN_CONTRACT),
-                        rx.text(
-                            "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
+                rx.vstack(
+                    rx.heading("Xian Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    code_block(XIAN_CONTRACT),
+                    rx.text(
+                        "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
                     ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
+                    spacing="3",
+                    align_items="start",
                 ),
                 template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
                 gap="1.5rem",
