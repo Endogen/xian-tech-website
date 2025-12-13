@@ -1,6 +1,3 @@
-from venv import CORE_VENV_DEPS
-
-
 def _slugify(value: str) -> str:
     return (
         value.lower()

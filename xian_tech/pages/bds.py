@@ -55,12 +55,16 @@ def bds_page() -> rx.Component:
             )
         ),
         section(
-            rx.flex(
+            rx.grid(
                 *[
                     rx.box(
                         rx.vstack(
-                            rx.text(item["icon"], size="8", line_height="1"),
-                            rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                            rx.hstack(
+                                rx.text(item["icon"], size="6", line_height="1"),
+                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
                             rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
                             spacing="3",
                             align_items="start",
@@ -72,8 +76,9 @@ def bds_page() -> rx.Component:
                         transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
                         height="100%",
                         width="100%",
-                        min_width="0",
                         style={
+                            "display": "flex",
+                            "flexDirection": "column",
                             "backgroundImage": "linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
                             "backgroundSize": "200% 200%",
                             "backgroundPosition": "left center",
@@ -87,10 +92,13 @@ def bds_page() -> rx.Component:
                     )
                     for item in BDS_COMPONENTS
                 ],
+                columns={
+                    "base": "repeat(1, minmax(0, 1fr))",
+                    "md": "repeat(3, minmax(0, 1fr))",
+                },
                 spacing="4",
                 width="100%",
-                wrap="nowrap",
-                overflow_x="auto",
+                align="stretch",
             ),
             style={"paddingTop": "0"},
         ),
