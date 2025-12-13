@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import code_block, page_layout, section
+from ..components.common import page_layout, section
 from ..data import BDS_COMPONENTS
 from ..theme import (
     ACCENT,
@@ -44,7 +44,9 @@ def bds_page() -> rx.Component:
                 ),
                 rx.heading("Blockchain Data Service (BDS)", size="8", color=TEXT_PRIMARY, line_height="1.2", weight="bold"),
                 rx.text(
-                    "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction—successful or failed—into PostgreSQL and exposes that data via a GraphQL API powered by PostGraphile.",
+                    "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction—successful or failed—into PostgreSQL and exposes that data via a GraphQL API powered by ",
+                    rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
+                    ".",
                     size="4",
                     color=TEXT_MUTED,
                     max_width="900px",
@@ -106,10 +108,20 @@ def bds_page() -> rx.Component:
         ),
         section(
             rx.vstack(
-                rx.heading("Sample GraphQL query", size="6", color=TEXT_PRIMARY, weight="bold"),
-                code_block(GRAPHQL_SAMPLE),
+                rx.heading("Explore data with GraphiQL", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.box(
+                    rx.image(
+                        src="/postgraphile.png",
+                        alt="GraphiQL interface for BDS",
+                        width="100%",
+                        border_radius="12px",
+                        object_fit="cover",
+                        box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                    ),
+                    width="100%",
+                ),
                 rx.text(
-                    "Query recent transactions with status, stamps, and contract metadata. Extend the schema as needed via PostGraphile or consume the underlying PostgreSQL tables for analytics.",
+                    "Prefer code? Point your app at the BDS GraphQL endpoint to pull chain data directly into your dashboards or dapps.",
                     size="3",
                     color=TEXT_MUTED,
                     line_height="1.7",
