@@ -126,17 +126,13 @@ def stack_overview() -> rx.Component:
                     rx.link(
                         rx.box(
                             rx.vstack(
-                                rx.hstack(
-                                    rx.text(item["icon"], size="6", line_height="1"),
-                                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
-                                    spacing="3",
-                                    align_items="center",
-                                ),
+                                rx.text(item["icon"], size="8", line_height="1"),
+                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
                                 rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
                                 spacing="3",
                                 align_items="start",
                             ),
-                            padding="2.5rem",
+                            padding="2rem",
                             background=SURFACE,
                             border=f"1px solid {BORDER_COLOR}",
                             border_radius="14px",
