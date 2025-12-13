@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import code_block, page_layout, section
+from ..data import STACK_COMPONENTS
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -8,6 +9,7 @@ from ..theme import (
     BORDER_COLOR,
     PRIMARY_BG,
     SURFACE,
+    SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
@@ -54,82 +56,38 @@ def bds_page() -> rx.Component:
             )
         ),
         section(
-            rx.hstack(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Opt-in at install", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Enable BDS when provisioning the node. It runs inside the ABCI app—no extra daemon to manage.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
+            rx.flex(
+                *[
+                    rx.box(
+                        rx.vstack(
+                            rx.text(item["icon"], size="8", line_height="1"),
+                            rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                            rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                            spacing="3",
+                            align_items="start",
                         ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    min_width="280px",
-                    max_width="320px",
-                    height="100%",
-                    transition="all 0.3s ease",
-                    _hover={
-                        "borderColor": BORDER_COLOR,
-                        "backgroundColor": SURFACE,
-                    },
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Complete transaction history", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Capture every transaction—successes and failures—with status, stamps, contract/function, and block metadata for auditing.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    min_width="280px",
-                    max_width="320px",
-                    height="100%",
-                    transition="all 0.3s ease",
-                    _hover={
-                        "borderColor": BORDER_COLOR,
-                        "backgroundColor": SURFACE,
-                    },
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("PostgreSQL + GraphQL", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Data lands in PostgreSQL and is served through PostGraphile, so you can query with GraphQL or tap Postgres directly.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    min_width="280px",
-                    max_width="320px",
-                    height="100%",
-                    transition="all 0.3s ease",
-                    _hover={
-                        "borderColor": BORDER_COLOR,
-                        "backgroundColor": SURFACE,
-                    },
-                ),
+                        padding="2.5rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
+                        height="100%",
+                        width="100%",
+                        min_width="0",
+                        style={
+                            "backgroundImage": "linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+                            "backgroundSize": "200% 200%",
+                            "backgroundPosition": "left center",
+                        },
+                        _hover={
+                            "borderColor": ACCENT,
+                            "backgroundColor": SURFACE_HOVER,
+                            "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+                            "backgroundPosition": "right center",
+                        },
+                    )
+                    for item in STACK_COMPONENTS[:3]
+                ],
                 spacing="4",
                 width="100%",
                 wrap="nowrap",
