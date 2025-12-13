@@ -65,18 +65,31 @@ def theme_toggle() -> rx.Component:
 
 def nav_link(link: dict[str, str]) -> rx.Component:
     """Navigation link with consistent spacing."""
+    chevron = link.get("children")
     return rx.link(
-        rx.text(
-            link["label"],
-            size="3",
-            weight="medium",
-            color=TEXT_MUTED,
+        rx.hstack(
+            rx.text(
+                link["label"],
+                size="3",
+                weight="medium",
+                color=TEXT_MUTED,
+            ),
+            rx.cond(
+                chevron,
+                rx.text("▾", size="2", color=TEXT_MUTED, weight="bold"),
+                rx.box(),
+            ),
+            align_items="center",
+            gap="0.35rem",
         ),
         href=link["href"],
         style={
-            "padding": "0.75rem 1.25rem",
-            "borderRadius": "8px",
+            "padding": "0.65rem 1rem",
+            "borderRadius": "10px",
             "transition": "all 0.2s ease",
+            "display": "inline-flex",
+            "alignItems": "center",
+            "gap": "0.35rem",
         },
         _hover={
             "textDecoration": "none",
@@ -123,6 +136,121 @@ def command_palette_button() -> rx.Component:
     )
 
 
+def nav_dropdown(link: dict[str, Any]) -> rx.Component:
+    """Hoverable dropdown for links with children."""
+    items = link.get("children", [])
+    if not items:
+        return nav_link(link)
+
+    return rx.hover_card.root(
+        rx.hover_card.trigger(nav_link(link)),
+        rx.hover_card.content(
+            rx.vstack(
+                *[
+                    rx.link(
+                        rx.vstack(
+                            rx.text(child["label"], size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
+                            spacing="1",
+                            align_items="start",
+                        ),
+                        href=child["href"],
+                        _hover={
+                            "textDecoration": "none",
+                            "color": ACCENT,
+                        },
+                        width="100%",
+                    )
+                    for child in items
+                ],
+                spacing="3",
+                align_items="start",
+            ),
+            side="bottom",
+            side_offset=10,
+            align="start",
+            padding="1rem",
+            background=SURFACE_BRIGHT,
+            border=f"1px solid {BORDER_BRIGHT}",
+            border_radius="12px",
+            box_shadow="0 20px 36px rgba(0,0,0,0.35)",
+            min_width="260px",
+            style={"backdropFilter": "blur(12px)"},
+        ),
+        open_delay=80,
+        close_delay=120,
+    )
+
+
+def mobile_nav_panel() -> rx.Component:
+    """Slide-down mobile navigation with nested links."""
+    return rx.cond(
+        State.mobile_nav_open,
+        rx.box(
+            rx.vstack(
+                *[
+                    rx.box(
+                        rx.link(
+                            rx.hstack(
+                                rx.text(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                                rx.cond(
+                                    link.get("children"),
+                                    rx.text("▾", size="3", color=TEXT_MUTED),
+                                    rx.box(),
+                                ),
+                                align_items="center",
+                                gap="0.5rem",
+                            ),
+                            href=link["href"],
+                            _hover={"textDecoration": "none", "color": ACCENT},
+                            on_click=State.close_mobile_nav,
+                        ),
+                        rx.cond(
+                            link.get("children"),
+                            rx.vstack(
+                                *[
+                                    rx.link(
+                                        rx.text(
+                                            f"• {child['label']}",
+                                            size="3",
+                                            color=TEXT_MUTED,
+                                        ),
+                                        href=child["href"],
+                                        padding_left="1.5rem",
+                                        _hover={"textDecoration": "none", "color": ACCENT},
+                                        on_click=State.close_mobile_nav,
+                                    )
+                                    for child in link.get("children", [])
+                                ],
+                                spacing="2",
+                                align_items="start",
+                                margin_top="0.5rem",
+                            ),
+                            rx.box(),
+                        ),
+                        padding="0.5rem 0",
+                        border_bottom=f"1px solid {BORDER_COLOR}",
+                    )
+                    for link in NAV_LINKS
+                ],
+                spacing="2",
+                align_items="start",
+            ),
+            background=PRIMARY_BG,
+            position="absolute",
+            top="100%",
+            left="0",
+            right="0",
+            z_index="90",
+            border_bottom=f"1px solid {BORDER_COLOR}",
+            padding="1rem 1.5rem 1.5rem",
+            box_shadow="0 10px 30px rgba(0,0,0,0.18)",
+            display={"base": "block", "md": "none"},
+        ),
+        rx.box(),
+    )
+
+
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
     border_color = rx.cond(
@@ -161,7 +289,7 @@ def nav_bar() -> rx.Component:
                     _hover={"textDecoration": "none"},
                 ),
                 rx.flex(
-                    *[nav_link(link) for link in NAV_LINKS],
+                    *[nav_dropdown(link) for link in NAV_LINKS],
                     gap="0.75rem",
                     justify="center",
                     align_items="center",
@@ -171,7 +299,23 @@ def nav_bar() -> rx.Component:
                 rx.flex(
                     command_palette_button(),
                     theme_toggle(),
-                    gap="1.5rem",
+                    rx.button(
+                        rx.text("☰", size="6"),
+                        variant="ghost",
+                        cursor="pointer",
+                        padding="0.35rem 0.6rem",
+                        border_radius="10px",
+                        border=f"1px solid {BORDER_COLOR}",
+                        background_color=rx.cond(
+                            State.theme_mode == "light",
+                            "rgba(255, 255, 255, 0.8)",
+                            "rgba(12, 18, 26, 0.7)",
+                        ),
+                        on_click=State.toggle_mobile_nav,
+                        display={"base": "flex", "md": "none"},
+                        _hover={"borderColor": ACCENT, "color": ACCENT},
+                    ),
+                    gap="1rem",
                     align_items="center",
                 ),
                 align_items="center",
@@ -182,6 +326,7 @@ def nav_bar() -> rx.Component:
             margin="0 auto",
             padding="0 2rem",
         ),
+        mobile_nav_panel(),
         position="sticky",
         top="0",
         z_index="100",

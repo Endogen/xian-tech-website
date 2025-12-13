@@ -10,7 +10,18 @@ def _slugify(value: str) -> str:
 
 NAV_LINKS = [
     {"label": "Home", "href": "/"},
-    {"label": "Technology", "href": "/technology"},
+    {
+        "label": "Technology",
+        "href": "/technology",
+        "children": [
+            {"label": "Overview", "href": "/technology", "description": "Architecture, stack, and design goals."},
+            {"label": "Contracts", "href": "/contracts", "description": "Python-native smart contracts and patterns."},
+            {"label": "Consensus", "href": "/consensus", "description": "CometBFT backbone securing the network."},
+            {"label": "ABCI", "href": "/abci", "description": "Python ABCI app bridging consensus and execution."},
+            {"label": "BDS", "href": "/bds", "description": "Blockchain Data Service with PostgreSQL + GraphQL."},
+            {"label": "Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
+        ],
+    },
     {"label": "Ecosystem", "href": "/ecosystem"},
     {"label": "Community", "href": "/community"},
 ]

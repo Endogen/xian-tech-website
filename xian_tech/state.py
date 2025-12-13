@@ -44,6 +44,7 @@ class State(rx.State):
     """Global application state."""
 
     theme_mode: str = "light"
+    mobile_nav_open: bool = False
     command_palette_open: bool = False
     command_query: str = ""
     command_palette_active_id: str | None = None
@@ -51,6 +52,14 @@ class State(rx.State):
     def toggle_theme(self):
         """Toggle between light and dark themes."""
         self.theme_mode = "light" if self.theme_mode == "dark" else "dark"
+
+    def toggle_mobile_nav(self):
+        """Toggle the mobile navigation drawer."""
+        self.mobile_nav_open = not self.mobile_nav_open
+
+    def close_mobile_nav(self):
+        """Close the mobile navigation."""
+        self.mobile_nav_open = False
 
     def open_command_palette(self):
         """Show the command palette."""
