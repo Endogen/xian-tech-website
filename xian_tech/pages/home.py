@@ -121,13 +121,17 @@ def stack_overview() -> rx.Component:
                 line_height="1.7",
                 text_align="center",
             ),
-            rx.flex(
+            rx.grid(
                 *[
                     rx.link(
                         rx.box(
                             rx.vstack(
-                                rx.text(item["icon"], size="8", line_height="1"),
-                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                rx.hstack(
+                                    rx.text(item["icon"], size="6", line_height="1"),
+                                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                    spacing="3",
+                                    align_items="center",
+                                ),
                                 rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
                                 spacing="3",
                                 align_items="start",
@@ -138,9 +142,10 @@ def stack_overview() -> rx.Component:
                             border_radius="14px",
                             transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
                             height="100%",
-                            min_width="260px",
-                            max_width="260px",
+                            width="100%",
                             style={
+                                "display": "flex",
+                                "flexDirection": "column",
                                 "backgroundImage": "linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
                                 "backgroundSize": "200% 200%",
                                 "backgroundPosition": "left center",
@@ -157,10 +162,14 @@ def stack_overview() -> rx.Component:
                     )
                     for item in CORE_COMPONENTS
                 ],
+                columns={
+                    "base": "repeat(1, minmax(0, 1fr))",
+                    "md": "repeat(2, minmax(0, 1fr))",
+                    "lg": "repeat(4, minmax(0, 1fr))",
+                },
                 spacing="4",
                 width="100%",
-                wrap="nowrap",
-                overflow_x="auto",
+                align="stretch",
             ),
             spacing="6",
             align_items="center",
