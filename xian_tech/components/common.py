@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 import reflex as rx
 
@@ -96,6 +96,85 @@ def nav_link(link: dict[str, str]) -> rx.Component:
             "color": ACCENT,
             "backgroundColor": ACCENT_SOFT,
         },
+    )
+
+
+def nav_item(link: dict[str, Any]) -> rx.Component:
+    """Navigation item with hover tracking for mega menu."""
+    has_children = bool(link.get("children"))
+    return rx.box(
+        nav_link(link),
+        on_mouse_enter=State.set_nav_hover(link["label"]) if has_children else State.clear_nav_hover,
+        on_focus=State.set_nav_hover(link["label"]) if has_children else State.clear_nav_hover,
+        display="inline-flex",
+    )
+
+
+def submenu_children(label: str) -> rx.Component:
+    """Render submenu content for a hovered label."""
+    groups: list[rx.Component] = []
+    for link in NAV_LINKS:
+        children = link.get("children")
+        if not children:
+            continue
+        groups.append(
+            rx.cond(
+                State.nav_hover_label == link["label"],
+                rx.vstack(
+                    rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                    rx.grid(
+                        *[
+                            rx.link(
+                                rx.box(
+                                    rx.text(child["label"], size="3", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
+                                    spacing="1",
+                                    align_items="start",
+                                ),
+                                href=child["href"],
+                                _hover={"textDecoration": "none", "color": ACCENT},
+                            )
+                            for child in children
+                        ],
+                        columns={
+                            "base": "repeat(1, minmax(0, 1fr))",
+                            "md": "repeat(3, minmax(0, 1fr))",
+                        },
+                        spacing="3",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                ),
+                rx.box(),
+            )
+        )
+    return rx.fragment(*groups)
+
+
+def nav_mega_panel() -> rx.Component:
+    """Full-width slide-down panel for nav children."""
+    return rx.cond(
+        State.nav_hover_label != "",
+        rx.box(
+            rx.box(
+                submenu_children(State.nav_hover_label),
+                max_width=MAX_CONTENT_WIDTH,
+                margin="0 auto",
+                padding="1.5rem 2rem",
+            ),
+            position="absolute",
+            left="0",
+            right="0",
+            top="100%",
+            background=SURFACE_BRIGHT,
+            border_bottom=f"1px solid {BORDER_BRIGHT}",
+            box_shadow="0 24px 40px rgba(0,0,0,0.25)",
+            backdrop_filter="blur(14px)",
+            display={"base": "none", "md": "block"},
+            z_index="90",
+        ),
+        rx.box(),
     )
 
 
@@ -265,66 +344,69 @@ def nav_bar() -> rx.Component:
     )
     return rx.box(
         rx.box(
-            rx.flex(
-                rx.link(
-                    rx.flex(
-                        rx.image(
-                            src="/xian.jpg",
-                            alt="Xian Technology Logo",
-                            width="3rem",
-                            height="3rem",
-                            border_radius="8px",
-                            object_fit="cover",
+            rx.box(
+                rx.flex(
+                    rx.link(
+                        rx.flex(
+                            rx.image(
+                                src="/xian.jpg",
+                                alt="Xian Technology Logo",
+                                width="3rem",
+                                height="3rem",
+                                border_radius="8px",
+                                object_fit="cover",
+                            ),
+                            rx.vstack(
+                                rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
+                                rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
+                                align_items="start",
+                                spacing="0",
+                            ),
+                            gap="1rem",
+                            align_items="center",
                         ),
-                        rx.vstack(
-                            rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
-                            rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
-                            align_items="start",
-                            spacing="0",
+                        href="/",
+                        _hover={"textDecoration": "none"},
+                    ),
+                    rx.flex(
+                        *[nav_item(link) for link in NAV_LINKS],
+                        gap="0.75rem",
+                        justify="center",
+                        align_items="center",
+                        flex="1",
+                        display={"base": "none", "md": "flex"},
+                    ),
+                    rx.flex(
+                        command_palette_button(),
+                        theme_toggle(),
+                        rx.button(
+                            rx.text("☰", size="6"),
+                            variant="ghost",
+                            cursor="pointer",
+                            padding="0.35rem 0.6rem",
+                            border_radius="10px",
+                            border=f"1px solid {BORDER_COLOR}",
+                            background_color=rx.cond(
+                                State.theme_mode == "light",
+                                "rgba(255, 255, 255, 0.8)",
+                                "rgba(12, 18, 26, 0.7)",
+                            ),
+                            on_click=State.toggle_mobile_nav,
+                            display={"base": "flex", "md": "none"},
+                            _hover={"borderColor": ACCENT, "color": ACCENT},
                         ),
                         gap="1rem",
                         align_items="center",
                     ),
-                    href="/",
-                    _hover={"textDecoration": "none"},
-                ),
-                rx.flex(
-                    *[nav_dropdown(link) for link in NAV_LINKS],
-                    gap="0.75rem",
-                    justify="center",
                     align_items="center",
-                    flex="1",
-                    display={"base": "none", "md": "flex"},
-                ),
-                rx.flex(
-                    command_palette_button(),
-                    theme_toggle(),
-                    rx.button(
-                        rx.text("☰", size="6"),
-                        variant="ghost",
-                        cursor="pointer",
-                        padding="0.35rem 0.6rem",
-                        border_radius="10px",
-                        border=f"1px solid {BORDER_COLOR}",
-                        background_color=rx.cond(
-                            State.theme_mode == "light",
-                            "rgba(255, 255, 255, 0.8)",
-                            "rgba(12, 18, 26, 0.7)",
-                        ),
-                        on_click=State.toggle_mobile_nav,
-                        display={"base": "flex", "md": "none"},
-                        _hover={"borderColor": ACCENT, "color": ACCENT},
-                    ),
+                    width="100%",
                     gap="1rem",
-                    align_items="center",
                 ),
-                align_items="center",
-                width="100%",
-                gap="1rem",
+                max_width=MAX_CONTENT_WIDTH,
+                margin="0 auto",
+                padding="0 2rem",
             ),
-            max_width=MAX_CONTENT_WIDTH,
-            margin="0 auto",
-            padding="0 2rem",
+            nav_mega_panel(),
         ),
         mobile_nav_panel(),
         position="sticky",
@@ -337,6 +419,7 @@ def nav_bar() -> rx.Component:
         padding="0.85rem 0",
         width="100%",
         style={"transition": "background-color 0.3s ease"},
+        on_mouse_leave=State.clear_nav_hover,
     )
 
 

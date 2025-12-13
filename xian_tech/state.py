@@ -45,6 +45,7 @@ class State(rx.State):
 
     theme_mode: str = "light"
     mobile_nav_open: bool = False
+    nav_hover_label: str = ""
     command_palette_open: bool = False
     command_query: str = ""
     command_palette_active_id: str | None = None
@@ -60,6 +61,14 @@ class State(rx.State):
     def close_mobile_nav(self):
         """Close the mobile navigation."""
         self.mobile_nav_open = False
+
+    def set_nav_hover(self, label: str):
+        """Track which nav item is hovered."""
+        self.nav_hover_label = label
+
+    def clear_nav_hover(self):
+        """Clear nav hover state."""
+        self.nav_hover_label = ""
 
     def open_command_palette(self):
         """Show the command palette."""
