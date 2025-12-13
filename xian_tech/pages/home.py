@@ -1,7 +1,7 @@
 import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
-from ..data import STACK_COMPONENTS
+from ..data import CORE_COMPONENTS
 from ..state import State
 from ..theme import (
     ACCENT,
@@ -155,7 +155,7 @@ def stack_overview() -> rx.Component:
                         href=item["href"],
                         _hover={"textDecoration": "none"},
                     )
-                    for item in STACK_COMPONENTS
+                    for item in CORE_COMPONENTS
                 ],
                 spacing="4",
                 width="100%",

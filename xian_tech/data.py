@@ -1,3 +1,6 @@
+from venv import CORE_VENV_DEPS
+
+
 def _slugify(value: str) -> str:
     return (
         value.lower()
@@ -15,7 +18,7 @@ NAV_LINKS = [
     {"label": "Community", "href": "/community"},
 ]
 
-STACK_COMPONENTS = [
+CORE_COMPONENTS = [
     {
         "title": "CometBFT Consensus Engine",
         "description": "Byzantine fault-tolerant, deterministic state machine replication securing every block.",
@@ -39,6 +42,24 @@ STACK_COMPONENTS = [
         "description": "xian-py SDK plus BDS GraphQL for querying chain data and building integrations.",
         "href": "/tooling",
         "icon": "🛠️",
+    },
+]
+
+BDS_COMPONENTS = [
+    {
+        "title": "Opt-in at install",
+        "description": "Enable BDS when provisioning the node. It runs inside the ABCI app—no extra daemon to manage.",
+        "icon": "🛰️",
+    },
+    {
+        "title": "Complete transaction history",
+        "description": "Capture every transaction—successes and failures—with status, stamps, contract/function, and block metadata for auditing.",
+        "icon": "🐍",
+    },
+    {
+        "title": "PostgreSQL + GraphQL",
+        "description": "Data lands in PostgreSQL and is served through PostGraphile, so you can query with GraphQL or tap Postgres directly.",
+        "icon": "🔗",
     },
 ]
 
@@ -355,7 +376,7 @@ def _build_search_entries() -> list[dict[str, str]]:
     ]
 
     # Stack components
-    for component in STACK_COMPONENTS:
+    for component in CORE_COMPONENTS:
         entries.append(
             {
                 "id": f"stack-{_slugify(component['title'])}",
@@ -376,7 +397,8 @@ SEARCH_ENTRIES = _build_search_entries()
 
 
 __all__ = [
-    "STACK_COMPONENTS",
+    "CORE_COMPONENTS",
+    "BDS_COMPONENTS",
     "COMMUNITY_STREAMS",
     "ECOSYSTEM_INITIATIVES",
     "NAV_LINKS",

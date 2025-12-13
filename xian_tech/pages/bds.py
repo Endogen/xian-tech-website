@@ -1,13 +1,12 @@
 import reflex as rx
 
 from ..components.common import code_block, page_layout, section
-from ..data import STACK_COMPONENTS
+from ..data import BDS_COMPONENTS
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
     BORDER_COLOR,
-    PRIMARY_BG,
     SURFACE,
     SURFACE_HOVER,
     TEXT_MUTED,
@@ -86,7 +85,7 @@ def bds_page() -> rx.Component:
                             "backgroundPosition": "right center",
                         },
                     )
-                    for item in STACK_COMPONENTS[:3]
+                    for item in BDS_COMPONENTS
                 ],
                 spacing="4",
                 width="100%",
