@@ -59,17 +59,18 @@ def bds_page() -> rx.Component:
                 *[
                     rx.box(
                         rx.vstack(
-                            rx.hstack(
-                                rx.text(item["icon"], size="6", line_height="1"),
+                            rx.flex(
+                                rx.text(item["icon"], size="7", line_height="1"),
                                 rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                direction={"base": "row", "lg": "column"},
+                                align={"base": "center", "lg": "start"},
                                 spacing="3",
-                                align_items="center",
                             ),
                             rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
                             spacing="3",
                             align_items="start",
                         ),
-                        padding="2.5rem",
+                        padding="2rem",
                         background=SURFACE,
                         border=f"1px solid {BORDER_COLOR}",
                         border_radius="14px",
@@ -94,7 +95,8 @@ def bds_page() -> rx.Component:
                 ],
                 columns={
                     "base": "repeat(1, minmax(0, 1fr))",
-                    "md": "repeat(3, minmax(0, 1fr))",
+                    "md": "repeat(2, minmax(0, 1fr))",
+                    "lg": "repeat(3, minmax(0, 1fr))",
                 },
                 spacing="4",
                 width="100%",
