@@ -152,32 +152,6 @@ def submenu_children(label: str) -> rx.Component:
     return rx.fragment(*groups)
 
 
-def nav_mega_panel() -> rx.Component:
-    """Full-width slide-down panel for nav children."""
-    return rx.cond(
-        State.nav_hover_label != "",
-        rx.box(
-            rx.box(
-                submenu_children(State.nav_hover_label),
-                max_width=MAX_CONTENT_WIDTH,
-                margin="0 auto",
-                padding="1.5rem 2rem",
-            ),
-            position="absolute",
-            left="0",
-            right="0",
-            top="100%",
-            background=SURFACE,
-            border_bottom=f"1px solid {BORDER_COLOR}",
-            box_shadow="0 16px 32px rgba(0,0,0,0.22)",
-            backdrop_filter="blur(20px)",
-            display={"base": "none", "md": "block"},
-            z_index="90",
-        ),
-        rx.box(),
-    )
-
-
 def command_palette_button() -> rx.Component:
     """Compact trigger for the global command palette."""
     return rx.button(
@@ -406,13 +380,23 @@ def nav_bar() -> rx.Component:
                 margin="0 auto",
                 padding="0 2rem",
             ),
-            nav_mega_panel(),
+            rx.box(
+                submenu_children(State.nav_hover_label),
+                max_width=MAX_CONTENT_WIDTH,
+                margin="0 auto",
+                padding=rx.cond(State.nav_hover_label != "", "1.25rem 2rem", "0 2rem"),
+                opacity=rx.cond(State.nav_hover_label != "", "1", "0"),
+                max_height=rx.cond(State.nav_hover_label != "", "400px", "0px"),
+                overflow="hidden",
+                transition="max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease",
+                display={"base": "none", "md": "block"},
+            ),
         ),
         mobile_nav_panel(),
         position="sticky",
         top="0",
         z_index="100",
-        background_color="transparent",
+        background_color=SURFACE,
         backdrop_filter="blur(20px)",
         border_bottom=border_color,
         box_shadow=box_shadow,
