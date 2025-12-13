@@ -54,12 +54,12 @@ def bds_page() -> rx.Component:
             )
         ),
         section(
-            rx.grid(
+            rx.hstack(
                 rx.box(
                     rx.vstack(
                         rx.heading("Opt-in at install", size="5", color=TEXT_PRIMARY, weight="bold"),
                         rx.text(
-                            "Toggle BDS on or off when provisioning the node. It runs inside the ABCI app, so no separate daemon is required.",
+                            "Enable BDS when provisioning the node. It runs inside the ABCI app—no extra daemon to manage.",
                             size="3",
                             color=TEXT_MUTED,
                             line_height="1.7",
@@ -71,12 +71,20 @@ def bds_page() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    min_width="280px",
+                    max_width="320px",
+                    height="100%",
+                    transition="all 0.3s ease",
+                    _hover={
+                        "borderColor": BORDER_COLOR,
+                        "backgroundColor": SURFACE,
+                    },
                 ),
                 rx.box(
                     rx.vstack(
                         rx.heading("Complete transaction history", size="5", color=TEXT_PRIMARY, weight="bold"),
                         rx.text(
-                            "BDS captures all transactions—including failures—with status, stamps used, contract/function, and block metadata for auditing and observability.",
+                            "Capture every transaction—successes and failures—with status, stamps, contract/function, and block metadata for auditing.",
                             size="3",
                             color=TEXT_MUTED,
                             line_height="1.7",
@@ -88,12 +96,20 @@ def bds_page() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    min_width="280px",
+                    max_width="320px",
+                    height="100%",
+                    transition="all 0.3s ease",
+                    _hover={
+                        "borderColor": BORDER_COLOR,
+                        "backgroundColor": SURFACE,
+                    },
                 ),
                 rx.box(
                     rx.vstack(
                         rx.heading("PostgreSQL + GraphQL", size="5", color=TEXT_PRIMARY, weight="bold"),
                         rx.text(
-                            "Data lands in PostgreSQL and is served through PostGraphile, so you can query with GraphQL directly or tap Postgres for analytics.",
+                            "Data lands in PostgreSQL and is served through PostGraphile, so you can query with GraphQL or tap Postgres directly.",
                             size="3",
                             color=TEXT_MUTED,
                             line_height="1.7",
@@ -105,9 +121,19 @@ def bds_page() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    min_width="280px",
+                    max_width="320px",
+                    height="100%",
+                    transition="all 0.3s ease",
+                    _hover={
+                        "borderColor": BORDER_COLOR,
+                        "backgroundColor": SURFACE,
+                    },
                 ),
-                template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
-                gap="1.5rem",
+                spacing="4",
+                width="100%",
+                wrap="nowrap",
+                overflow_x="auto",
             ),
             style={"paddingTop": "0"},
         ),
