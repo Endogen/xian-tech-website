@@ -396,27 +396,14 @@ def nav_bar() -> rx.Component:
         rx.box(
             # Visible dropdown card
             rx.box(
-                # Backdrop layer - separate element for blur
-                rx.box(
-                    position="absolute",
-                    top="0",
-                    left="0",
-                    right="0",
-                    bottom="0",
-                    background_color=SURFACE,
-                    backdrop_filter="blur(20px)",
-                    border_radius="10px",
-                    z_index="-1",
-                ),
-                # Content wrapper - positioned above backdrop
-                rx.box(
-                    submenu_children(State.nav_hover_label),
-                    padding="1.5rem 2rem",
-                    position="relative",
-                ),
+                submenu_children(State.nav_hover_label),
+                padding="1.5rem 2rem",
                 max_width=MAX_CONTENT_WIDTH,
                 width="100%",
                 margin="0 auto",
+                position="relative",
+                background=SURFACE,
+                backdrop_filter="blur(20px)",
                 border=f"1px solid {BORDER_COLOR}",
                 border_radius="10px",
                 box_shadow=rx.cond(
@@ -428,11 +415,7 @@ def nav_bar() -> rx.Component:
                 opacity=rx.cond(State.nav_hover_label != "", "1", "0"),
                 transform=rx.cond(State.nav_hover_label != "", "scale(1)", "scale(0.98)"),
                 visibility=rx.cond(State.nav_hover_label != "", "visible", "hidden"),
-                transition=rx.cond(
-                    State.nav_hover_label != "",
-                    "opacity 0.15s ease, transform 0.15s ease, visibility 0s",
-                    "opacity 0.15s ease, transform 0.15s ease, visibility 0s 0.15s",
-                ),
+                transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
                 pointer_events=rx.cond(State.nav_hover_label != "", "auto", "none"),
             ),
             # Outer container - invisible, bridges hover gap
