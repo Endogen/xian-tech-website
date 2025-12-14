@@ -63,29 +63,41 @@ def theme_toggle() -> rx.Component:
     )
 
 
-def nav_link(link: dict[str, str]) -> rx.Component:
+def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.Component:
     """Navigation link with consistent spacing."""
-    chevron = link.get("children")
     return rx.link(
-        rx.hstack(
-            rx.text(
-                link["label"],
-                size="3",
-                weight="medium",
-                color=TEXT_MUTED,
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.text(
+                        link["label"],
+                        size="3",
+                        weight="medium",
+                        color=TEXT_MUTED,
+                    ),
+                    extra if extra is not None else rx.box(),
+                    align_items="center",
+                    gap="0.35rem",
+                ),
+                rx.box(
+                    bg=ACCENT,
+                    height="2px",
+                    width=rx.cond(
+                        State.nav_hover_label == link["label"],
+                        "100%",
+                        "0%",
+                    ),
+                    transition="width 0.2s ease",
+                    border_radius="999px",
+                ),
+                spacing="1",
+                align_items="start",
             ),
-            rx.cond(
-                chevron,
-                rx.text("▾", size="2", color=TEXT_MUTED, weight="bold"),
-                rx.box(),
-            ),
-            align_items="center",
-            gap="0.35rem",
+            padding="0.35rem 0",
         ),
         href=link["href"],
         style={
-            "padding": "0.65rem 1rem",
-            "borderRadius": "10px",
+            "padding": "0.35rem 0.1rem",
             "transition": "all 0.2s ease",
             "display": "inline-flex",
             "alignItems": "center",
@@ -94,18 +106,16 @@ def nav_link(link: dict[str, str]) -> rx.Component:
         _hover={
             "textDecoration": "none",
             "color": ACCENT,
-            "backgroundColor": ACCENT_SOFT,
         },
     )
 
 
 def nav_item(link: dict[str, Any]) -> rx.Component:
     """Navigation item with hover tracking for mega menu."""
-    has_children = bool(link.get("children"))
     return rx.box(
         nav_link(link),
-        on_mouse_enter=State.set_nav_hover(link["label"]) if has_children else State.clear_nav_hover,
-        on_focus=State.set_nav_hover(link["label"]) if has_children else State.clear_nav_hover,
+        on_mouse_enter=State.set_nav_hover(link["label"]),
+        on_focus=State.set_nav_hover(link["label"]),
         display="inline-flex",
     )
 
@@ -412,11 +422,11 @@ def nav_bar() -> rx.Component:
                     "0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3)",
                 ),
                 overflow="hidden",
-                opacity=rx.cond(State.nav_hover_label != "", "1", "0"),
-                transform=rx.cond(State.nav_hover_label != "", "scale(1)", "scale(0.98)"),
-                visibility=rx.cond(State.nav_hover_label != "", "visible", "hidden"),
+                opacity=rx.cond(State.nav_hover_label == "Technology", "1", "0"),
+                transform=rx.cond(State.nav_hover_label == "Technology", "scale(1)", "scale(0.98)"),
+                visibility=rx.cond(State.nav_hover_label == "Technology", "visible", "hidden"),
                 transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
-                pointer_events=rx.cond(State.nav_hover_label != "", "auto", "none"),
+                pointer_events=rx.cond(State.nav_hover_label == "Technology", "auto", "none"),
             ),
             # Outer container - invisible, bridges hover gap
             position="absolute",
