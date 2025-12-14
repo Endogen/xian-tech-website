@@ -21,6 +21,8 @@ from ..theme import (
     TOP_GRADIENT,
 )
 
+MD_MEDIA = "@media (min-width: 1024px)"
+
 
 def section(*children: rx.Component, **kwargs) -> rx.Component:
     """Wrap content in a centered section with generous spacing."""
@@ -147,7 +149,7 @@ def submenu_children(label: str) -> rx.Component:
                             for child in children
                         ],
                         columns={
-                            "base": "repeat(1, minmax(0, 1fr))",
+                            "initial": "repeat(1, minmax(0, 1fr))",
                             "md": "repeat(3, minmax(0, 1fr))",
                         },
                         spacing="3",
@@ -307,7 +309,10 @@ def mobile_nav_panel() -> rx.Component:
             border_bottom=f"1px solid {BORDER_COLOR}",
             padding="1rem 1.5rem 1.5rem",
             box_shadow="0 10px 30px rgba(0,0,0,0.18)",
-            display={"base": "block", "md": "none"},
+            style={
+                "display": "block",
+                MD_MEDIA: {"display": "none"},
+            },
         ),
         rx.box(),
     )
@@ -383,7 +388,10 @@ def nav_bar() -> rx.Component:
                         justify="center",
                         align_items="center",
                         flex="1",
-                        display={"base": "none", "md": "flex"},
+                        style={
+                            "display": "none",
+                            MD_MEDIA: {"display": "flex"},
+                        },
                     ),
                     rx.flex(
                         command_palette_button(),
@@ -401,8 +409,11 @@ def nav_bar() -> rx.Component:
                                 "rgba(12, 18, 26, 0.7)",
                             ),
                             on_click=State.toggle_mobile_nav,
-                            display={"base": "flex", "md": "none"},
                             _hover={"borderColor": ACCENT, "color": ACCENT},
+                            style={
+                                "display": "flex",
+                                MD_MEDIA: {"display": "none"},
+                            },
                         ),
                         gap="1rem",
                         align_items="center",
@@ -446,8 +457,11 @@ def nav_bar() -> rx.Component:
             padding_top="0px",
             padding_left="0",
             padding_right="0",
-            display={"base": "none", "md": "block"},
             z_index="99",
+            style={
+                "display": "none",
+                MD_MEDIA: {"display": "block"},
+            },
         ),
         mobile_nav_panel(),
         position="sticky",
@@ -793,9 +807,9 @@ def footer() -> rx.Component:
                     ),
                     justify="between",
                     width="100%",
-                    direction={"base": "column", "md": "row"},
+                    direction={"initial": "column", "md": "row"},
                     gap="4rem",
-                    align_items={"base": "start", "md": "start"},
+                    align_items={"initial": "start", "md": "start"},
                 ),
                 rx.box(
                     rx.text(
