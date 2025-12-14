@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 import reflex as rx
 
@@ -20,6 +20,8 @@ from ..theme import (
     TEXT_PRIMARY,
     TOP_GRADIENT,
 )
+
+MD_MEDIA = "@media (min-width: 1024px)"
 
 
 def section(*children: rx.Component, **kwargs) -> rx.Component:
@@ -63,27 +65,103 @@ def theme_toggle() -> rx.Component:
     )
 
 
-def nav_link(link: dict[str, str]) -> rx.Component:
+def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.Component:
     """Navigation link with consistent spacing."""
     return rx.link(
-        rx.text(
-            link["label"],
-            size="3",
-            weight="medium",
-            color=TEXT_MUTED,
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.text(
+                        link["label"],
+                        size="3",
+                        weight="medium",
+                        color=TEXT_MUTED,
+                    ),
+                    extra if extra is not None else rx.box(),
+                    align_items="center",
+                    gap="0.35rem",
+                ),
+                rx.box(
+                    bg=ACCENT,
+                    height="2px",
+                    width=rx.cond(
+                        State.nav_hover_label == link["label"],
+                        "100%",
+                        "0%",
+                    ),
+                    transition="width 0.2s ease",
+                    border_radius="999px",
+                ),
+                spacing="1",
+                align_items="start",
+            ),
+            padding="0.35rem 0",
         ),
         href=link["href"],
         style={
-            "padding": "0.75rem 1.25rem",
-            "borderRadius": "8px",
+            "padding": "0.35rem 0.1rem",
             "transition": "all 0.2s ease",
+            "display": "inline-flex",
+            "alignItems": "center",
+            "gap": "0.35rem",
         },
         _hover={
             "textDecoration": "none",
             "color": ACCENT,
-            "backgroundColor": ACCENT_SOFT,
         },
     )
+
+
+def nav_item(link: dict[str, Any]) -> rx.Component:
+    """Navigation item with hover tracking for mega menu."""
+    return rx.box(
+        nav_link(link),
+        on_mouse_enter=State.set_nav_hover(link["label"]),
+        on_focus=State.set_nav_hover(link["label"]),
+        display="inline-flex",
+    )
+
+
+def submenu_children(label: str) -> rx.Component:
+    """Render submenu content for a hovered label."""
+    groups: list[rx.Component] = []
+    for link in NAV_LINKS:
+        children = link.get("children")
+        if not children:
+            continue
+        groups.append(
+            rx.cond(
+                State.nav_hover_label == link["label"],
+                rx.vstack(
+                    rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                    rx.grid(
+                        *[
+                            rx.link(
+                                rx.box(
+                                    rx.text(child["label"], size="3", weight="bold", color=TEXT_PRIMARY),
+                                    rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
+                                    spacing="1",
+                                    align_items="start",
+                                ),
+                                href=child["href"],
+                                _hover={"textDecoration": "none", "color": ACCENT},
+                            )
+                            for child in children
+                        ],
+                        columns={
+                            "initial": "repeat(1, minmax(0, 1fr))",
+                            "md": "repeat(3, minmax(0, 1fr))",
+                        },
+                        spacing="3",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                ),
+                rx.box(),
+            )
+        )
+    return rx.fragment(*groups)
 
 
 def command_palette_button() -> rx.Component:
@@ -123,6 +201,123 @@ def command_palette_button() -> rx.Component:
     )
 
 
+def nav_dropdown(link: dict[str, Any]) -> rx.Component:
+    """Hoverable dropdown for links with children."""
+    items = link.get("children", [])
+    if not items:
+        return nav_link(link)
+
+    return rx.hover_card.root(
+        rx.hover_card.trigger(nav_link(link)),
+        rx.hover_card.content(
+            rx.vstack(
+                *[
+                    rx.link(
+                        rx.vstack(
+                            rx.text(child["label"], size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
+                            spacing="1",
+                            align_items="start",
+                        ),
+                        href=child["href"],
+                        _hover={
+                            "textDecoration": "none",
+                            "color": ACCENT,
+                        },
+                        width="100%",
+                    )
+                    for child in items
+                ],
+                spacing="3",
+                align_items="start",
+            ),
+            side="bottom",
+            side_offset=10,
+            align="start",
+            padding="1rem",
+            background=SURFACE_BRIGHT,
+            border=f"1px solid {BORDER_BRIGHT}",
+            border_radius="12px",
+            box_shadow="0 20px 36px rgba(0,0,0,0.35)",
+            min_width="260px",
+        ),
+        open_delay=80,
+        close_delay=120,
+    )
+
+
+def mobile_nav_panel() -> rx.Component:
+    """Slide-down mobile navigation with nested links."""
+    return rx.cond(
+        State.mobile_nav_open,
+        rx.box(
+            rx.vstack(
+                *[
+                    rx.box(
+                        rx.link(
+                            rx.hstack(
+                                rx.text(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                                rx.cond(
+                                    link.get("children"),
+                                    rx.text("▾", size="3", color=TEXT_MUTED),
+                                    rx.box(),
+                                ),
+                                align_items="center",
+                                gap="0.5rem",
+                            ),
+                            href=link["href"],
+                            _hover={"textDecoration": "none", "color": ACCENT},
+                            on_click=State.close_mobile_nav,
+                        ),
+                        rx.cond(
+                            link.get("children"),
+                            rx.vstack(
+                                *[
+                                    rx.link(
+                                        rx.text(
+                                            f"• {child['label']}",
+                                            size="3",
+                                            color=TEXT_MUTED,
+                                        ),
+                                        href=child["href"],
+                                        padding_left="1.5rem",
+                                        _hover={"textDecoration": "none", "color": ACCENT},
+                                        on_click=State.close_mobile_nav,
+                                    )
+                                    for child in link.get("children", [])
+                                ],
+                                spacing="2",
+                                align_items="start",
+                                margin_top="0.5rem",
+                            ),
+                            rx.box(),
+                        ),
+                        padding="0.5rem 0",
+                        border_bottom=f"1px solid {BORDER_COLOR}",
+                    )
+                    for link in NAV_LINKS
+                ],
+                spacing="2",
+                align_items="start",
+            ),
+            background=SURFACE,
+            position="absolute",
+            top="100%",
+            left="0",
+            right="0",
+            z_index="90",
+            border_bottom="none",
+            padding="1rem 1.5rem 1.5rem",
+            box_shadow="none",
+            style={
+                "display": "block",
+                MD_MEDIA: {"display": "none"},
+            },
+        ),
+        rx.box(),
+    )
+
+
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
     border_color = rx.cond(
@@ -130,68 +325,174 @@ def nav_bar() -> rx.Component:
         "1px solid rgba(15, 23, 42, 0.08)",
         "1px solid rgba(255, 255, 255, 0.12)",
     )
-    box_shadow = rx.cond(
+    base_shadow = rx.cond(
         State.theme_mode == "light",
         "0 1px 20px rgba(15, 23, 42, 0.08)",
         "0 1px 20px rgba(0, 0, 0, 0.35)",
     )
+    combined_shadow = rx.cond(
+        State.theme_mode == "light",
+        "drop-shadow(0 16px 40px rgba(15, 23, 42, 0.14)) drop-shadow(0 4px 12px rgba(15, 23, 42, 0.1))",
+        "drop-shadow(0 16px 40px rgba(0, 0, 0, 0.46)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35))",
+    )
+    box_shadow = rx.cond(
+        State.nav_hover_label == "Technology",
+        "none",
+        base_shadow,
+    )
+    filter_shadow = rx.cond(
+        State.nav_hover_label == "Technology",
+        combined_shadow,
+        "none",
+    )
     return rx.box(
+        # Background layer for the nav surface (kept separate to avoid stacking context issues)
         rx.box(
-            rx.flex(
-                rx.link(
+            position="absolute",
+            top="0",
+            left="0",
+            right="0",
+            bottom="0",
+            background_color=SURFACE,
+            z_index="-1",
+            style={"transition": "background-color 0.3s ease"},
+        ),
+        rx.box(
+            rx.box(
+                rx.flex(
+                    rx.link(
+                        rx.flex(
+                            rx.image(
+                                src="/xian.jpg",
+                                alt="Xian Technology Logo",
+                                width="3rem",
+                                height="3rem",
+                                border_radius="8px",
+                                object_fit="cover",
+                            ),
+                            rx.vstack(
+                                rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
+                                rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
+                                align_items="start",
+                                spacing="0",
+                            ),
+                            gap="1rem",
+                            align_items="center",
+                        ),
+                        href="/",
+                        _hover={"textDecoration": "none"},
+                    ),
                     rx.flex(
-                        rx.image(
-                            src="/xian.jpg",
-                            alt="Xian Technology Logo",
-                            width="3rem",
-                            height="3rem",
-                            border_radius="8px",
-                            object_fit="cover",
+                        *[nav_item(link) for link in NAV_LINKS],
+                        gap="0.75rem",
+                        justify="center",
+                        align_items="center",
+                        flex="1",
+                        style={
+                            "display": "none",
+                            MD_MEDIA: {"display": "flex"},
+                        },
+                    ),
+                    rx.flex(
+                        command_palette_button(),
+                        theme_toggle(),
+                        rx.button(
+                            rx.icon(tag="menu", size=24),
+                            variant="ghost",
+                            cursor="pointer",
+                            padding="0.4rem 0.55rem",
+                            border_radius="12px",
+                            border="none",
+                            background_color="transparent",
+                            on_click=State.toggle_mobile_nav,
+                            _hover={"color": ACCENT},
+                            _active={"transform": "scale(0.92)"},
+                            style={
+                                "display": "flex",
+                                "alignItems": "center",
+                                "justifyContent": "center",
+                                "height": "2.6rem",
+                                "transition": "color 0.2s ease, transform 0.15s ease",
+                                MD_MEDIA: {"display": "none"},
+                            },
                         ),
-                        rx.vstack(
-                            rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
-                            rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
-                            align_items="start",
-                            spacing="0",
-                        ),
-                        gap="1rem",
+                        style={
+                            "gap": "1.25rem",
+                            MD_MEDIA: {"gap": "1rem"},
+                        },
                         align_items="center",
                     ),
-                    href="/",
-                    _hover={"textDecoration": "none"},
-                ),
-                rx.flex(
-                    *[nav_link(link) for link in NAV_LINKS],
-                    gap="0.75rem",
-                    justify="center",
                     align_items="center",
-                    flex="1",
-                    display={"base": "none", "md": "flex"},
+                    width="100%",
+                    justify="between",
+                    style={
+                        "gap": "1.25rem",
+                        MD_MEDIA: {"gap": "1rem", "justifyContent": "start"},
+                    },
                 ),
-                rx.flex(
-                    command_palette_button(),
-                    theme_toggle(),
-                    gap="1.5rem",
-                    align_items="center",
-                ),
-                align_items="center",
-                width="100%",
-                gap="1rem",
+                max_width=MAX_CONTENT_WIDTH,
+                margin="0 auto",
+                padding="0 2rem",
             ),
-            max_width=MAX_CONTENT_WIDTH,
-            margin="0 auto",
-            padding="0 2rem",
         ),
+        rx.box(
+            rx.box(
+                rx.box(
+                    submenu_children(State.nav_hover_label),
+                    padding="1.5rem 2rem",
+                    max_width=MAX_CONTENT_WIDTH,
+                    width="100%",
+                    margin="0 auto",
+                ),
+                position="relative",
+                background=SURFACE,
+                border=f"1px solid {BORDER_COLOR}",
+                border_top="none",
+                border_radius="0px",
+                box_shadow="none",
+                width="100%",
+                overflow="hidden",
+                opacity=rx.cond(State.nav_hover_label == "Technology", "1", "0"),
+                transform=rx.cond(State.nav_hover_label == "Technology", "scale(1)", "scale(0.98)"),
+                visibility=rx.cond(State.nav_hover_label == "Technology", "visible", "hidden"),
+                transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
+                pointer_events=rx.cond(State.nav_hover_label == "Technology", "auto", "none"),
+            ),
+            position="absolute",
+            top="100%",
+            left="0",
+            right="0",
+            padding_top="0px",
+            padding_left="0",
+            padding_right="0",
+            z_index="99",
+            style={
+                "display": "none",
+                MD_MEDIA: {"display": "block"},
+            },
+        ),
+        mobile_nav_panel(),
         position="sticky",
         top="0",
         z_index="100",
-        background_color="transparent",
-        backdrop_filter="blur(20px)",
-        border_bottom=border_color,
-        box_shadow=box_shadow,
+        border_bottom=rx.cond(
+            State.nav_hover_label == "Technology",
+            "none",
+            rx.cond(State.mobile_nav_open, "none", border_color),
+        ),
+        box_shadow="none",
         padding="0.85rem 0",
         width="100%",
-        style={"transition": "background-color 0.3s ease"},
+        on_mouse_leave=State.clear_nav_hover,
+        style={
+            "filter": "none",
+            "boxShadow": "none",
+            MD_MEDIA: {
+                "filter": filter_shadow,
+                "boxShadow": box_shadow,
+            },
+            "transition": "filter 0.18s ease, box-shadow 0.18s ease",
+        },
     )
 
 
@@ -523,9 +824,9 @@ def footer() -> rx.Component:
                     ),
                     justify="between",
                     width="100%",
-                    direction={"base": "column", "md": "row"},
+                    direction={"initial": "column", "md": "row"},
                     gap="4rem",
-                    align_items={"base": "start", "md": "start"},
+                    align_items={"initial": "start", "md": "start"},
                 ),
                 rx.box(
                     rx.text(
