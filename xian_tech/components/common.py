@@ -317,6 +317,18 @@ def nav_bar() -> rx.Component:
         "0 1px 20px rgba(0, 0, 0, 0.35)",
     )
     return rx.box(
+        # Backdrop layer - separate element for blur effect (avoids stacking context issues)
+        rx.box(
+            position="absolute",
+            top="0",
+            left="0",
+            right="0",
+            bottom="0",
+            background_color=SURFACE,
+            backdrop_filter="blur(20px)",
+            z_index="-1",
+            style={"transition": "background-color 0.3s ease"},
+        ),
         rx.box(
             rx.box(
                 rx.flex(
@@ -382,24 +394,55 @@ def nav_bar() -> rx.Component:
             ),
         ),
         rx.box(
+            # Visible dropdown card
             rx.box(
-                submenu_children(State.nav_hover_label),
+                # Backdrop layer - separate element for blur
+                rx.box(
+                    position="absolute",
+                    top="0",
+                    left="0",
+                    right="0",
+                    bottom="0",
+                    background_color=SURFACE,
+                    backdrop_filter="blur(20px)",
+                    border_radius="10px",
+                    z_index="-1",
+                ),
+                # Content wrapper - positioned above backdrop
+                rx.box(
+                    submenu_children(State.nav_hover_label),
+                    padding="1.5rem 2rem",
+                    position="relative",
+                ),
                 max_width=MAX_CONTENT_WIDTH,
+                width="100%",
                 margin="0 auto",
-                padding=rx.cond(State.nav_hover_label != "", "1.25rem 2rem", "0 2rem"),
+                border=f"1px solid {BORDER_COLOR}",
+                border_radius="10px",
+                box_shadow=rx.cond(
+                    State.theme_mode == "light",
+                    "0 8px 32px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.08)",
+                    "0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3)",
+                ),
+                overflow="hidden",
+                opacity=rx.cond(State.nav_hover_label != "", "1", "0"),
+                transform=rx.cond(State.nav_hover_label != "", "scale(1)", "scale(0.98)"),
+                visibility=rx.cond(State.nav_hover_label != "", "visible", "hidden"),
+                transition=rx.cond(
+                    State.nav_hover_label != "",
+                    "opacity 0.15s ease, transform 0.15s ease, visibility 0s",
+                    "opacity 0.15s ease, transform 0.15s ease, visibility 0s 0.15s",
+                ),
+                pointer_events=rx.cond(State.nav_hover_label != "", "auto", "none"),
             ),
+            # Outer container - invisible, bridges hover gap
             position="absolute",
             top="100%",
             left="0",
             right="0",
-            background_color=SURFACE,
-            backdrop_filter="blur(20px)",
-            border_bottom=border_color,
-            box_shadow=box_shadow,
-            opacity=rx.cond(State.nav_hover_label != "", "1", "0"),
-            max_height=rx.cond(State.nav_hover_label != "", "400px", "0px"),
-            overflow="hidden",
-            transition="max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease",
+            padding_top="12px",
+            padding_left="2rem",
+            padding_right="2rem",
             display={"base": "none", "md": "block"},
             z_index="99",
         ),
@@ -407,13 +450,10 @@ def nav_bar() -> rx.Component:
         position="sticky",
         top="0",
         z_index="100",
-        background_color=SURFACE,
-        backdrop_filter="blur(20px)",
         border_bottom=border_color,
         box_shadow=box_shadow,
         padding="0.85rem 0",
         width="100%",
-        style={"transition": "background-color 0.3s ease"},
         on_mouse_leave=State.clear_nav_hover,
     )
 
