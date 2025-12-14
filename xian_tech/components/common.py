@@ -238,7 +238,6 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
             border_radius="12px",
             box_shadow="0 20px 36px rgba(0,0,0,0.35)",
             min_width="260px",
-            style={"backdropFilter": "blur(12px)"},
         ),
         open_delay=80,
         close_delay=120,
@@ -321,13 +320,28 @@ def nav_bar() -> rx.Component:
         "1px solid rgba(15, 23, 42, 0.08)",
         "1px solid rgba(255, 255, 255, 0.12)",
     )
-    box_shadow = rx.cond(
+    base_shadow = rx.cond(
         State.theme_mode == "light",
         "0 1px 20px rgba(15, 23, 42, 0.08)",
         "0 1px 20px rgba(0, 0, 0, 0.35)",
     )
+    combined_shadow = rx.cond(
+        State.theme_mode == "light",
+        "drop-shadow(0 16px 40px rgba(15, 23, 42, 0.14)) drop-shadow(0 4px 12px rgba(15, 23, 42, 0.1))",
+        "drop-shadow(0 16px 40px rgba(0, 0, 0, 0.46)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35))",
+    )
+    box_shadow = rx.cond(
+        State.nav_hover_label == "Technology",
+        "none",
+        base_shadow,
+    )
+    filter_shadow = rx.cond(
+        State.nav_hover_label == "Technology",
+        combined_shadow,
+        "none",
+    )
     return rx.box(
-        # Backdrop layer - separate element for blur effect (avoids stacking context issues)
+        # Background layer for the nav surface (kept separate to avoid stacking context issues)
         rx.box(
             position="absolute",
             top="0",
@@ -335,7 +349,6 @@ def nav_bar() -> rx.Component:
             right="0",
             bottom="0",
             background_color=SURFACE,
-            backdrop_filter="blur(20px)",
             z_index="-1",
             style={"transition": "background-color 0.3s ease"},
         ),
@@ -404,23 +417,21 @@ def nav_bar() -> rx.Component:
             ),
         ),
         rx.box(
-            # Visible dropdown card
             rx.box(
-                submenu_children(State.nav_hover_label),
-                padding="1.5rem 2rem",
-                max_width=MAX_CONTENT_WIDTH,
-                width="100%",
-                margin="0 auto",
+                rx.box(
+                    submenu_children(State.nav_hover_label),
+                    padding="1.5rem 2rem",
+                    max_width=MAX_CONTENT_WIDTH,
+                    width="100%",
+                    margin="0 auto",
+                ),
                 position="relative",
                 background=SURFACE,
-                backdrop_filter="blur(20px)",
                 border=f"1px solid {BORDER_COLOR}",
-                border_radius="10px",
-                box_shadow=rx.cond(
-                    State.theme_mode == "light",
-                    "0 8px 32px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.08)",
-                    "0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3)",
-                ),
+                border_top="none",
+                border_radius="0px",
+                box_shadow="none",
+                width="100%",
                 overflow="hidden",
                 opacity=rx.cond(State.nav_hover_label == "Technology", "1", "0"),
                 transform=rx.cond(State.nav_hover_label == "Technology", "scale(1)", "scale(0.98)"),
@@ -428,14 +439,13 @@ def nav_bar() -> rx.Component:
                 transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
                 pointer_events=rx.cond(State.nav_hover_label == "Technology", "auto", "none"),
             ),
-            # Outer container - invisible, bridges hover gap
             position="absolute",
             top="100%",
             left="0",
             right="0",
-            padding_top="12px",
-            padding_left="2rem",
-            padding_right="2rem",
+            padding_top="0px",
+            padding_left="0",
+            padding_right="0",
             display={"base": "none", "md": "block"},
             z_index="99",
         ),
@@ -443,11 +453,15 @@ def nav_bar() -> rx.Component:
         position="sticky",
         top="0",
         z_index="100",
-        border_bottom=border_color,
+        border_bottom=rx.cond(State.nav_hover_label == "Technology", "none", border_color),
         box_shadow=box_shadow,
         padding="0.85rem 0",
         width="100%",
         on_mouse_leave=State.clear_nav_hover,
+        style={
+            "filter": filter_shadow,
+            "transition": "filter 0.18s ease, box-shadow 0.18s ease",
+        },
     )
 
 
