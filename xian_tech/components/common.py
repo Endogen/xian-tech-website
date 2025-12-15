@@ -477,8 +477,8 @@ def nav_bar() -> rx.Component:
         z_index="100",
         border_bottom=rx.cond(
             State.nav_hover_label == "Technology",
-            "none",
-            rx.cond(State.mobile_nav_open, "none", border_color),
+            "1px solid transparent",
+            rx.cond(State.mobile_nav_open, "1px solid transparent", border_color),
         ),
         box_shadow="none",
         padding="0.85rem 0",
