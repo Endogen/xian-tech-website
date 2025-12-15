@@ -139,7 +139,7 @@ def submenu_children(label: str) -> rx.Component:
                             rx.link(
                                 rx.box(
                                     rx.text(child["label"], size="1", weight="bold", color=TEXT_PRIMARY),
-                                    rx.text(child["description"], size="1", color=TEXT_MUTED, line_height="1.5"),
+                                    rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
                                     spacing="1",
                                     align_items="start",
                                 ),
@@ -227,7 +227,7 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
                     rx.link(
                         rx.vstack(
                             rx.text(child["label"], size="1", weight="bold", color=TEXT_PRIMARY),
-                            rx.text(child["description"], size="1", color=TEXT_MUTED, line_height="1.5"),
+                            rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
                             spacing="1",
                             align_items="start",
                         ),
