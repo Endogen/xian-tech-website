@@ -144,7 +144,19 @@ def submenu_children(label: str) -> rx.Component:
                                     align_items="start",
                                 ),
                                 href=child["href"],
-                                _hover={"textDecoration": "none", "color": ACCENT},
+                                _hover={
+                                    "textDecoration": "none",
+                                    "color": ACCENT,
+                                    "background": SURFACE_BRIGHT,
+                                    "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
+                                },
+                                padding="0.85rem 0.95rem",
+                                border_radius="10px",
+                                width="100%",
+                                style={
+                                    "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
+                                    "display": "block",
+                                },
                             )
                             for child in children
                         ],
@@ -223,8 +235,16 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
                         _hover={
                             "textDecoration": "none",
                             "color": ACCENT,
+                            "background": SURFACE_BRIGHT,
+                            "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
                         },
+                        padding="0.8rem 0.9rem",
+                        border_radius="10px",
                         width="100%",
+                        style={
+                            "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
+                            "display": "block",
+                        },
                     )
                     for child in items
                 ],
