@@ -359,67 +359,176 @@ def why_another_blockchain() -> rx.Component:
 
 def why_python() -> rx.Component:
     """Explain the Python-first choice."""
-    return section(
-        rx.grid(
-            rx.vstack(
-                rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
-                rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                rx.text(
-                    rx.fragment(
-                        "Explore current programming language trends over at ",
-                        rx.link(
-                            "Languish",
-                            href="https://tjpalmer.github.io/languish",
-                            is_external=True,
-                            color=ACCENT,
-                        ),
-                        " for a broader snapshot of the ecosystem.",
-                    ),
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                spacing="4",
-                align_items="start",
+    quotes = [
+        {
+            "quote": (
+                "Mastery of technology must infuse everything we do. Not just in our labs, but in the field, in our tradecraft, "
+                "and even more importantly, in the mindset of every officer. We must be as comfortable with lines of code as we are "
+                "with human sources, as fluent in Python as we are in multiple languages."
             ),
-            rx.box(
+            "author": "Blaise Metreweli — Head of MI6",
+            "source": "https://www.theguardian.com/uk-news/2025/dec/15/new-mi6-head-blaise-metreweli-speech-russia-threat",
+        },
+        {
+            "quote": (
+                "Python is now the most used language on GitHub as global open source activity continues to extend beyond traditional "
+                "software development. We saw Python emerge for the first time as the most used language on GitHub (more on that later). "
+                "Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation fields among others."
+            ),
+            "author": "GitHub Staff — Octoverse 2024",
+            "source": "https://github.blog/news-insights/octoverse/octoverse-2024/",
+        },
+        {
+            "quote": (
+                "Python is approachable because it's designed for developers who are learning, tinkering, and exploring. Python's future remains bright "
+                "because its values align with how developers actually learn and build: readability, approachability, stability, and a touch of irreverence."
+            ),
+            "author": "Guido van Rossum — Python Creator",
+            "source": "https://github.blog/developer-skills/programming-languages-and-frameworks/why-developers-still-flock-to-python-guido-van-rossum-on-readability-ai-and-the-future-of-programming",
+        },
+    ]
+
+    def quote_card(item: dict[str, str]) -> rx.Component:
+        return rx.box(
+            rx.vstack(
+                rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
+                rx.text(item["quote"], size="4", color=TEXT_MUTED, line_height="1.8", style={"fontStyle": "italic"}),
+                rx.hstack(
+                    rx.spacer(),
+                    rx.text("”", size="9", color=ACCENT, weight="bold", line_height="0.6"),
+                    width="100%",
+                ),
+                rx.hstack(
+                    rx.box(width="6px", height="6px", border_radius="50%", background=ACCENT),
+                    rx.text(item["author"], size="2", color=TEXT_MUTED, weight="medium"),
+                    rx.link(
+                        "Source",
+                        href=item["source"],
+                        is_external=True,
+                        color=ACCENT,
+                        size="2",
+                        _hover={"textDecoration": "none"},
+                    ),
+                    gap="0.6rem",
+                    align_items="center",
+                    wrap="wrap",
+                ),
+                spacing="1",
+                align_items="start",
+                width="100%",
+            ),
+            padding="1.25rem",
+            background=rx.cond(
+                State.theme_mode == "light",
+                "rgba(0, 179, 92, 0.14)",
+                ACCENT_SOFT,
+            ),
+            border_radius="14px",
+            box_shadow=f"0 0 18px {ACCENT_SOFT}",
+            width="100%",
+        )
+
+    return section(
+        rx.vstack(
+            rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based.",
+                size="4",
+                color=TEXT_MUTED,
+                line_height="1.7",
+            ),
+            rx.text(
+                rx.fragment(
+                    "Explore current programming language trends over at ",
+                    rx.link(
+                        "Languish",
+                        href="https://tjpalmer.github.io/languish",
+                        is_external=True,
+                        color=ACCENT,
+                    ),
+                    " for a broader snapshot of the ecosystem.",
+                ),
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+            ),
+            rx.flex(
                 rx.box(
                     rx.image(
                         src="/languages.png",
                         alt="Programming languages",
                         width="100%",
+                        height="100%",
                         border_radius="12px",
                         object_fit="cover",
                         box_shadow=f"0 0 18px {ACCENT_SOFT}",
-                    ),
-                    rx.link(
-                        rx.badge(
-                            "Source",
-                            variant="soft",
-                            color_scheme="green",
-                            radius="medium",
-                            size="2",
-                        ),
-                        href="https://github.blog/news-insights/octoverse/octoverse-2024",
-                        is_external=True,
-                        position="absolute",
-                        bottom="0.33rem",
-                        right="0.33rem",
-                        _hover={"textDecoration": "none"},
+                        style={"transition": "transform 0.25s ease, box-shadow 0.25s ease"},
+                        _hover={
+                            "transform": "scale(1.05)",
+                            "boxShadow": f"0 16px 34px {ACCENT_SOFT}",
+                        },
                     ),
                     position="relative",
+                    overflow="hidden",
+                    width={"initial": "110px", "md": "140px"},
+                    height="100%",
+                    border_radius="12px",
+                    flex_shrink="0",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
+                        rx.text(
+                            "Python is now the most used language on GitHub as global open source activity continues to extend beyond traditional software development. We saw Python emerge for the first time as the most used language on GitHub (more on that later). Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation fields among others.",
+                            size="4",
+                            color=TEXT_MUTED,
+                            line_height="1.8",
+                            style={"fontStyle": "italic"},
+                        ),
+                        rx.hstack(
+                            rx.spacer(),
+                            rx.text("”", size="9", color=ACCENT, weight="bold", line_height="0.6"),
+                            width="100%",
+                        ),
+                        rx.hstack(
+                            rx.spacer(),
+                            rx.text("Source: GitHub Octoverse 2024", size="2", color=ACCENT, weight="medium"),
+                            width="100%",
+                        ),
+                        spacing="1",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    padding="1.25rem",
+                    background=rx.cond(
+                        State.theme_mode == "light",
+                        "rgba(0, 179, 92, 0.14)",
+                        ACCENT_SOFT,
+                    ),
+                    border_radius="12px",
+                    box_shadow=f"0 0 18px {ACCENT_SOFT}",
                     width="100%",
                 ),
-                display="flex",
-                justify_content="center",
+                direction={"initial": "column", "md": "row"},
+                align_items="stretch",
+                gap={"initial": "1.6rem", "md": "2.5rem"},
+                width="100%",
             ),
-            template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
-            gap="2rem",
+            rx.box(
+                rx.heading("Noteworthy quotes", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.grid(
+                    *[quote_card(item) for item in quotes],
+                    template_columns={"initial": "1fr"},
+                    gap="1.5rem",
+                    width="100%",
+                ),
+                width="100%",
+                spacing="3",
+                align_items="start",
+            ),
+            spacing="5",
+            align_items="start",
+            width="100%",
         ),
         style={"paddingTop": "2rem", "paddingBottom": "3rem"},
     )
