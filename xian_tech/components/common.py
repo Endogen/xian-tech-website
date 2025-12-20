@@ -22,6 +22,15 @@ from ..theme import (
 )
 
 MD_MEDIA = "@media (min-width: 1024px)"
+NAV_DROPDOWN_LABELS = [link["label"] for link in NAV_LINKS if link.get("children")]
+
+
+def _nav_has_dropdown(label_var: rx.Var) -> rx.Var:
+    """Return True if the hovered label has dropdown children."""
+    active: rx.Var | bool = False
+    for label in NAV_DROPDOWN_LABELS:
+        active = rx.cond(label_var == label, True, active)
+    return active
 
 
 def section(*children: rx.Component, **kwargs) -> rx.Component:
@@ -355,16 +364,9 @@ def nav_bar() -> rx.Component:
         "drop-shadow(0 16px 40px rgba(15, 23, 42, 0.14)) drop-shadow(0 4px 12px rgba(15, 23, 42, 0.1))",
         "drop-shadow(0 16px 40px rgba(0, 0, 0, 0.46)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35))",
     )
-    box_shadow = rx.cond(
-        State.nav_hover_label == "Technology",
-        "none",
-        base_shadow,
-    )
-    filter_shadow = rx.cond(
-        State.nav_hover_label == "Technology",
-        combined_shadow,
-        "none",
-    )
+    dropdown_active = _nav_has_dropdown(State.nav_hover_label)
+    box_shadow = rx.cond(dropdown_active, "none", base_shadow)
+    filter_shadow = rx.cond(dropdown_active, combined_shadow, "none")
     return rx.box(
         # Background layer for the nav surface (kept separate to avoid stacking context issues)
         rx.box(
@@ -472,11 +474,11 @@ def nav_bar() -> rx.Component:
                 box_shadow="none",
                 width="100%",
                 overflow="hidden",
-                opacity=rx.cond(State.nav_hover_label == "Technology", "1", "0"),
-                transform=rx.cond(State.nav_hover_label == "Technology", "scale(1)", "scale(0.98)"),
-                visibility=rx.cond(State.nav_hover_label == "Technology", "visible", "hidden"),
+                opacity=rx.cond(dropdown_active, "1", "0"),
+                transform=rx.cond(dropdown_active, "scale(1)", "scale(0.98)"),
+                visibility=rx.cond(dropdown_active, "visible", "hidden"),
                 transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
-                pointer_events=rx.cond(State.nav_hover_label == "Technology", "auto", "none"),
+                pointer_events=rx.cond(dropdown_active, "auto", "none"),
             ),
             position="absolute",
             top="100%",
@@ -496,7 +498,7 @@ def nav_bar() -> rx.Component:
         top="0",
         z_index="100",
         border_bottom=rx.cond(
-            State.nav_hover_label == "Technology",
+            dropdown_active,
             "1px solid transparent",
             rx.cond(State.mobile_nav_open, "1px solid transparent", border_color),
         ),

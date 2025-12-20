@@ -22,7 +22,18 @@ NAV_LINKS = [
             {"label": "Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
         ],
     },
-    {"label": "Developers", "href": "/developers"},
+    {
+        "label": "Developers",
+        "href": "/developers",
+        "children": [
+            {"label": "Contracting Playground", "href": "/playground", "description": "Interactive browser IDE for contracts."},
+            {"label": "Contracting Hub", "href": "/contracts", "description": "Curated, deploy-ready contracts with metadata."},
+            {"label": "Documentation", "href": "/docs", "description": "MkDocs site with specs, contracts, and BDS queries."},
+            {"label": "Tutorials & First Steps", "href": "/docs/tutorials", "description": "Guides to go from zero to deployed."},
+            {"label": "Samples/SDKs", "href": "/tooling", "description": "Client SDKs (JS, etc.) and integration guides."},
+            {"label": "API References", "href": "/docs/api", "description": "Reference endpoints for BDS, transactions, and contracts."},
+        ],
+    },
     {"label": "About", "href": "/about"},
 ]
 
@@ -198,6 +209,7 @@ def _build_search_entries() -> list[dict[str, str]]:
         "/technology": "Detailed breakdown of contracting, node, and roadmap work.",
         "/ecosystem": "Programs for researchers, builders, and educators.",
         "/community": "Calls to join missions, open grants, and validator collectives.",
+        "/developers": "Hub for playground, curated contracts, docs, SDKs, and APIs.",
     }
 
     for link in NAV_LINKS:
