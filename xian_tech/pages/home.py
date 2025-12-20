@@ -290,7 +290,7 @@ def why_another_blockchain() -> rx.Component:
             rx.vstack(
                 rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based.",
+                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
@@ -358,7 +358,7 @@ def why_python() -> rx.Component:
             rx.vstack(
                 rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based.",
+                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
