@@ -280,6 +280,34 @@ def why_another_blockchain() -> rx.Component:
             ),
             template_columns={"base": "1fr", "md": "repeat(1, 1fr)"},
             gap="1.5rem",
+            width="100%",
+        ),
+        rx.box(
+            rx.text(
+                rx.fragment(
+                    "A practical example of this shift is ",
+                    rx.link(
+                        "Google’s Universal Ledger (GCUL)",
+                        href="https://cloud.google.com/application/web3/universal-ledger",
+                        is_external=True,
+                        color=ACCENT,
+                    ),
+                    ": a managed, programmable ledger on familiar cloud primitives. It uses Python as its programmable layer, underscoring the move toward mainstream tooling over blockchain-only stacks.",
+                ),
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+            ),
+            margin_top="1rem",
+        ),
+        rx.box(
+            rx.text(
+                "The Xian software stack aims to be a free, open alternative to offerings like GCUL—built on familiar technology, ready to run on-prem or in public settings, and suited for your next distributed or decentralized project.",
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+            ),
+            margin_top="0.5rem",
         ),
         style={"paddingTop": "2rem", "paddingBottom": "3rem"},
     )
