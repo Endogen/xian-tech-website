@@ -338,6 +338,8 @@ def mobile_nav_panel() -> rx.Component:
             border_bottom="none",
             padding="1rem 1.5rem 1.5rem",
             box_shadow="none",
+            max_height="70vh",
+            overflow_y="auto",
             style={
                 "display": "block",
                 MD_MEDIA: {"display": "none"},
