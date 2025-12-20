@@ -22,8 +22,8 @@ NAV_LINKS = [
             {"label": "Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
         ],
     },
-    {"label": "Ecosystem", "href": "/ecosystem"},
-    {"label": "Community", "href": "/community"},
+    {"label": "Developers", "href": "/developers"},
+    {"label": "About", "href": "/about"},
 ]
 
 CORE_COMPONENTS = [
@@ -314,7 +314,7 @@ def _build_search_entries() -> list[dict[str, str]]:
                 "id": f"ecosystem-{_slugify(item['title'])}",
                 "title": item["title"],
                 "subtitle": item["description"],
-                "category": "Ecosystem",
+                "category": "Developers",
                 "badge": "Program",
                 "href": "/ecosystem",
                 "external": False,
@@ -327,7 +327,7 @@ def _build_search_entries() -> list[dict[str, str]]:
             "id": "ecosystem-partner",
             "title": "Partner With Us",
             "subtitle": "Collaboration pathways for researchers, builders, and educators.",
-            "category": "Ecosystem",
+            "category": "Developers",
             "badge": "CTA",
             "href": "/ecosystem",
             "external": False,

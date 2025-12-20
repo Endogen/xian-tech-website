@@ -302,7 +302,7 @@ def why_another_blockchain() -> rx.Component:
         ),
         rx.box(
             rx.text(
-                "The Xian software stack aims to be a free, open alternative to offerings like GCUL—built on familiar technology, ready to run on-prem or in public settings, and suited for your next distributed or decentralized project.",
+                "The Xian software stack aims to be a free, open alternative to offerings like GCUL—built on familiar technology, ready to run on-prem or in the cloud, and suited for your next distributed or decentralized project.",
                 size="3",
                 color=TEXT_MUTED,
                 line_height="1.7",
