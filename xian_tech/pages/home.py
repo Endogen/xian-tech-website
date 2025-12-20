@@ -229,7 +229,7 @@ def mission_section() -> rx.Component:
                 rx.box(
                     rx.vstack(
                         rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Smooth setup for local nodes and multi-node devnets."),
+                        bullet("Smooth setup for local nodes and multi-node environments."),
                         bullet("Documented patterns for distributed production networks."),
                         spacing="3",
                         align_items="start",
@@ -242,7 +242,7 @@ def mission_section() -> rx.Component:
                 rx.box(
                     rx.vstack(
                         rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Explain how the stack works and how to build on it."),
+                        bullet("Explain how the stack works and how to build on it and interface with it."),
                         bullet("Keep upgrade paths, examples, and reference guides current."),
                         spacing="3",
                         align_items="start",
@@ -270,88 +270,16 @@ def why_another_blockchain() -> rx.Component:
             rx.vstack(
                 rx.heading("Why Another Blockchain?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
-                    "The industry is shifting from specialized, hard-to-extend stacks to general-purpose blockchains that feel familiar, are hackable, and integrate cleanly with existing infrastructure.",
+                    "Blockchains are shifting away from bespoke, blockchain-only stacks toward ones built on familiar technology—avoiding niche languages and tools you never see outside crypto. The goal is a universal stack that plugs into existing infrastructure and is straightforward to deploy and operate. Our aim is to to deliver a simple yet powerful software stack that companies and communities can run themselves when they want their own decentralized ledger.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
                 ),
-                rx.text(
-                    "Xian embraces that shift: CometBFT for consensus, pure Python for contracts, and tooling that fits modern workflows—similar to how Google’s GCUL leans on familiar cloud-native primitives and a single API surface.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
-                        rx.text(
-                            "Google Cloud Universal Ledger (GCUL) is a new platform to create innovative payments services and financial markets products... provided as a service and accessible through a single API.",
-                            size="4",
-                            color=TEXT_MUTED,
-                            line_height="1.8",
-                            style={"fontStyle": "italic"},
-                        ),
-                        rx.hstack(
-                            rx.spacer(),
-                            rx.text("”", size="9", color=ACCENT, weight="bold", line_height="0.6"),
-                            width="100%",
-                        ),
-                        spacing="1",
-                        align_items="start",
-                        width="100%",
-                    ),
-                    rx.link(
-                        "Source: Google Cloud Universal Ledger",
-                        href="https://cloud.google.com/application/web3/universal-ledger",
-                        is_external=True,
-                        color=ACCENT,
-                        size="2",
-                    ),
-                    gap="1rem",
-                    padding="1.5rem",
-                    background=rx.cond(
-                        State.theme_mode == "light",
-                        "rgba(0, 179, 92, 0.14)",
-                        ACCENT_SOFT,
-                    ),
-                    border_radius="14px",
-                    box_shadow=f"0 0 18px {ACCENT_SOFT}",
-                ),
-                rx.box(
-                    rx.heading("Why not just use GCUL?", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    rx.text(
-                        "GCUL is a proprietary, Google-controlled platform delivered as a service. Xian is public and free software: run it on-prem, private, or public, with full control of your consensus, contracts, governance, fee structure, and data.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    spacing="3",
-                    align_items="start",
-                ),
                 spacing="4",
                 align_items="start",
             ),
-            rx.box(
-                rx.vstack(
-                    rx.heading("What this means for Xian", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    rx.vstack(
-                        rx.flex(rx.text("→", color=ACCENT, size="3"), rx.text("Lower cognitive load: Python everywhere, no transpilers or DSLs.", size="3", color=TEXT_MUTED), gap="0.65rem"),
-                        rx.flex(rx.text("→", color=ACCENT, size="3"), rx.text("Integration-first: SDKs and data services that drop into existing stacks.", size="3", color=TEXT_MUTED), gap="0.65rem"),
-                        rx.flex(rx.text("→", color=ACCENT, size="3"), rx.text("Operational clarity: deterministic consensus, predictable metering, and documented patterns.", size="3", color=TEXT_MUTED), gap="0.65rem"),
-                        rx.flex(rx.text("→", color=ACCENT, size="3"), rx.text("Evolvable: Python ABCI app and contracts that can be maintained and extended cleanly.", size="3", color=TEXT_MUTED), gap="0.65rem"),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    spacing="4",
-                    align_items="start",
-                ),
-                padding="2.5rem",
-                background=SURFACE,
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="14px",
-            ),
-            template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
-            gap="2rem",
+            template_columns={"base": "1fr", "md": "repeat(1, 1fr)"},
+            gap="1.5rem",
         ),
         style={"paddingTop": "2rem", "paddingBottom": "3rem"},
     )
