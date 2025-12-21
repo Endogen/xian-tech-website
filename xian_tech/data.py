@@ -216,10 +216,10 @@ def _build_search_entries() -> list[dict[str, str]]:
     nav_descriptions = {
         "/": "Landing page for the foundation, stats, and hero messaging.",
         "/technology": "Detailed breakdown of contracting, node, and roadmap work.",
-        "/ecosystem": "Programs for researchers, builders, and educators.",
         "/community": "Calls to join missions, open grants, and validator collectives.",
         "/developers": "Hub for playground, curated contracts, docs, SDKs, and APIs.",
         "/about": "Foundation mission, team, terminology, and contact.",
+        "/terminology": "Key distinctions between the stack, foundation, and network.",
     }
 
     for link in NAV_LINKS:
