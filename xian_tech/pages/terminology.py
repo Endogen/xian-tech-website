@@ -1,9 +1,104 @@
 import reflex as rx
 
 from ..components.common import page_layout, section
-from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, BORDER_COLOR, SURFACE, SURFACE_BRIGHT, TEXT_MUTED, TEXT_PRIMARY
+from ..theme import (
+    ACCENT,
+    ACCENT_GLOW,
+    ACCENT_SOFT,
+    BORDER_COLOR,
+    DARK_ACCENT,
+    DARK_ACCENT_GLOW,
+    LIGHT_ACCENT,
+    LIGHT_ACCENT_GLOW,
+    SURFACE,
+    SURFACE_BRIGHT,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+)
+from ..state import State
 
 MD_MEDIA = "@media (min-width: 1024px)"
+
+
+def _connectors_svg() -> rx.Component:
+    """SVG connectors showing Foundation connecting to Technology and Network."""
+    # Colors need to be static strings for SVG attributes
+    stroke_light = LIGHT_ACCENT
+    stroke_dark = DARK_ACCENT
+    glow_light = LIGHT_ACCENT_GLOW
+    glow_dark = DARK_ACCENT_GLOW
+
+    # Path from Foundation (center-bottom) to Technology (left-top)
+    # Using quadratic bezier: M=move, Q=quadratic curve
+    path_left = "M 50 38 Q 50 52, 16.67 55"
+
+    # Path from Foundation (center-bottom) to Network (right-top)
+    path_right = "M 50 38 Q 50 52, 83.33 55"
+
+    def make_path(d: str) -> rx.Component:
+        return rx.el.svg.path(
+            d=d,
+            stroke=rx.cond(State.theme_mode == "light", stroke_light, stroke_dark),
+            stroke_width="2",
+            fill="none",
+            stroke_linecap="round",
+        )
+
+    def make_glow_path(d: str) -> rx.Component:
+        return rx.el.svg.path(
+            d=d,
+            stroke=rx.cond(State.theme_mode == "light", glow_light, glow_dark),
+            stroke_width="8",
+            fill="none",
+            stroke_linecap="round",
+            opacity="0.4",
+        )
+
+    def make_node(cx: str, cy: str, r: str = "4") -> rx.Component:
+        return rx.el.svg.circle(
+            cx=cx,
+            cy=cy,
+            r=r,
+            fill=rx.cond(State.theme_mode == "light", stroke_light, stroke_dark),
+        )
+
+    def make_node_glow(cx: str, cy: str) -> rx.Component:
+        return rx.el.svg.circle(
+            cx=cx,
+            cy=cy,
+            r="8",
+            fill=rx.cond(State.theme_mode == "light", glow_light, glow_dark),
+            opacity="0.5",
+        )
+
+    return rx.el.svg(
+        # Glow layers (behind main paths)
+        make_glow_path(path_left),
+        make_glow_path(path_right),
+        # Main paths
+        make_path(path_left),
+        make_path(path_right),
+        # Node glows
+        make_node_glow("50", "38"),
+        make_node_glow("16.67", "55"),
+        make_node_glow("83.33", "55"),
+        # Connection nodes
+        make_node("50", "38", "5"),  # Foundation bottom (larger)
+        make_node("16.67", "55"),  # Technology top
+        make_node("83.33", "55"),  # Network top
+        view_box="0 0 100 100",
+        preserve_aspect_ratio="none",
+        position="absolute",
+        top="0",
+        left="0",
+        width="100%",
+        height="100%",
+        pointer_events="none",
+        style={
+            "display": "none",
+            MD_MEDIA: {"display": "block"},
+        },
+    )
 
 
 def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
@@ -50,34 +145,7 @@ def terminology_page() -> rx.Component:
         "A production blockchain demonstrating the Xian Technology stack in real-world use.",
     )
 
-    connectors = rx.fragment(
-        # Foundation to Technology (left)
-        rx.box(
-            position="absolute",
-            top="32%",
-            left="14%",
-            width="30%",
-            height="3px",
-            background=f"linear-gradient(90deg, {ACCENT_SOFT}, {ACCENT})",
-            transform="rotate(14deg)",
-            border_radius="999px",
-            filter=f"drop-shadow(0 0 12px {ACCENT_SOFT})",
-            display={"base": "none", "md": "block"},
-        ),
-        # Foundation to Network (right)
-        rx.box(
-            position="absolute",
-            top="32%",
-            right="14%",
-            width="30%",
-            height="3px",
-            background=f"linear-gradient(90deg, {ACCENT}, {ACCENT_SOFT})",
-            transform="rotate(-14deg)",
-            border_radius="999px",
-            filter=f"drop-shadow(0 0 12px {ACCENT_SOFT})",
-            display={"base": "none", "md": "block"},
-        ),
-    )
+    connectors = _connectors_svg()
 
     foundation_node = rx.box(
         foundation,
