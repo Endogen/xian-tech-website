@@ -131,6 +131,50 @@ def nav_item(link: dict[str, Any]) -> rx.Component:
     )
 
 
+def _submenu_item(child: dict) -> rx.Component:
+    """Render a single submenu item, optionally with a background image."""
+    bg_image = child.get("background_image")
+    has_bg = bg_image is not None
+
+    # Base style for all items
+    base_style = {
+        "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
+        "display": "block",
+    }
+
+    # Add background image styles if present
+    if has_bg:
+        base_style.update({
+            "backgroundImage": f"url({bg_image})",
+            "backgroundSize": "contain",
+            "backgroundPosition": "right center",
+            "backgroundRepeat": "no-repeat",
+        })
+
+    return rx.link(
+        rx.box(
+            rx.text(child["label"], size="1", weight="bold", color=TEXT_PRIMARY),
+            rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
+            spacing="1",
+            align_items="start",
+        ),
+        href=child["href"],
+        _hover={
+            "textDecoration": "none",
+            "color": ACCENT,
+            "background": SURFACE_BRIGHT if not has_bg else f"linear-gradient(to right, {SURFACE_BRIGHT} 60%, transparent 100%), url({bg_image})",
+            "backgroundSize": "contain" if has_bg else None,
+            "backgroundPosition": "right center" if has_bg else None,
+            "backgroundRepeat": "no-repeat" if has_bg else None,
+            "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
+        },
+        padding="0.85rem 0.95rem",
+        border_radius="10px",
+        width="100%",
+        style=base_style,
+    )
+
+
 def submenu_children(label: str) -> rx.Component:
     """Render submenu content for a hovered label."""
     groups: list[rx.Component] = []
@@ -144,31 +188,7 @@ def submenu_children(label: str) -> rx.Component:
                 rx.vstack(
                     rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
                     rx.grid(
-                        *[
-                            rx.link(
-                                rx.box(
-                                    rx.text(child["label"], size="1", weight="bold", color=TEXT_PRIMARY),
-                                    rx.text(child["description"], size="2", color=TEXT_MUTED, line_height="1.5"),
-                                    spacing="1",
-                                    align_items="start",
-                                ),
-                                href=child["href"],
-                                _hover={
-                                    "textDecoration": "none",
-                                    "color": ACCENT,
-                                    "background": SURFACE_BRIGHT,
-                                    "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
-                                },
-                                padding="0.85rem 0.95rem",
-                                border_radius="10px",
-                                width="100%",
-                                style={
-                                    "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
-                                    "display": "block",
-                                },
-                            )
-                            for child in children
-                        ],
+                        *[_submenu_item(child) for child in children],
                         columns={
                             "initial": "repeat(1, minmax(0, 1fr))",
                             "md": "repeat(3, minmax(0, 1fr))",
