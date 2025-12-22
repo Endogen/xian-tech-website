@@ -618,6 +618,14 @@ COMMAND_SCRIPT = """
   const moveUp = () => document.getElementById("command-palette-up")?.click();
   const moveDown = () => document.getElementById("command-palette-down")?.click();
   const selectActive = () => document.getElementById("command-palette-select")?.click();
+  const scrollToActive = () => {
+    setTimeout(() => {
+      const active = document.getElementById("palette-active-item");
+      if (active) {
+        active.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    }, 50);
+  };
   window.addEventListener("keydown", (event) => {
     const key = event.key?.toLowerCase();
     if ((event.metaKey || event.ctrlKey) && key === "k") {
@@ -630,10 +638,12 @@ COMMAND_SCRIPT = """
     if (key === "arrowup") {
       event.preventDefault();
       moveUp();
+      scrollToActive();
     }
     if (key === "arrowdown") {
       event.preventDefault();
       moveDown();
+      scrollToActive();
     }
     if (key === "enter") {
       const active = document.activeElement;
@@ -680,6 +690,7 @@ def command_palette() -> rx.Component:
                 align_items="center",
                 width="100%",
             ),
+            id=rx.cond(is_active, "palette-active-item", ""),
             href=action["href"],
             is_external=action["external"],
             on_click=State.close_command_palette,
