@@ -28,12 +28,13 @@ def _connectors_svg() -> rx.Component:
     glow_light = LIGHT_ACCENT_GLOW
     glow_dark = DARK_ACCENT_GLOW
 
-    # Path from Foundation (center-bottom) to Technology (left-top)
+    # Path from Foundation (center-bottom border) to Technology (left-top border)
     # Using quadratic bezier: M=move, Q=quadratic curve
-    path_left = "M 50 38 Q 50 52, 16.67 55"
+    # Coordinates adjusted to connect card borders, not overlap content
+    path_left = "M 50 46 Q 50 51, 16.67 56"
 
-    # Path from Foundation (center-bottom) to Network (right-top)
-    path_right = "M 50 38 Q 50 52, 83.33 55"
+    # Path from Foundation (center-bottom border) to Network (right-top border)
+    path_right = "M 50 46 Q 50 51, 83.33 56"
 
     def make_path(d: str) -> rx.Component:
         return rx.el.svg.path(
@@ -79,13 +80,13 @@ def _connectors_svg() -> rx.Component:
         make_path(path_left),
         make_path(path_right),
         # Node glows
-        make_node_glow("50", "38"),
-        make_node_glow("16.67", "55"),
-        make_node_glow("83.33", "55"),
+        make_node_glow("50", "46"),
+        make_node_glow("16.67", "56"),
+        make_node_glow("83.33", "56"),
         # Connection nodes
-        make_node("50", "38", "5"),  # Foundation bottom (larger)
-        make_node("16.67", "55"),  # Technology top
-        make_node("83.33", "55"),  # Network top
+        make_node("50", "46", "5"),  # Foundation bottom border (larger)
+        make_node("16.67", "56"),  # Technology top border
+        make_node("83.33", "56"),  # Network top border
         view_box="0 0 100 100",
         preserve_aspect_ratio="none",
         position="absolute",
