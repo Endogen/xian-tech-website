@@ -10,11 +10,15 @@ from ..theme import (
     DARK_ACCENT_GLOW,
     LIGHT_ACCENT,
     LIGHT_ACCENT_GLOW,
-    SURFACE,
-    SURFACE_BRIGHT,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
+
+# Solid (non-transparent) background colors for cards
+LIGHT_CARD_BG = "#f8f9fa"
+LIGHT_CARD_BG_BRIGHT = "#ffffff"
+DARK_CARD_BG = "#0f141c"
+DARK_CARD_BG_BRIGHT = "#192330"
 from ..state import State
 
 MD_MEDIA = "@media (min-width: 1024px)"
@@ -80,6 +84,12 @@ def _connectors_svg() -> rx.Component:
 
 def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
     """Reusable card for terminology entries."""
+    # Use solid backgrounds (non-transparent)
+    card_bg = rx.cond(
+        State.theme_mode == "light",
+        LIGHT_CARD_BG_BRIGHT if highlight else LIGHT_CARD_BG,
+        DARK_CARD_BG_BRIGHT if highlight else DARK_CARD_BG,
+    )
     return rx.box(
         rx.vstack(
             rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
@@ -88,7 +98,7 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
             align_items="start",
         ),
         padding="1.75rem",
-        background=rx.cond(highlight, SURFACE_BRIGHT, SURFACE),
+        background=card_bg,
         border=f"1px solid {ACCENT_GLOW}" if highlight else f"1px solid {BORDER_COLOR}",
         border_radius="16px",
         box_shadow=rx.cond(
@@ -201,11 +211,7 @@ def terminology_page() -> rx.Component:
                         },
                     ),
                     position="relative",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="20px",
-                    padding="2rem",
-                    box_shadow="0 18px 42px rgba(0,0,0,0.18)",
+                    width="100%",
                 ),
                 rx.vstack(
                     rx.text("At a glance", size="3", weight="bold", color=TEXT_PRIMARY),
