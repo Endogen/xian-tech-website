@@ -135,9 +135,13 @@ def _submenu_item(child: dict) -> rx.Component:
     """Render a single submenu item, optionally highlighted with accent gradient."""
     highlighted = child.get("highlighted", False)
 
-    # Accent gradient for highlighted items (green fade from right)
-    light_accent_gradient = "linear-gradient(to right, transparent 50%, rgba(0, 179, 92, 0.12) 100%)"
-    dark_accent_gradient = "linear-gradient(to right, transparent 50%, rgba(0, 255, 136, 0.10) 100%)"
+    # Normal state: green-to-green gradient (light green → darker green)
+    light_normal_gradient = "linear-gradient(to right, rgba(0, 179, 92, 0.08) 0%, rgba(0, 179, 92, 0.18) 100%)"
+    dark_normal_gradient = "linear-gradient(to right, rgba(0, 255, 136, 0.06) 0%, rgba(0, 255, 136, 0.14) 100%)"
+
+    # Hover state: surface color → green gradient
+    light_hover_gradient = "linear-gradient(to right, rgba(255, 255, 255, 0.95) 40%, rgba(0, 179, 92, 0.15) 100%)"
+    dark_hover_gradient = "linear-gradient(to right, rgba(25, 35, 48, 0.95) 40%, rgba(0, 255, 136, 0.12) 100%)"
 
     # Base style for all items
     base_style = {
@@ -145,21 +149,33 @@ def _submenu_item(child: dict) -> rx.Component:
         "display": "block",
     }
 
-    # Add accent gradient for highlighted items
+    # Add green-to-green gradient for highlighted items (normal state)
     if highlighted:
         base_style["backgroundImage"] = rx.cond(
             State.theme_mode == "light",
-            light_accent_gradient,
-            dark_accent_gradient,
+            light_normal_gradient,
+            dark_normal_gradient,
         )
 
     # Hover styles
-    hover_style = {
-        "textDecoration": "none",
-        "color": ACCENT,
-        "background": SURFACE_BRIGHT,
-        "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
-    }
+    if highlighted:
+        hover_style = {
+            "textDecoration": "none",
+            "color": ACCENT,
+            "backgroundImage": rx.cond(
+                State.theme_mode == "light",
+                light_hover_gradient,
+                dark_hover_gradient,
+            ),
+            "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
+        }
+    else:
+        hover_style = {
+            "textDecoration": "none",
+            "color": ACCENT,
+            "background": SURFACE_BRIGHT,
+            "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
+        }
 
     return rx.link(
         rx.box(
