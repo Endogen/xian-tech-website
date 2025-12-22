@@ -108,7 +108,6 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
         ),
         transition="all 0.25s ease",
         _hover={
-            "transform": "translateY(-4px)",
             "borderColor": ACCENT,
             "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
         },
