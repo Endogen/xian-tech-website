@@ -92,6 +92,39 @@ class State(rx.State):
         """Highlight a palette item."""
         self.command_palette_active_id = value
 
+    def command_palette_move_up(self):
+        """Move selection to previous item in the palette."""
+        actions = self.command_palette_actions
+        if not actions:
+            return
+        ids = [a["id"] for a in actions]
+        current = self.command_palette_active_id
+        if current is None or current not in ids:
+            self.command_palette_active_id = ids[-1]
+        else:
+            idx = ids.index(current)
+            self.command_palette_active_id = ids[idx - 1] if idx > 0 else ids[-1]
+
+    def command_palette_move_down(self):
+        """Move selection to next item in the palette."""
+        actions = self.command_palette_actions
+        if not actions:
+            return
+        ids = [a["id"] for a in actions]
+        current = self.command_palette_active_id
+        if current is None or current not in ids:
+            self.command_palette_active_id = ids[0]
+        else:
+            idx = ids.index(current)
+            self.command_palette_active_id = ids[idx + 1] if idx < len(ids) - 1 else ids[0]
+
+    def command_palette_select_active(self):
+        """Navigate to the currently selected item."""
+        active = self.command_palette_active_action
+        if not active["placeholder"]:
+            self.close_command_palette()
+            return rx.redirect(active["href"])
+
     @rx.var
     def command_palette_actions(self) -> list[CommandAction]:
         """Return filtered actions for the command palette."""

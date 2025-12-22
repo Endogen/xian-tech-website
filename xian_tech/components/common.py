@@ -597,6 +597,9 @@ COMMAND_SCRIPT = """
   window.__xianCommandHotkeys = true;
   const trigger = () => document.getElementById("command-palette-trigger")?.click();
   const close = () => document.getElementById("command-palette-close")?.click();
+  const moveUp = () => document.getElementById("command-palette-up")?.click();
+  const moveDown = () => document.getElementById("command-palette-down")?.click();
+  const selectActive = () => document.getElementById("command-palette-select")?.click();
   window.addEventListener("keydown", (event) => {
     const key = event.key?.toLowerCase();
     if ((event.metaKey || event.ctrlKey) && key === "k") {
@@ -605,6 +608,22 @@ COMMAND_SCRIPT = """
     }
     if (key === "escape") {
       close();
+    }
+    if (key === "arrowup") {
+      event.preventDefault();
+      moveUp();
+    }
+    if (key === "arrowdown") {
+      event.preventDefault();
+      moveDown();
+    }
+    if (key === "enter") {
+      const active = document.activeElement;
+      const isInput = active?.tagName === "INPUT";
+      if (isInput) {
+        event.preventDefault();
+        selectActive();
+      }
     }
   });
 })();
@@ -684,6 +703,9 @@ def command_palette() -> rx.Component:
     return rx.fragment(
         rx.button(on_click=State.open_command_palette, id="command-palette-trigger", display="none"),
         rx.button(on_click=State.close_command_palette, id="command-palette-close", display="none"),
+        rx.button(on_click=State.command_palette_move_up, id="command-palette-up", display="none"),
+        rx.button(on_click=State.command_palette_move_down, id="command-palette-down", display="none"),
+        rx.button(on_click=State.command_palette_select_active, id="command-palette-select", display="none"),
         rx.script(COMMAND_SCRIPT),
         rx.cond(
             State.command_palette_open,
