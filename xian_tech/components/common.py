@@ -132,9 +132,12 @@ def nav_item(link: dict[str, Any]) -> rx.Component:
 
 
 def _submenu_item(child: dict) -> rx.Component:
-    """Render a single submenu item, optionally with a background image."""
-    bg_image = child.get("background_image")
-    has_bg = bg_image is not None
+    """Render a single submenu item, optionally highlighted with accent gradient."""
+    highlighted = child.get("highlighted", False)
+
+    # Accent gradient for highlighted items (green fade from right)
+    light_accent_gradient = "linear-gradient(to right, transparent 50%, rgba(0, 179, 92, 0.12) 100%)"
+    dark_accent_gradient = "linear-gradient(to right, transparent 50%, rgba(0, 255, 136, 0.10) 100%)"
 
     # Base style for all items
     base_style = {
@@ -142,14 +145,21 @@ def _submenu_item(child: dict) -> rx.Component:
         "display": "block",
     }
 
-    # Add background image styles if present
-    if has_bg:
-        base_style.update({
-            "backgroundImage": f"url({bg_image})",
-            "backgroundSize": "contain",
-            "backgroundPosition": "right center",
-            "backgroundRepeat": "no-repeat",
-        })
+    # Add accent gradient for highlighted items
+    if highlighted:
+        base_style["backgroundImage"] = rx.cond(
+            State.theme_mode == "light",
+            light_accent_gradient,
+            dark_accent_gradient,
+        )
+
+    # Hover styles
+    hover_style = {
+        "textDecoration": "none",
+        "color": ACCENT,
+        "background": SURFACE_BRIGHT,
+        "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
+    }
 
     return rx.link(
         rx.box(
@@ -159,15 +169,7 @@ def _submenu_item(child: dict) -> rx.Component:
             align_items="start",
         ),
         href=child["href"],
-        _hover={
-            "textDecoration": "none",
-            "color": ACCENT,
-            "background": SURFACE_BRIGHT if not has_bg else f"linear-gradient(to right, {SURFACE_BRIGHT} 60%, transparent 100%), url({bg_image})",
-            "backgroundSize": "contain" if has_bg else None,
-            "backgroundPosition": "right center" if has_bg else None,
-            "backgroundRepeat": "no-repeat" if has_bg else None,
-            "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
-        },
+        _hover=hover_style,
         padding="0.85rem 0.95rem",
         border_radius="10px",
         width="100%",
