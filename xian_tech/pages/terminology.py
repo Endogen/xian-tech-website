@@ -179,7 +179,6 @@ def terminology_page() -> rx.Component:
                     "Keep the distinctions clear: the technology stack, the foundation stewarding it, and the production network that proves it works.",
                     size="4",
                     color=TEXT_MUTED,
-                    max_width="860px",
                     line_height="1.7",
                 ),
                 spacing="5",
@@ -212,28 +211,6 @@ def terminology_page() -> rx.Component:
                     position="relative",
                     width="100%",
                 ),
-                rx.vstack(
-                    rx.text("At a glance", size="3", weight="bold", color=TEXT_PRIMARY),
-                    rx.vstack(
-                        _term_card(
-                            "Xian Technology",
-                            "CometBFT consensus + custom Python ABCI + Python contracting engine + tooling for running robust blockchain networks.",
-                        ),
-                        _term_card(
-                            "Xian Technology Foundation",
-                            "Independent group advancing the stack; not the same as the production Xian Network.",
-                        ),
-                        _term_card(
-                            "Xian Network",
-                            "Live blockchain that proves the stack in real-world deployments.",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    spacing="3",
-                    align_items="start",
-                ),
-                spacing="5",
                 align_items="start",
             ),
             style={"paddingTop": "0"},
