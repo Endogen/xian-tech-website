@@ -31,10 +31,10 @@ def _connectors_svg() -> rx.Component:
     # Path from Foundation (center-bottom) to Technology (middle of card)
     # Using quadratic bezier: M=move, Q=quadratic curve
     # SVG is behind cards, so paths go to card centers
-    path_left = "M 50 46 Q 50 60, 16.67 78"
+    path_left = "M 50 40 Q 50 58, 16.67 78"
 
     # Path from Foundation (center-bottom) to Network (middle of card)
-    path_right = "M 50 46 Q 50 60, 83.33 78"
+    path_right = "M 50 40 Q 50 58, 83.33 78"
 
     def make_path(d: str) -> rx.Component:
         return rx.el.svg.path(
