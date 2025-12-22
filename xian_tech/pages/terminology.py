@@ -28,13 +28,13 @@ def _connectors_svg() -> rx.Component:
     glow_light = LIGHT_ACCENT_GLOW
     glow_dark = DARK_ACCENT_GLOW
 
-    # Path from Foundation (center-bottom border) to Technology (left-top border)
+    # Path from Foundation (center-bottom) to Technology (middle of card)
     # Using quadratic bezier: M=move, Q=quadratic curve
-    # Coordinates adjusted to connect card borders, not overlap content
-    path_left = "M 50 46 Q 50 51, 16.67 56"
+    # SVG is behind cards, so paths go to card centers
+    path_left = "M 50 46 Q 50 60, 16.67 78"
 
-    # Path from Foundation (center-bottom border) to Network (right-top border)
-    path_right = "M 50 46 Q 50 51, 83.33 56"
+    # Path from Foundation (center-bottom) to Network (middle of card)
+    path_right = "M 50 46 Q 50 60, 83.33 78"
 
     def make_path(d: str) -> rx.Component:
         return rx.el.svg.path(
@@ -55,23 +55,6 @@ def _connectors_svg() -> rx.Component:
             opacity="0.4",
         )
 
-    def make_node(cx: str, cy: str, r: str = "4") -> rx.Component:
-        return rx.el.svg.circle(
-            cx=cx,
-            cy=cy,
-            r=r,
-            fill=rx.cond(State.theme_mode == "light", stroke_light, stroke_dark),
-        )
-
-    def make_node_glow(cx: str, cy: str) -> rx.Component:
-        return rx.el.svg.circle(
-            cx=cx,
-            cy=cy,
-            r="8",
-            fill=rx.cond(State.theme_mode == "light", glow_light, glow_dark),
-            opacity="0.5",
-        )
-
     return rx.el.svg(
         # Glow layers (behind main paths)
         make_glow_path(path_left),
@@ -79,14 +62,6 @@ def _connectors_svg() -> rx.Component:
         # Main paths
         make_path(path_left),
         make_path(path_right),
-        # Node glows
-        make_node_glow("50", "46"),
-        make_node_glow("16.67", "56"),
-        make_node_glow("83.33", "56"),
-        # Connection nodes
-        make_node("50", "46", "5"),  # Foundation bottom border (larger)
-        make_node("16.67", "56"),  # Technology top border
-        make_node("83.33", "56"),  # Network top border
         view_box="0 0 100 100",
         preserve_aspect_ratio="none",
         position="absolute",
@@ -94,6 +69,7 @@ def _connectors_svg() -> rx.Component:
         left="0",
         width="100%",
         height="100%",
+        z_index="0",
         pointer_events="none",
         style={
             "display": "none",
@@ -213,6 +189,8 @@ def terminology_page() -> rx.Component:
                         display="grid",
                         gap="1.5rem",
                         align_items="start",
+                        position="relative",
+                        z_index="1",
                         style={
                             "gridTemplateColumns": "1fr",
                             "gridTemplateRows": "repeat(3, auto)",
