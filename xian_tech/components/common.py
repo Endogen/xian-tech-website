@@ -136,8 +136,8 @@ def _submenu_item(child: dict) -> rx.Component:
     highlighted = child.get("highlighted", False)
 
     # Normal state: green-to-green gradient (light green → darker green)
-    light_normal_gradient = "linear-gradient(to right, rgba(0, 179, 92, 0.08) 0%, rgba(0, 179, 92, 0.18) 100%)"
-    dark_normal_gradient = "linear-gradient(to right, rgba(0, 255, 136, 0.06) 0%, rgba(0, 255, 136, 0.14) 100%)"
+    light_normal_gradient = "linear-gradient(to right, rgba(0, 179, 92, 0.12) 0%, rgba(0, 179, 92, 0.25) 100%)"
+    dark_normal_gradient = "linear-gradient(to right, rgba(0, 255, 136, 0.10) 0%, rgba(0, 255, 136, 0.20) 100%)"
 
     # Hover state: surface color → green gradient
     light_hover_gradient = "linear-gradient(to right, rgba(255, 255, 255, 0.95) 40%, rgba(0, 179, 92, 0.15) 100%)"
