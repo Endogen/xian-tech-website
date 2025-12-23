@@ -27,9 +27,9 @@ NAV_LINKS = [
         "href": "/developers",
         "children": [
             {"label": "Contracting Playground", "href": "/playground", "description": "Interactive browser IDE for contracts.", "highlighted": True},
-            {"label": "Contracting Hub", "href": "/contracts", "description": "Curated, deploy-ready contracts with metadata.", "highlighted": True},
             {"label": "Documentation", "href": "/docs", "description": "Specs, contracts, and BDS queries."},
             {"label": "Tutorials & First Steps", "href": "/docs/tutorials", "description": "Guides to go from zero to deployed."},
+            {"label": "Contracting Hub", "href": "/contracts", "description": "Curated, deploy-ready contracts with metadata.", "highlighted": True},
             {"label": "Samples/SDKs", "href": "/tooling", "description": "Client SDKs (JS, etc.) and integration guides."},
             {"label": "API References", "href": "/docs/api", "description": "Endpoints for BDS, transactions, and contracts."},
         ],

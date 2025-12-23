@@ -200,23 +200,68 @@ def submenu_children(label: str) -> rx.Component:
         children = link.get("children")
         if not children:
             continue
+        if link["label"] == "Developers":
+            highlighted = [child for child in children if child.get("highlighted")]
+            regular = [child for child in children if not child.get("highlighted")]
+            content = rx.vstack(
+                rx.grid(
+                    rx.vstack(
+                        rx.text("Highlighted", size="2", weight="bold", color=TEXT_MUTED, letter_spacing="0.08em"),
+                        rx.vstack(
+                            *[_submenu_item(child) for child in highlighted],
+                            spacing="3",
+                            align_items="start",
+                            width="100%",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    rx.vstack(
+                        rx.text("Developers", size="2", weight="bold", color=TEXT_MUTED, letter_spacing="0.08em"),
+                        rx.grid(
+                            *[_submenu_item(child) for child in regular],
+                            columns={
+                                "initial": "repeat(1, minmax(0, 1fr))",
+                                "md": "repeat(2, minmax(0, 1fr))",
+                            },
+                            spacing="3",
+                            width="100%",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    columns={
+                        "initial": "repeat(1, minmax(0, 1fr))",
+                        "md": "minmax(0, 1fr) minmax(0, 2fr)",
+                    },
+                    spacing="4",
+                    width="100%",
+                ),
+                spacing="3",
+                align_items="start",
+                width="100%",
+            )
+        else:
+            content = rx.vstack(
+                rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                rx.grid(
+                    *[_submenu_item(child) for child in children],
+                    columns={
+                        "initial": "repeat(1, minmax(0, 1fr))",
+                        "md": "repeat(3, minmax(0, 1fr))",
+                    },
+                    spacing="3",
+                    width="100%",
+                ),
+                spacing="3",
+                align_items="start",
+            )
         groups.append(
             rx.cond(
                 State.nav_hover_label == link["label"],
-                rx.vstack(
-                    rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
-                    rx.grid(
-                        *[_submenu_item(child) for child in children],
-                        columns={
-                            "initial": "repeat(1, minmax(0, 1fr))",
-                            "md": "repeat(3, minmax(0, 1fr))",
-                        },
-                        spacing="3",
-                        width="100%",
-                    ),
-                    spacing="3",
-                    align_items="start",
-                ),
+                content,
                 rx.box(),
             )
         )
