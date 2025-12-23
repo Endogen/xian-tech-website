@@ -444,14 +444,9 @@ def nav_bar() -> rx.Component:
         "0 1px 20px rgba(15, 23, 42, 0.08)",
         "0 1px 20px rgba(0, 0, 0, 0.35)",
     )
-    combined_shadow = rx.cond(
-        State.theme_mode == "light",
-        "drop-shadow(0 16px 40px rgba(15, 23, 42, 0.14)) drop-shadow(0 4px 12px rgba(15, 23, 42, 0.1))",
-        "drop-shadow(0 16px 40px rgba(0, 0, 0, 0.46)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35))",
-    )
     dropdown_active = _nav_has_dropdown(State.nav_hover_label)
-    box_shadow = rx.cond(dropdown_active, "none", base_shadow)
-    filter_shadow = rx.cond(dropdown_active, combined_shadow, "none")
+    box_shadow = base_shadow
+    filter_shadow = "none"
     return rx.box(
         # Background layer for the nav surface (kept separate to avoid stacking context issues)
         rx.box(
