@@ -245,7 +245,7 @@ def submenu_children(label: str) -> rx.Component:
             )
         else:
             content = rx.vstack(
-                rx.heading(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                rx.text(link["label"], size="2", weight="bold", color=TEXT_MUTED, letter_spacing="0.08em"),
                 rx.grid(
                     *[_submenu_item(child) for child in children],
                     columns={
