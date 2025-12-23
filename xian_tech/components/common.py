@@ -936,20 +936,10 @@ def footer() -> rx.Component:
                     ),
                     rx.vstack(
                         rx.text("Contact", size="3", weight="bold", color=TEXT_PRIMARY),
-                        rx.hstack(
-                            rx.link(
-                                rx.icon(tag="mail", size=20, color=TEXT_PRIMARY),
-                                href="mailto:foundation@xian.technology",
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                "foundation@xian.technology",
-                                href="mailto:foundation@xian.technology",
-                                color=TEXT_MUTED,
-                                size="3",
-                            ),
-                            spacing="2",
-                            align_items="center",
+                        rx.link(
+                            rx.icon(tag="mail", size=20, color=TEXT_PRIMARY),
+                            href="mailto:foundation@xian.technology",
+                            _hover={"color": ACCENT},
                         ),
                         rx.text("Follow", size="3", weight="bold", color=TEXT_PRIMARY),
                         rx.hstack(
