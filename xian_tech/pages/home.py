@@ -189,6 +189,12 @@ def mission_section() -> rx.Component:
             align_items="flex-start",
         )
 
+    card_style = {
+        "display": "flex",
+        "flexDirection": "column",
+        "alignSelf": "stretch",
+    }
+
     return section(
         rx.vstack(
             rx.heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
@@ -211,6 +217,9 @@ def mission_section() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    height="100%",
+                    width="100%",
+                    style=card_style,
                 ),
                 rx.box(
                     rx.vstack(
@@ -225,6 +234,9 @@ def mission_section() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    height="100%",
+                    width="100%",
+                    style=card_style,
                 ),
                 rx.box(
                     rx.vstack(
@@ -238,6 +250,9 @@ def mission_section() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    height="100%",
+                    width="100%",
+                    style=card_style,
                 ),
                 rx.box(
                     rx.vstack(
@@ -251,10 +266,19 @@ def mission_section() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    height="100%",
+                    width="100%",
+                    style=card_style,
                 ),
-                template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
+                columns={
+                    "base": "repeat(1, minmax(0, 1fr))",
+                    "md": "repeat(2, minmax(0, 1fr))",
+                },
+                rows="2",
+                flow="row",
                 gap="1.5rem",
                 width="100%",
+                align="stretch",
             ),
             spacing="6",
             align_items="start",
