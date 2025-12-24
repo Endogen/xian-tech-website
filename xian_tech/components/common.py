@@ -776,6 +776,13 @@ def command_palette() -> rx.Component:
         rx.button(on_click=State.command_palette_move_down, id="command-palette-down", display="none"),
         rx.button(on_click=State.command_palette_select_active, id="command-palette-select", display="none"),
         rx.script(COMMAND_SCRIPT),
+        rx.el.style(
+            rx.cond(
+                State.theme_mode == "light",
+                "#command-palette-input::placeholder { color: #4b5563 !important; opacity: 1 !important; }",
+                "#command-palette-input::placeholder { color: #9ca3af !important; opacity: 1 !important; }",
+            )
+        ),
         rx.cond(
             State.command_palette_open,
             rx.fragment(
@@ -807,7 +814,7 @@ def command_palette() -> rx.Component:
                             rx.input(
                                 value=State.command_query,
                                 on_change=State.set_command_query,
-                                placeholder="Try “deterministic python”, “research guild”, or “foundation contact”",
+                                placeholder='Try "deterministic python", "research guild", or "foundation contact"',
                                 auto_focus=True,
                                 width="100%",
                                 padding="1.1rem 1rem",
@@ -820,6 +827,7 @@ def command_palette() -> rx.Component:
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
+                                id="command-palette-input",
                                 style={"boxShadow": "none", "lineHeight": "1.5", "height": "64px"},
                                 _focus={
                                     "borderColor": ACCENT,
