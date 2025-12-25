@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import page_layout, section
+from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -19,7 +20,6 @@ LIGHT_CARD_BG = "#f8f9fa"
 LIGHT_CARD_BG_BRIGHT = "#ffffff"
 DARK_CARD_BG = "#0f141c"
 DARK_CARD_BG_BRIGHT = "#192330"
-from ..state import State
 
 MD_MEDIA = "@media (min-width: 1024px)"
 
@@ -115,7 +115,7 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
     )
 
 
-def terminology_page() -> rx.Component:
+def about_page() -> rx.Component:
     """Explain key Xian terms and their relationship."""
     foundation = _term_card(
         "Xian Technology Foundation",
@@ -218,4 +218,4 @@ def terminology_page() -> rx.Component:
     )
 
 
-__all__ = ["terminology_page"]
+__all__ = ["about_page"]

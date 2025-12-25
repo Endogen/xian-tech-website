@@ -40,7 +40,6 @@ NAV_LINKS = [
         "children": [
             {"label": "About", "href": "/about", "description": "Mission, approach, and what we are building."},
             {"label": "Team", "href": "/team", "description": "Meet the contributors behind the Xian stack."},
-            {"label": "Terminology", "href": "/terminology", "description": "Glossary of Xian and blockchain terminology."},
             {"label": "Contact", "href": "/contact", "description": "Reach out for support, partnerships, or questions."},
         ],
     },
@@ -218,8 +217,7 @@ def _build_search_entries() -> list[dict[str, str]]:
         "/technology": "Detailed breakdown of contracting, node, and roadmap work.",
         "/community": "Calls to join missions, open grants, and validator collectives.",
         "/developers": "Hub for playground, curated contracts, docs, SDKs, and APIs.",
-        "/about": "Foundation mission, team, terminology, and contact.",
-        "/terminology": "Key distinctions between the stack, foundation, and network.",
+        "/about": "Foundation mission, team, and contact.",
     }
 
     for link in NAV_LINKS:

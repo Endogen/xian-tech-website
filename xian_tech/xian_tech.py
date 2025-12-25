@@ -7,7 +7,9 @@ from .pages.contracts import contracts_page
 from .pages.home import home_page
 from .pages.bds import bds_page
 from .pages.developers import developers_page
-from .pages.terminology import terminology_page
+from .pages.about import about_page
+from .pages.contact import contact_page
+from .pages.team import team_page
 from .pages.technology import technology_page
 from .pages.tooling import tooling_page
 
@@ -28,5 +30,7 @@ app.add_page(bds_page, route="/bds", title="Blockchain Data Service")
 app.add_page(tooling_page, route="/tooling", title="Tooling & Integrations")
 app.add_page(technology_page, route="/technology")
 app.add_page(developers_page, route="/developers", title="Developer Hub")
-app.add_page(terminology_page, route="/terminology", title="Terminology")
+app.add_page(about_page, route="/about", title="About the Foundation")
+app.add_page(team_page, route="/team", title="Team")
 app.add_page(community_page, route="/community")
+app.add_page(contact_page, route="/contact", title="Contact")
