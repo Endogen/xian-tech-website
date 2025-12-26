@@ -776,13 +776,6 @@ def command_palette() -> rx.Component:
         rx.button(on_click=State.command_palette_move_down, id="command-palette-down", display="none"),
         rx.button(on_click=State.command_palette_select_active, id="command-palette-select", display="none"),
         rx.script(COMMAND_SCRIPT),
-        rx.el.style(
-            rx.cond(
-                State.theme_mode == "light",
-                "#command-palette-input::placeholder { color: #4b5563 !important; opacity: 1 !important; }",
-                "#command-palette-input::placeholder { color: #9ca3af !important; opacity: 1 !important; }",
-            )
-        ),
         rx.cond(
             State.command_palette_open,
             rx.fragment(
@@ -827,8 +820,15 @@ def command_palette() -> rx.Component:
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
-                                id="command-palette-input",
-                                style={"boxShadow": "none", "lineHeight": "1.5", "height": "64px"},
+                                style={
+                                    "boxShadow": "none",
+                                    "lineHeight": "1.5",
+                                    "height": "64px",
+                                    "& input::placeholder": {
+                                        "color": rx.cond(State.theme_mode == "light", "#4b5563", "#9ca3af"),
+                                        "opacity": "1",
+                                    },
+                                },
                                 _focus={
                                     "borderColor": ACCENT,
                                     "outline": "none",
