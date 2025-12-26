@@ -1,4 +1,5 @@
 from typing import Any, TypedDict
+from urllib.parse import quote
 
 import reflex as rx
 
@@ -117,6 +118,41 @@ class State(rx.State):
         else:
             idx = ids.index(current)
             self.command_palette_active_id = ids[idx + 1] if idx < len(ids) - 1 else ids[0]
+
+    def submit_contact_form(self, form_data: dict[str, Any]):
+        """Open a pre-filled email draft with the contact form details."""
+        name = (form_data.get("name") or "").strip()
+        email = (form_data.get("email") or "").strip()
+        organization = (form_data.get("organization") or "").strip()
+        topic = (form_data.get("topic") or "").strip()
+        message = (form_data.get("message") or "").strip()
+
+        subject_bits = [topic or "Foundation contact"]
+        if name:
+            subject_bits.append(name)
+        elif email:
+            subject_bits.append(email)
+        subject = " - ".join(subject_bits)
+
+        body_lines = []
+        if name:
+            body_lines.append(f"Name: {name}")
+        if email:
+            body_lines.append(f"Email: {email}")
+        if organization:
+            body_lines.append(f"Organization: {organization}")
+        if topic:
+            body_lines.append(f"Topic: {topic}")
+        body_lines.append("")
+        body_lines.append(message or "(No message provided)")
+
+        body = "\n".join(body_lines)
+        mailto = (
+            "mailto:foundation@xian.technology"
+            f"?subject={quote(subject)}"
+            f"&body={quote(body)}"
+        )
+        return rx.redirect(mailto, is_external=True)
 
     def command_palette_select_active(self):
         """Navigate to the currently selected item."""
