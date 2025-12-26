@@ -80,6 +80,13 @@ def contact_page() -> rx.Component:
     return page_layout(
         section(
             rx.vstack(
+                rx.el.style(
+                    rx.cond(
+                        State.theme_mode == "light",
+                        ".contact-form input::placeholder, .contact-form textarea::placeholder { color: #6b7280; opacity: 1; }",
+                        ".contact-form input::placeholder, .contact-form textarea::placeholder { color: #9ca3af; opacity: 1; }",
+                    )
+                ),
                 rx.box(
                     rx.text("CONTACT", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
                     padding="0.625rem 1.25rem",
@@ -154,6 +161,7 @@ def contact_page() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
+                    class_name="contact-form",
                     width="100%",
                 ),
                 spacing="6",
