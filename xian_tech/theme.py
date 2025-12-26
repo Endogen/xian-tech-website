@@ -20,10 +20,10 @@ DARK_BORDER_BRIGHT = "rgba(72, 80, 90, 0.8)"
 DARK_TOP_GRADIENT = "linear-gradient(180deg, rgba(0, 255, 136, 0.2), rgba(10, 14, 20, 0))"
 
 # Light palette
-LIGHT_ACCENT = "#00b35c"
-LIGHT_ACCENT_HOVER = "#008f4a"
-LIGHT_ACCENT_SOFT = "rgba(0, 179, 92, 0.08)"
-LIGHT_ACCENT_GLOW = "rgba(0, 179, 92, 0.25)"
+LIGHT_ACCENT = "#50b165"
+LIGHT_ACCENT_HOVER = "#408d50"
+LIGHT_ACCENT_SOFT = "rgba(80, 177, 101, 0.08)"
+LIGHT_ACCENT_GLOW = "rgba(80, 177, 101, 0.25)"
 LIGHT_PRIMARY_BG = "#ffffff"
 LIGHT_SURFACE = "rgba(248, 249, 250, 0.97)"
 LIGHT_SURFACE_HOVER = "rgba(241, 243, 245, 0.9)"
@@ -34,7 +34,7 @@ LIGHT_TEXT_MUTED = "#6b7280"
 LIGHT_TEXT_ACCENT = "#0066cc"
 LIGHT_BORDER_COLOR = "rgba(209, 213, 219, 0.6)"
 LIGHT_BORDER_BRIGHT = "rgba(156, 163, 175, 0.8)"
-LIGHT_TOP_GRADIENT = "linear-gradient(180deg, rgba(0, 179, 92, 0.28), rgba(255, 255, 255, 0))"
+LIGHT_TOP_GRADIENT = "linear-gradient(180deg, rgba(80, 177, 101, 0.28), rgba(255, 255, 255, 0))"
 
 MAX_CONTENT_WIDTH = "1200px"
 

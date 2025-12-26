@@ -27,6 +27,7 @@ def contact_page() -> rx.Component:
         field_type: str = "text",
         required: bool = False,
     ) -> rx.Component:
+        placeholder_color = rx.cond(State.theme_mode == "light", "#6b7280", "#9ca3af")
         return rx.vstack(
             rx.text(label, size="2", weight="medium", color=TEXT_MUTED),
             rx.input(
@@ -44,7 +45,17 @@ def contact_page() -> rx.Component:
                 color=TEXT_PRIMARY,
                 font_size="1rem",
                 line_height="1.6",
-                _focus={"borderColor": ACCENT, "outline": "none"},
+                style={"& input::placeholder": {"color": placeholder_color, "opacity": "1"}},
+                _focus={
+                    "borderColor": ACCENT,
+                    "outline": "none",
+                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
+                },
+                _focus_within={
+                    "borderColor": ACCENT,
+                    "outline": "none",
+                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
+                },
             ),
             spacing="2",
             align_items="start",
@@ -52,6 +63,7 @@ def contact_page() -> rx.Component:
         )
 
     def message_field() -> rx.Component:
+        placeholder_color = rx.cond(State.theme_mode == "light", "#6b7280", "#9ca3af")
         return rx.vstack(
             rx.text("Message", size="2", weight="medium", color=TEXT_MUTED),
             rx.text_area(
@@ -70,7 +82,17 @@ def contact_page() -> rx.Component:
                 color=TEXT_PRIMARY,
                 font_size="1rem",
                 line_height="1.6",
-                _focus={"borderColor": ACCENT, "outline": "none"},
+                style={"& textarea::placeholder": {"color": placeholder_color, "opacity": "1"}},
+                _focus={
+                    "borderColor": ACCENT,
+                    "outline": "none",
+                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
+                },
+                _focus_within={
+                    "borderColor": ACCENT,
+                    "outline": "none",
+                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
+                },
             ),
             spacing="2",
             align_items="start",
@@ -80,13 +102,6 @@ def contact_page() -> rx.Component:
     return page_layout(
         section(
             rx.vstack(
-                rx.el.style(
-                    rx.cond(
-                        State.theme_mode == "light",
-                        ".contact-form input::placeholder, .contact-form textarea::placeholder { color: #6b7280; opacity: 1; }",
-                        ".contact-form input::placeholder, .contact-form textarea::placeholder { color: #9ca3af; opacity: 1; }",
-                    )
-                ),
                 rx.box(
                     rx.text("CONTACT", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
                     padding="0.625rem 1.25rem",
@@ -161,7 +176,6 @@ def contact_page() -> rx.Component:
                     background=SURFACE,
                     border=f"1px solid {BORDER_COLOR}",
                     border_radius="14px",
-                    class_name="contact-form",
                     width="100%",
                 ),
                 spacing="6",
