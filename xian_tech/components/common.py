@@ -779,17 +779,6 @@ def command_palette() -> rx.Component:
         rx.cond(
             State.command_palette_open,
             rx.fragment(
-                rx.box(
-                    position="fixed",
-                    top="0",
-                    left="0",
-                    width="100%",
-                    height="100vh",
-                    background="rgba(6, 11, 17, 0.65)",
-                    backdrop_filter="blur(12px)",
-                    z_index="1000",
-                    on_click=State.close_command_palette,
-                ),
                 rx.center(
                     rx.box(
                         rx.vstack(
@@ -880,6 +869,7 @@ def command_palette() -> rx.Component:
                         ),
                         padding="2rem",
                         z_index="1001",
+                        on_click=rx.stop_propagation,
                     ),
                     position="fixed",
                     top="0",
@@ -887,6 +877,9 @@ def command_palette() -> rx.Component:
                     width="100%",
                     height="100vh",
                     z_index="1001",
+                    background="rgba(6, 11, 17, 0.65)",
+                    backdrop_filter="blur(12px)",
+                    on_click=State.close_command_palette,
                 ),
             ),
         ),
