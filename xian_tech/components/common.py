@@ -49,12 +49,11 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
 def theme_toggle() -> rx.Component:
     """Theme toggle button with minimalist icons."""
     return rx.button(
-        rx.cond(
-            State.theme_mode == "dark",
-            rx.text("◐", size="6", line_height="1"),
-            rx.text("◑", size="6", line_height="1"),
+        rx.color_mode_cond(
+            light=rx.text("◑", size="6", line_height="1"),
+            dark=rx.text("◐", size="6", line_height="1"),
         ),
-        on_click=State.toggle_theme,
+        on_click=rx.toggle_color_mode,
         variant="ghost",
         cursor="pointer",
         padding="0.5rem",
@@ -141,10 +140,9 @@ def _submenu_item(child: dict) -> rx.Component:
         "display": "block",
     }
     if highlighted:
-        base_props["background_image"] = rx.cond(
-            State.theme_mode == "light",
-            light_normal_gradient,
-            dark_normal_gradient,
+        base_props["background_image"] = rx.color_mode_cond(
+            light=light_normal_gradient,
+            dark=dark_normal_gradient,
         )
 
     # Hover styles
@@ -152,10 +150,9 @@ def _submenu_item(child: dict) -> rx.Component:
         hover_style = {
             "textDecoration": "none",
             "color": ACCENT,
-            "backgroundImage": rx.cond(
-                State.theme_mode == "light",
-                light_hover_gradient,
-                dark_hover_gradient,
+            "backgroundImage": rx.color_mode_cond(
+                light=light_hover_gradient,
+                dark=dark_hover_gradient,
             ),
             "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
         }
@@ -280,10 +277,9 @@ def command_palette_button() -> rx.Component:
         padding="0.4rem 0.85rem",
         border_radius="12px",
         border=f"1px solid {BORDER_COLOR}",
-        background_color=rx.cond(
-            State.theme_mode == "light",
-            "rgba(255, 255, 255, 0.65)",
-            "rgba(12, 18, 26, 0.6)",
+        background_color=rx.color_mode_cond(
+            light="rgba(255, 255, 255, 0.65)",
+            dark="rgba(12, 18, 26, 0.6)",
         ),
         backdrop_filter="blur(16px)",
         color=TEXT_PRIMARY,
@@ -419,15 +415,13 @@ def mobile_nav_panel() -> rx.Component:
 
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
-    border_color = rx.cond(
-        State.theme_mode == "light",
-        "1px solid rgba(15, 23, 42, 0.08)",
-        "1px solid rgba(255, 255, 255, 0.12)",
+    border_color = rx.color_mode_cond(
+        light="1px solid rgba(15, 23, 42, 0.08)",
+        dark="1px solid rgba(255, 255, 255, 0.12)",
     )
-    base_shadow = rx.cond(
-        State.theme_mode == "light",
-        "0 1px 20px rgba(15, 23, 42, 0.08)",
-        "0 1px 20px rgba(0, 0, 0, 0.35)",
+    base_shadow = rx.color_mode_cond(
+        light="0 1px 20px rgba(15, 23, 42, 0.08)",
+        dark="0 1px 20px rgba(0, 0, 0, 0.35)",
     )
     dropdown_active = _nav_has_dropdown(State.nav_hover_label)
     box_shadow = rx.cond(dropdown_active, "none", base_shadow)
@@ -568,7 +562,7 @@ def code_block(code: str) -> rx.Component:
             code,
             font_family="'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace",
             size="2",
-            color=rx.cond(State.theme_mode == "light", "#1f2937", "#c9d1d9"),
+            color=rx.color_mode_cond(light="#1f2937", dark="#c9d1d9"),
             white_space="pre",
             line_height="1.6",
         ),
@@ -773,10 +767,9 @@ def command_palette() -> rx.Component:
                                 padding="1.1rem 1rem",
                                 border=f"1.5px solid {BORDER_COLOR}",
                                 border_radius="8px",
-                                background=rx.cond(
-                                    State.theme_mode == "light",
-                                    "rgba(248, 249, 250, 0.95)",
-                                    "rgba(15, 20, 28, 0.9)",
+                                background=rx.color_mode_cond(
+                                    light="rgba(248, 249, 250, 0.95)",
+                                    dark="rgba(15, 20, 28, 0.9)",
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
@@ -785,7 +778,7 @@ def command_palette() -> rx.Component:
                                 height="64px",
                                 style={
                                     "& input::placeholder": {
-                                        "color": rx.cond(State.theme_mode == "light", "#4b5563", "#9ca3af"),
+                                        "color": rx.color_mode_cond(light="#4b5563", dark="#9ca3af"),
                                         "opacity": "1",
                                     },
                                 },
@@ -819,10 +812,9 @@ def command_palette() -> rx.Component:
                                 border=f"1px solid {BORDER_COLOR}",
                                 border_radius="12px",
                                 padding="0.75rem",
-                                background=rx.cond(
-                                    State.theme_mode == "light",
-                                    "rgba(248, 249, 250, 0.7)",
-                                    "rgba(13, 17, 23, 0.8)",
+                                background=rx.color_mode_cond(
+                                    light="rgba(248, 249, 250, 0.7)",
+                                    dark="rgba(13, 17, 23, 0.8)",
                                 ),
                             ),
                             spacing="4",
@@ -833,10 +825,9 @@ def command_palette() -> rx.Component:
                         background=PRIMARY_BG,
                         border_radius="20px",
                         border=f"1px solid {BORDER_COLOR}",
-                        box_shadow=rx.cond(
-                            State.theme_mode == "light",
-                            "0 30px 120px rgba(15, 23, 42, 0.25)",
-                            "0 30px 120px rgba(0, 0, 0, 0.8)",
+                        box_shadow=rx.color_mode_cond(
+                            light="0 30px 120px rgba(15, 23, 42, 0.25)",
+                            dark="0 30px 120px rgba(0, 0, 0, 0.8)",
                         ),
                         padding="2rem",
                         z_index="1001",

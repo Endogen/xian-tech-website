@@ -16,7 +16,7 @@ from .pages.not_found import not_found_page
 
 
 app = rx.App(
-    theme=rx.theme(appearance="light"),
+    theme=rx.theme(appearance="inherit"),
     head_components=[
         rx.el.link(rel="icon", type="image/png", href="/favicon.png"),
         rx.el.link(rel="shortcut icon", type="image/png", href="/favicon.png"),

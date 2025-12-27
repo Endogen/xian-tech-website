@@ -1,7 +1,6 @@
 import reflex as rx
 
 from ..components.common import page_layout, section
-from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -40,7 +39,7 @@ def _connectors_svg() -> rx.Component:
     def make_path(d: str) -> rx.Component:
         return rx.el.svg.path(
             d=d,
-            stroke=rx.cond(State.theme_mode == "light", stroke_light, stroke_dark),
+            stroke=rx.color_mode_cond(light=stroke_light, dark=stroke_dark),
             stroke_width="2",
             fill="none",
             stroke_linecap="round",
@@ -49,7 +48,7 @@ def _connectors_svg() -> rx.Component:
     def make_glow_path(d: str) -> rx.Component:
         return rx.el.svg.path(
             d=d,
-            stroke=rx.cond(State.theme_mode == "light", glow_light, glow_dark),
+            stroke=rx.color_mode_cond(light=glow_light, dark=glow_dark),
             stroke_width="8",
             fill="none",
             stroke_linecap="round",
@@ -79,10 +78,9 @@ def _connectors_svg() -> rx.Component:
 def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
     """Reusable card for terminology entries."""
     # Use solid backgrounds (non-transparent)
-    card_bg = rx.cond(
-        State.theme_mode == "light",
-        LIGHT_CARD_BG_BRIGHT if highlight else LIGHT_CARD_BG,
-        DARK_CARD_BG_BRIGHT if highlight else DARK_CARD_BG,
+    card_bg = rx.color_mode_cond(
+        light=LIGHT_CARD_BG_BRIGHT if highlight else LIGHT_CARD_BG,
+        dark=DARK_CARD_BG_BRIGHT if highlight else DARK_CARD_BG,
     )
     return rx.box(
         rx.vstack(

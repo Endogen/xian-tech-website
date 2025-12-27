@@ -1,7 +1,5 @@
 import reflex as rx
 
-from .state import State
-
 # Dark palette
 DARK_ACCENT = "#00ff88"
 DARK_ACCENT_HOVER = "#00cc6a"
@@ -39,21 +37,21 @@ LIGHT_TOP_GRADIENT = "linear-gradient(180deg, rgba(80, 177, 101, 0.28), rgba(255
 MAX_CONTENT_WIDTH = "1200px"
 
 # Theme-aware tokens
-ACCENT = rx.cond(State.theme_mode == "light", LIGHT_ACCENT, DARK_ACCENT)
-ACCENT_HOVER = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_HOVER, DARK_ACCENT_HOVER)
-ACCENT_SOFT = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_SOFT, DARK_ACCENT_SOFT)
-ACCENT_GLOW = rx.cond(State.theme_mode == "light", LIGHT_ACCENT_GLOW, DARK_ACCENT_GLOW)
-PRIMARY_BG = rx.cond(State.theme_mode == "light", LIGHT_PRIMARY_BG, DARK_PRIMARY_BG)
-SURFACE = rx.cond(State.theme_mode == "light", LIGHT_SURFACE, DARK_SURFACE)
-SURFACE_HOVER = rx.cond(State.theme_mode == "light", LIGHT_SURFACE_HOVER, DARK_SURFACE_HOVER)
-SURFACE_BRIGHT = rx.cond(State.theme_mode == "light", LIGHT_SURFACE_BRIGHT, DARK_SURFACE_BRIGHT)
-CODE_BG = rx.cond(State.theme_mode == "light", LIGHT_CODE_BG, DARK_CODE_BG)
-TEXT_PRIMARY = rx.cond(State.theme_mode == "light", LIGHT_TEXT_PRIMARY, DARK_TEXT_PRIMARY)
-TEXT_MUTED = rx.cond(State.theme_mode == "light", LIGHT_TEXT_MUTED, DARK_TEXT_MUTED)
-TEXT_ACCENT = rx.cond(State.theme_mode == "light", LIGHT_TEXT_ACCENT, DARK_TEXT_ACCENT)
-BORDER_COLOR = rx.cond(State.theme_mode == "light", LIGHT_BORDER_COLOR, DARK_BORDER_COLOR)
-BORDER_BRIGHT = rx.cond(State.theme_mode == "light", LIGHT_BORDER_BRIGHT, DARK_BORDER_BRIGHT)
-TOP_GRADIENT = rx.cond(State.theme_mode == "light", LIGHT_TOP_GRADIENT, DARK_TOP_GRADIENT)
+ACCENT = rx.color_mode_cond(light=LIGHT_ACCENT, dark=DARK_ACCENT)
+ACCENT_HOVER = rx.color_mode_cond(light=LIGHT_ACCENT_HOVER, dark=DARK_ACCENT_HOVER)
+ACCENT_SOFT = rx.color_mode_cond(light=LIGHT_ACCENT_SOFT, dark=DARK_ACCENT_SOFT)
+ACCENT_GLOW = rx.color_mode_cond(light=LIGHT_ACCENT_GLOW, dark=DARK_ACCENT_GLOW)
+PRIMARY_BG = rx.color_mode_cond(light=LIGHT_PRIMARY_BG, dark=DARK_PRIMARY_BG)
+SURFACE = rx.color_mode_cond(light=LIGHT_SURFACE, dark=DARK_SURFACE)
+SURFACE_HOVER = rx.color_mode_cond(light=LIGHT_SURFACE_HOVER, dark=DARK_SURFACE_HOVER)
+SURFACE_BRIGHT = rx.color_mode_cond(light=LIGHT_SURFACE_BRIGHT, dark=DARK_SURFACE_BRIGHT)
+CODE_BG = rx.color_mode_cond(light=LIGHT_CODE_BG, dark=DARK_CODE_BG)
+TEXT_PRIMARY = rx.color_mode_cond(light=LIGHT_TEXT_PRIMARY, dark=DARK_TEXT_PRIMARY)
+TEXT_MUTED = rx.color_mode_cond(light=LIGHT_TEXT_MUTED, dark=DARK_TEXT_MUTED)
+TEXT_ACCENT = rx.color_mode_cond(light=LIGHT_TEXT_ACCENT, dark=DARK_TEXT_ACCENT)
+BORDER_COLOR = rx.color_mode_cond(light=LIGHT_BORDER_COLOR, dark=DARK_BORDER_COLOR)
+BORDER_BRIGHT = rx.color_mode_cond(light=LIGHT_BORDER_BRIGHT, dark=DARK_BORDER_BRIGHT)
+TOP_GRADIENT = rx.color_mode_cond(light=LIGHT_TOP_GRADIENT, dark=DARK_TOP_GRADIENT)
 
 __all__ = [
     "ACCENT",

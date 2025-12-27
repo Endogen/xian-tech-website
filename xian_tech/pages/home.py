@@ -2,7 +2,6 @@ import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
 from ..data import CORE_COMPONENTS
-from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -536,10 +535,9 @@ def noteworthy_quotes() -> rx.Component:
                 width="100%",
             ),
             padding="1.25rem",
-            background=rx.cond(
-                State.theme_mode == "light",
-                "rgba(0, 179, 92, 0.14)",
-                ACCENT_SOFT,
+            background=rx.color_mode_cond(
+                light="rgba(0, 179, 92, 0.14)",
+                dark=ACCENT_SOFT,
             ),
             border_radius="14px",
             box_shadow=f"0 0 18px {ACCENT_SOFT}",
