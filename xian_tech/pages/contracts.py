@@ -129,8 +129,8 @@ def contracts_page() -> rx.Component:
                 size="3",
                 color=TEXT_MUTED,
                 line_height="1.7",
-                style={"paddingBottom": "0.5rem"},
-            ),
+            padding_bottom="0.5rem",
+        ),
             rx.grid(
                 rx.vstack(
                     rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
@@ -159,7 +159,7 @@ def contracts_page() -> rx.Component:
                 template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
                 gap="1.5rem",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
         section(
             rx.vstack(
@@ -198,7 +198,7 @@ def contracts_page() -> rx.Component:
                 spacing="5",
                 align_items="start",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
     )
 

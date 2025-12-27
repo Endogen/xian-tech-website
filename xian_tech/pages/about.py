@@ -75,10 +75,7 @@ def _connectors_svg() -> rx.Component:
         height="100%",
         z_index="0",
         pointer_events="none",
-        style={
-            "display": "none",
-            MD_MEDIA: {"display": "block"},
-        },
+        display={"base": "none", "lg": "block"},
     )
 
 
@@ -135,27 +132,18 @@ def about_page() -> rx.Component:
 
     foundation_node = rx.box(
         foundation,
-        style={
-            "gridColumn": "1",
-            "gridRow": "1",
-            MD_MEDIA: {"gridColumn": "2", "gridRow": "1"},
-        },
+        grid_column={"base": "1", "lg": "2"},
+        grid_row={"base": "1", "lg": "1"},
     )
     technology_node = rx.box(
         technology,
-        style={
-            "gridColumn": "1",
-            "gridRow": "2",
-            MD_MEDIA: {"gridColumn": "1", "gridRow": "2"},
-        },
+        grid_column="1",
+        grid_row="2",
     )
     network_node = rx.box(
         network,
-        style={
-            "gridColumn": "1",
-            "gridRow": "3",
-            MD_MEDIA: {"gridColumn": "3", "gridRow": "2"},
-        },
+        grid_column={"base": "1", "lg": "3"},
+        grid_row={"base": "3", "lg": "2"},
     )
 
     return page_layout(
@@ -199,7 +187,7 @@ def about_page() -> rx.Component:
                 spacing="6",
                 align_items="start",
             ),
-            style={"paddingBottom": "3rem"},
+            padding_bottom="3rem",
         ),
         section(
             rx.vstack(
@@ -214,21 +202,15 @@ def about_page() -> rx.Component:
                         align_items="start",
                         position="relative",
                         z_index="1",
-                        style={
-                            "gridTemplateColumns": "1fr",
-                            "gridTemplateRows": "repeat(3, auto)",
-                            MD_MEDIA: {
-                                "gridTemplateColumns": "repeat(3, minmax(0, 1fr))",
-                                "gridTemplateRows": "repeat(2, auto)",
-                            },
-                        },
+                        grid_template_columns={"base": "1fr", "lg": "repeat(3, minmax(0, 1fr))"},
+                        grid_template_rows={"base": "repeat(3, auto)", "lg": "repeat(2, auto)"},
                     ),
                     position="relative",
                     width="100%",
                 ),
                 align_items="start",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
     )
 

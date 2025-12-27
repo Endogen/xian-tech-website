@@ -79,13 +79,11 @@ def bds_page() -> rx.Component:
                         transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
                         height="100%",
                         width="100%",
-                        style={
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "backgroundImage": "linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                            "backgroundSize": "200% 200%",
-                            "backgroundPosition": "left center",
-                        },
+                        display="flex",
+                        flex_direction="column",
+                        background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+                        background_size="200% 200%",
+                        background_position="left center",
                         _hover={
                             "borderColor": ACCENT,
                             "backgroundColor": SURFACE_HOVER,
@@ -104,7 +102,7 @@ def bds_page() -> rx.Component:
                 width="100%",
                 align="stretch",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
         section(
             rx.vstack(

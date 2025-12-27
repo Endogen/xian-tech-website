@@ -36,17 +36,14 @@ def _nav_has_dropdown(label_var: rx.Var) -> rx.Var:
 def section(*children: rx.Component, **kwargs) -> rx.Component:
     """Wrap content in a centered section with generous spacing."""
     identifier = kwargs.pop("id", None)
-    style = {
-        "width": "100%",
-        "maxWidth": MAX_CONTENT_WIDTH,
-        "margin": "0 auto",
-        "paddingLeft": "2rem",
-        "paddingRight": "2rem",
-        "paddingTop": "5rem",
-        "paddingBottom": "5rem",
-    }
-    style.update(kwargs.pop("style", {}))
-    return rx.box(*children, id=identifier, style=style, **kwargs)
+    kwargs.setdefault("width", "100%")
+    kwargs.setdefault("max_width", MAX_CONTENT_WIDTH)
+    kwargs.setdefault("margin", "0 auto")
+    kwargs.setdefault("padding_left", "2rem")
+    kwargs.setdefault("padding_right", "2rem")
+    kwargs.setdefault("padding_top", "5rem")
+    kwargs.setdefault("padding_bottom", "5rem")
+    return rx.box(*children, id=identifier, **kwargs)
 
 
 def theme_toggle() -> rx.Component:
@@ -63,13 +60,11 @@ def theme_toggle() -> rx.Component:
         padding="0.5rem",
         background_color="transparent",
         color=TEXT_MUTED,
+        border="none",
+        transition="all 0.3s ease",
         _hover={
             "color": ACCENT,
             "transform": "rotate(180deg)",
-        },
-        style={
-            "transition": "all 0.3s ease",
-            "border": "none",
         },
     )
 
@@ -107,13 +102,11 @@ def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.C
             padding="0.35rem 0",
         ),
         href=link["href"],
-        style={
-            "padding": "0.35rem 0.1rem",
-            "transition": "all 0.2s ease",
-            "display": "inline-flex",
-            "alignItems": "center",
-            "gap": "0.35rem",
-        },
+        padding="0.35rem 0.1rem",
+        transition="all 0.2s ease",
+        display="inline-flex",
+        align_items="center",
+        gap="0.35rem",
         _hover={
             "textDecoration": "none",
             "color": ACCENT,
@@ -143,15 +136,12 @@ def _submenu_item(child: dict) -> rx.Component:
     light_hover_gradient = "linear-gradient(to right, rgba(255, 255, 255, 0.95) 40%, rgba(0, 179, 92, 0.15) 100%)"
     dark_hover_gradient = "linear-gradient(to right, rgba(25, 35, 48, 0.95) 40%, rgba(0, 255, 136, 0.12) 100%)"
 
-    # Base style for all items
-    base_style = {
+    base_props = {
         "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
         "display": "block",
     }
-
-    # Add green-to-green gradient for highlighted items (normal state)
     if highlighted:
-        base_style["backgroundImage"] = rx.cond(
+        base_props["background_image"] = rx.cond(
             State.theme_mode == "light",
             light_normal_gradient,
             dark_normal_gradient,
@@ -189,7 +179,7 @@ def _submenu_item(child: dict) -> rx.Component:
         padding="0.85rem 0.95rem",
         border_radius="10px",
         width="100%",
-        style=base_style,
+        **base_props,
     )
 
 
@@ -297,11 +287,11 @@ def command_palette_button() -> rx.Component:
         ),
         backdrop_filter="blur(16px)",
         color=TEXT_PRIMARY,
+        transition="all 0.2s ease",
         _hover={
             "borderColor": ACCENT,
             "color": ACCENT,
         },
-        style={"transition": "all 0.2s ease"},
     )
 
 
@@ -333,10 +323,8 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
                         padding="0.8rem 0.9rem",
                         border_radius="10px",
                         width="100%",
-                        style={
-                            "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
-                            "display": "block",
-                        },
+                        transition="transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
+                        display="block",
                     )
                     for child in items
                 ],
@@ -423,10 +411,7 @@ def mobile_nav_panel() -> rx.Component:
             box_shadow="none",
             max_height="70vh",
             overflow_y="auto",
-            style={
-                "display": "block",
-                MD_MEDIA: {"display": "none"},
-            },
+            display=rx.breakpoints(initial="block", lg="none"),
         ),
         rx.box(),
     )
@@ -457,7 +442,7 @@ def nav_bar() -> rx.Component:
             bottom="0",
             background_color=SURFACE,
             z_index="-1",
-            style={"transition": "background-color 0.3s ease"},
+            transition="background-color 0.3s ease",
         ),
         rx.box(
             rx.box(
@@ -490,10 +475,7 @@ def nav_bar() -> rx.Component:
                         justify="center",
                         align_items="center",
                         flex="1",
-                        style={
-                            "display": "none",
-                            MD_MEDIA: {"display": "flex"},
-                        },
+                        display=rx.breakpoints(initial="none", lg="flex"),
                     ),
                     rx.flex(
                         command_palette_button(),
@@ -509,28 +491,19 @@ def nav_bar() -> rx.Component:
                             on_click=State.toggle_mobile_nav,
                             _hover={"color": ACCENT},
                             _active={"transform": "scale(0.92)"},
-                            style={
-                                "display": "flex",
-                                "alignItems": "center",
-                                "justifyContent": "center",
-                                "height": "2.6rem",
-                                "transition": "color 0.2s ease, transform 0.15s ease",
-                                MD_MEDIA: {"display": "none"},
-                            },
+                            display=rx.breakpoints(initial="flex", lg="none"),
+                            align_items="center",
+                            justify_content="center",
+                            height="2.6rem",
+                            transition="color 0.2s ease, transform 0.15s ease",
                         ),
-                        style={
-                            "gap": "1.25rem",
-                            MD_MEDIA: {"gap": "1rem"},
-                        },
+                        gap="1.25rem",
                         align_items="center",
                     ),
                     align_items="center",
                     width="100%",
+                    gap="1.25rem",
                     justify="between",
-                    style={
-                        "gap": "1.25rem",
-                        MD_MEDIA: {"gap": "1rem", "justifyContent": "start"},
-                    },
                 ),
                 max_width=MAX_CONTENT_WIDTH,
                 margin="0 auto",
@@ -568,10 +541,7 @@ def nav_bar() -> rx.Component:
             padding_left="0",
             padding_right="0",
             z_index="99",
-            style={
-                "display": "none",
-                MD_MEDIA: {"display": "block"},
-            },
+            display=rx.breakpoints(initial="none", lg="block"),
         ),
         mobile_nav_panel(),
         position="sticky",
@@ -582,19 +552,12 @@ def nav_bar() -> rx.Component:
             "1px solid transparent",
             rx.cond(State.mobile_nav_open, "1px solid transparent", border_color),
         ),
-        box_shadow="none",
         padding="0.85rem 0",
         width="100%",
         on_mouse_leave=State.clear_nav_hover,
-        style={
-            "filter": "none",
-            "boxShadow": "none",
-            MD_MEDIA: {
-                "filter": filter_shadow,
-                "boxShadow": box_shadow,
-            },
-            "transition": "filter 0.18s ease, box-shadow 0.18s ease",
-        },
+        filter=rx.breakpoints(initial="none", lg=filter_shadow),
+        box_shadow=rx.breakpoints(initial="none", lg=box_shadow),
+        transition="filter 0.18s ease, box-shadow 0.18s ease",
     )
 
 
@@ -615,7 +578,7 @@ def code_block(code: str) -> rx.Component:
         padding="1.5rem",
         overflow_x="auto",
         width="100%",
-        style={"transition": "all 0.3s ease"},
+        transition="all 0.3s ease",
     )
 
 
@@ -735,14 +698,12 @@ def command_palette() -> rx.Component:
             is_external=action["external"],
             on_click=State.close_command_palette,
             on_mouse_enter=State.set_command_palette_selection(action["id"]),
-            style={
-                "padding": "0.85rem 1rem",
-                "borderRadius": "12px",
-                "border": f"1px solid {BORDER_COLOR}",
-                "transition": "all 0.2s ease",
-                "background": rx.cond(is_active, ACCENT_SOFT, "transparent"),
-                "borderColor": rx.cond(is_active, ACCENT, BORDER_COLOR),
-            },
+            padding="0.85rem 1rem",
+            border_radius="12px",
+            border=f"1px solid {BORDER_COLOR}",
+            transition="all 0.2s ease",
+            background=rx.cond(is_active, ACCENT_SOFT, "transparent"),
+            border_color=rx.cond(is_active, ACCENT, BORDER_COLOR),
             _hover={
                 "borderColor": ACCENT,
                 "backgroundColor": ACCENT_SOFT,
@@ -819,10 +780,10 @@ def command_palette() -> rx.Component:
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
+                                box_shadow="none",
+                                line_height="1.5",
+                                height="64px",
                                 style={
-                                    "boxShadow": "none",
-                                    "lineHeight": "1.5",
-                                    "height": "64px",
                                     "& input::placeholder": {
                                         "color": rx.cond(State.theme_mode == "light", "#4b5563", "#9ca3af"),
                                         "opacity": "1",
@@ -999,7 +960,7 @@ def footer() -> rx.Component:
         ),
         background_color=CODE_BG,
         width="100%",
-        style={"transition": "background-color 0.3s ease"},
+        transition="background-color 0.3s ease",
     )
 
 
@@ -1032,7 +993,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
         background=PRIMARY_BG,
         color=TEXT_PRIMARY,
         min_height="100vh",
-        style={"transition": "background-color 0.3s ease, color 0.3s ease"},
+        transition="background-color 0.3s ease, color 0.3s ease",
     )
 
 

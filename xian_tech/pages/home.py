@@ -73,7 +73,7 @@ def hero_section() -> rx.Component:
                             "backgroundColor": ACCENT_HOVER,
                             "transform": "translateY(-2px)",
                         },
-                        style={"transition": "all 0.2s ease"},
+                        transition="all 0.2s ease",
                     ),
                     href="/technology",
                 ),
@@ -92,7 +92,7 @@ def hero_section() -> rx.Component:
                             "backgroundColor": SURFACE,
                             "borderColor": TEXT_MUTED,
                         },
-                        style={"transition": "all 0.2s ease"},
+                        transition="all 0.2s ease",
                     ),
                     href="https://github.com/xian-technology",
                     is_external=True,
@@ -105,7 +105,8 @@ def hero_section() -> rx.Component:
             align_items="center",
             width="100%",
         ),
-        style={"paddingTop": "8rem", "paddingBottom": "8rem"},
+        padding_top="8rem",
+        padding_bottom="8rem",
     )
 
 
@@ -144,13 +145,11 @@ def stack_overview() -> rx.Component:
                             transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
                             height="100%",
                             width="100%",
-                            style={
-                                "display": "flex",
-                                "flexDirection": "column",
-                                "backgroundImage": "linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                                "backgroundSize": "200% 200%",
-                                "backgroundPosition": "left center",
-                            },
+                            display="flex",
+                            flex_direction="column",
+                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+                            background_size="200% 200%",
+                            background_position="left center",
                             _hover={
                                 "borderColor": ACCENT,
                                 "backgroundColor": SURFACE_HOVER,
@@ -175,7 +174,8 @@ def stack_overview() -> rx.Component:
             spacing="6",
             align_items="center",
         ),
-        style={"paddingTop": "3rem", "paddingBottom": "3rem"},
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -189,10 +189,10 @@ def mission_section() -> rx.Component:
             align_items="flex-start",
         )
 
-    card_style = {
+    card_props = {
         "display": "flex",
-        "flexDirection": "column",
-        "alignSelf": "stretch",
+        "flex_direction": "column",
+        "align_self": "stretch",
     }
 
     return section(
@@ -219,7 +219,7 @@ def mission_section() -> rx.Component:
                     border_radius="14px",
                     height="100%",
                     width="100%",
-                    style=card_style,
+                    **card_props,
                 ),
                 rx.box(
                     rx.vstack(
@@ -236,7 +236,7 @@ def mission_section() -> rx.Component:
                     border_radius="14px",
                     height="100%",
                     width="100%",
-                    style=card_style,
+                    **card_props,
                 ),
                 rx.box(
                     rx.vstack(
@@ -252,7 +252,7 @@ def mission_section() -> rx.Component:
                     border_radius="14px",
                     height="100%",
                     width="100%",
-                    style=card_style,
+                    **card_props,
                 ),
                 rx.box(
                     rx.vstack(
@@ -268,7 +268,7 @@ def mission_section() -> rx.Component:
                     border_radius="14px",
                     height="100%",
                     width="100%",
-                    style=card_style,
+                    **card_props,
                 ),
                 columns={
                     "base": "repeat(1, minmax(0, 1fr))",
@@ -283,7 +283,8 @@ def mission_section() -> rx.Component:
             spacing="6",
             align_items="start",
         ),
-        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+        padding_top="2rem",
+        padding_bottom="3rem",
     )
 
 
@@ -333,7 +334,8 @@ def why_another_blockchain() -> rx.Component:
             ),
             margin_top="0.5rem",
         ),
-        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+        padding_top="2rem",
+        padding_bottom="3rem",
     )
 
 
@@ -399,7 +401,8 @@ def why_another_blockchain() -> rx.Component:
             template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
             gap="2rem",
         ),
-        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+        padding_top="2rem",
+        padding_bottom="3rem",
     )
 
 
@@ -467,7 +470,8 @@ def why_python() -> rx.Component:
             template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
             gap="2rem",
         ),
-        style={"paddingTop": "2rem", "paddingBottom": "3rem"},
+        padding_top="2rem",
+        padding_bottom="3rem",
     )
 
 
@@ -506,7 +510,7 @@ def noteworthy_quotes() -> rx.Component:
         return rx.box(
             rx.vstack(
                 rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
-                rx.text(item["quote"], size="4", color=TEXT_MUTED, line_height="1.8", style={"fontStyle": "italic"}),
+                rx.text(item["quote"], size="4", color=TEXT_MUTED, line_height="1.8", font_style="italic"),
                 rx.hstack(
                     rx.spacer(),
                     rx.text("”", size="9", color=ACCENT, weight="bold", line_height="0.6"),
@@ -554,7 +558,8 @@ def noteworthy_quotes() -> rx.Component:
             spacing="4",
             align_items="start",
         ),
-        style={"paddingTop": "0rem", "paddingBottom": "3rem"},
+        padding_top="0rem",
+        padding_bottom="3rem",
     )
 
 

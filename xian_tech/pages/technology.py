@@ -104,7 +104,7 @@ def architecture_overview() -> rx.Component:
             spacing="5",
             align_items="start",
         ),
-        style={"paddingBottom": "3rem"},
+        padding_bottom="3rem",
     )
 
 
