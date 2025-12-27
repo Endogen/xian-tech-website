@@ -21,9 +21,6 @@ LIGHT_CARD_BG_BRIGHT = "#ffffff"
 DARK_CARD_BG = "#0f141c"
 DARK_CARD_BG_BRIGHT = "#192330"
 
-MD_MEDIA = "@media (min-width: 1024px)"
-
-
 def _connectors_svg() -> rx.Component:
     """SVG connectors showing Foundation connecting to Technology and Network."""
     # Colors need to be static strings for SVG attributes
@@ -75,7 +72,7 @@ def _connectors_svg() -> rx.Component:
         height="100%",
         z_index="0",
         pointer_events="none",
-        display={"base": "none", "lg": "block"},
+        display=rx.breakpoints(initial="none", lg="block"),
     )
 
 
@@ -132,18 +129,18 @@ def about_page() -> rx.Component:
 
     foundation_node = rx.box(
         foundation,
-        grid_column={"base": "1", "lg": "2"},
-        grid_row={"base": "1", "lg": "1"},
+        grid_column=rx.breakpoints(initial="1", lg="2"),
+        grid_row=rx.breakpoints(initial="1", lg="1"),
     )
     technology_node = rx.box(
         technology,
-        grid_column="1",
-        grid_row="2",
+        grid_column=rx.breakpoints(initial="1", lg="1"),
+        grid_row=rx.breakpoints(initial="2", lg="2"),
     )
     network_node = rx.box(
         network,
-        grid_column={"base": "1", "lg": "3"},
-        grid_row={"base": "3", "lg": "2"},
+        grid_column=rx.breakpoints(initial="1", lg="3"),
+        grid_row=rx.breakpoints(initial="3", lg="2"),
     )
 
     return page_layout(
@@ -202,8 +199,14 @@ def about_page() -> rx.Component:
                         align_items="start",
                         position="relative",
                         z_index="1",
-                        grid_template_columns={"base": "1fr", "lg": "repeat(3, minmax(0, 1fr))"},
-                        grid_template_rows={"base": "repeat(3, auto)", "lg": "repeat(2, auto)"},
+                        grid_template_columns=rx.breakpoints(
+                            initial="1fr",
+                            lg="repeat(3, minmax(0, 1fr))",
+                        ),
+                        grid_template_rows=rx.breakpoints(
+                            initial="repeat(3, auto)",
+                            lg="repeat(2, auto)",
+                        ),
                     ),
                     position="relative",
                     width="100%",
