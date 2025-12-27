@@ -789,7 +789,7 @@ def command_palette() -> rx.Component:
                                     align_items="start",
                                 ),
                                 rx.spacer(),
-                                rx.text("ESC to close", size="2", color=TEXT_MUTED),
+                                rx.text("ESC or", size="2", color=TEXT_MUTED),
                                 rx.button(
                                     rx.icon(tag="x", size=18),
                                     on_click=State.close_command_palette,
