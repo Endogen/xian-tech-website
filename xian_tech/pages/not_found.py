@@ -19,13 +19,6 @@ def not_found_page() -> rx.Component:
     return page_layout(
         section(
             rx.vstack(
-                rx.box(
-                    rx.text("404", size="2", letter_spacing="0.2em", color=ACCENT, weight="medium"),
-                    padding="0.5rem 1rem",
-                    background=ACCENT_SOFT,
-                    border=f"1px solid {ACCENT_GLOW}",
-                    border_radius="999px",
-                ),
                 rx.heading(
                     "Page not found",
                     size="8",
@@ -34,13 +27,19 @@ def not_found_page() -> rx.Component:
                     line_height="1.1",
                     text_align="center",
                 ),
-                rx.text(
-                    "We could not find that page. It may have moved or the URL may be misspelled.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    max_width="720px",
-                    text_align="center",
+                rx.box(
+                    rx.text(
+                        "404",
+                        font_size="7.5rem",
+                        line_height="1",
+                        letter_spacing="0.2em",
+                        color=ACCENT,
+                        weight="bold",
+                    ),
+                    padding="0.75rem 1.5rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
                 ),
                 rx.hstack(
                     rx.link(
@@ -51,6 +50,7 @@ def not_found_page() -> rx.Component:
                             color=PRIMARY_BG,
                             border_radius="10px",
                             padding="1rem 1.75rem",
+                            cursor="pointer",
                             transition="all 0.2s ease",
                             _hover={
                                 "backgroundColor": ACCENT_HOVER,
@@ -62,7 +62,7 @@ def not_found_page() -> rx.Component:
                     ),
                     rx.link(
                         rx.button(
-                            "Contact the foundation",
+                            "Report issue",
                             size="4",
                             variant="outline",
                             border_color=BORDER_COLOR,
@@ -70,6 +70,7 @@ def not_found_page() -> rx.Component:
                             background_color="transparent",
                             border_radius="10px",
                             padding="1rem 1.75rem",
+                            cursor="pointer",
                             transition="all 0.2s ease",
                             _hover={
                                 "backgroundColor": SURFACE,
