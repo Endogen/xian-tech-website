@@ -75,7 +75,7 @@ def community_page() -> rx.Component:
                 spacing="6",
                 align_items="start",
             ),
-            style={"paddingBottom": "3rem"},
+            padding_bottom="3rem",
         ),
         section(
             rx.vstack(
@@ -89,7 +89,7 @@ def community_page() -> rx.Component:
                 align_items="start",
                 width="100%",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
         section(
             rx.grid(

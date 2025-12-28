@@ -12,10 +12,11 @@ from .pages.contact import contact_page
 from .pages.team import team_page
 from .pages.technology import technology_page
 from .pages.tooling import tooling_page
+from .pages.not_found import not_found_page
 
 
 app = rx.App(
-    theme=rx.theme(appearance="light"),
+    theme=rx.theme(appearance="inherit"),
     head_components=[
         rx.el.link(rel="icon", type="image/png", href="/favicon.png"),
         rx.el.link(rel="shortcut icon", type="image/png", href="/favicon.png"),
@@ -34,3 +35,4 @@ app.add_page(about_page, route="/about", title="About the Foundation")
 app.add_page(team_page, route="/team", title="Team")
 app.add_page(community_page, route="/community")
 app.add_page(contact_page, route="/contact", title="Contact")
+app.add_page(not_found_page, route="404", title="404 - Not Found")

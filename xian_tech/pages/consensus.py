@@ -98,7 +98,7 @@ def consensus_page() -> rx.Component:
                 template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
                 gap="1.5rem",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
     )
 

@@ -106,7 +106,7 @@ def developers_page() -> rx.Component:
                 spacing="6",
                 align_items="start",
             ),
-            style={"paddingBottom": "3rem"},
+            padding_bottom="3rem",
         ),
         section(
             rx.grid(
@@ -114,7 +114,7 @@ def developers_page() -> rx.Component:
                 template_columns={"base": "repeat(1,  minmax(0, 1fr))", "md": "repeat(2, minmax(0, 1fr))"},
                 gap="1.5rem",
             ),
-            style={"paddingTop": "0"},
+            padding_top="0",
         ),
     )
 

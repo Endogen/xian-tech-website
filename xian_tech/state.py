@@ -44,16 +44,11 @@ class ActiveCommandInfo(TypedDict):
 class State(rx.State):
     """Global application state."""
 
-    theme_mode: str = "light"
     mobile_nav_open: bool = False
     nav_hover_label: str = ""
     command_palette_open: bool = False
     command_query: str = ""
     command_palette_active_id: str | None = None
-
-    def toggle_theme(self):
-        """Toggle between light and dark themes."""
-        self.theme_mode = "light" if self.theme_mode == "dark" else "dark"
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""

@@ -27,7 +27,7 @@ def contact_page() -> rx.Component:
         field_type: str = "text",
         required: bool = False,
     ) -> rx.Component:
-        placeholder_color = rx.cond(State.theme_mode == "light", "#6b7280", "#9ca3af")
+        placeholder_color = rx.color_mode_cond(light="#6b7280", dark="#9ca3af")
         return rx.vstack(
             rx.text(label, size="2", weight="medium", color=TEXT_MUTED),
             rx.input(
@@ -63,7 +63,7 @@ def contact_page() -> rx.Component:
         )
 
     def message_field() -> rx.Component:
-        placeholder_color = rx.cond(State.theme_mode == "light", "#6b7280", "#9ca3af")
+        placeholder_color = rx.color_mode_cond(light="#6b7280", dark="#9ca3af")
         return rx.vstack(
             rx.text("Message", size="2", weight="medium", color=TEXT_MUTED),
             rx.text_area(

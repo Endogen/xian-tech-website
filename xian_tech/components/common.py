@@ -36,40 +36,34 @@ def _nav_has_dropdown(label_var: rx.Var) -> rx.Var:
 def section(*children: rx.Component, **kwargs) -> rx.Component:
     """Wrap content in a centered section with generous spacing."""
     identifier = kwargs.pop("id", None)
-    style = {
-        "width": "100%",
-        "maxWidth": MAX_CONTENT_WIDTH,
-        "margin": "0 auto",
-        "paddingLeft": "2rem",
-        "paddingRight": "2rem",
-        "paddingTop": "5rem",
-        "paddingBottom": "5rem",
-    }
-    style.update(kwargs.pop("style", {}))
-    return rx.box(*children, id=identifier, style=style, **kwargs)
+    kwargs.setdefault("width", "100%")
+    kwargs.setdefault("max_width", MAX_CONTENT_WIDTH)
+    kwargs.setdefault("margin", "0 auto")
+    kwargs.setdefault("padding_left", "2rem")
+    kwargs.setdefault("padding_right", "2rem")
+    kwargs.setdefault("padding_top", "5rem")
+    kwargs.setdefault("padding_bottom", "5rem")
+    return rx.box(*children, id=identifier, **kwargs)
 
 
 def theme_toggle() -> rx.Component:
     """Theme toggle button with minimalist icons."""
     return rx.button(
-        rx.cond(
-            State.theme_mode == "dark",
-            rx.text("◐", size="6", line_height="1"),
-            rx.text("◑", size="6", line_height="1"),
+        rx.color_mode_cond(
+            light=rx.text("◑", size="6", line_height="1"),
+            dark=rx.text("◐", size="6", line_height="1"),
         ),
-        on_click=State.toggle_theme,
+        on_click=rx.toggle_color_mode,
         variant="ghost",
         cursor="pointer",
         padding="0.5rem",
         background_color="transparent",
         color=TEXT_MUTED,
+        border="none",
+        transition="all 0.3s ease",
         _hover={
             "color": ACCENT,
             "transform": "rotate(180deg)",
-        },
-        style={
-            "transition": "all 0.3s ease",
-            "border": "none",
         },
     )
 
@@ -107,13 +101,11 @@ def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.C
             padding="0.35rem 0",
         ),
         href=link["href"],
-        style={
-            "padding": "0.35rem 0.1rem",
-            "transition": "all 0.2s ease",
-            "display": "inline-flex",
-            "alignItems": "center",
-            "gap": "0.35rem",
-        },
+        padding="0.35rem 0.1rem",
+        transition="all 0.2s ease",
+        display="inline-flex",
+        align_items="center",
+        gap="0.35rem",
         _hover={
             "textDecoration": "none",
             "color": ACCENT,
@@ -143,18 +135,14 @@ def _submenu_item(child: dict) -> rx.Component:
     light_hover_gradient = "linear-gradient(to right, rgba(255, 255, 255, 0.95) 40%, rgba(0, 179, 92, 0.15) 100%)"
     dark_hover_gradient = "linear-gradient(to right, rgba(25, 35, 48, 0.95) 40%, rgba(0, 255, 136, 0.12) 100%)"
 
-    # Base style for all items
-    base_style = {
+    base_props = {
         "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
         "display": "block",
     }
-
-    # Add green-to-green gradient for highlighted items (normal state)
     if highlighted:
-        base_style["backgroundImage"] = rx.cond(
-            State.theme_mode == "light",
-            light_normal_gradient,
-            dark_normal_gradient,
+        base_props["background_image"] = rx.color_mode_cond(
+            light=light_normal_gradient,
+            dark=dark_normal_gradient,
         )
 
     # Hover styles
@@ -162,10 +150,9 @@ def _submenu_item(child: dict) -> rx.Component:
         hover_style = {
             "textDecoration": "none",
             "color": ACCENT,
-            "backgroundImage": rx.cond(
-                State.theme_mode == "light",
-                light_hover_gradient,
-                dark_hover_gradient,
+            "backgroundImage": rx.color_mode_cond(
+                light=light_hover_gradient,
+                dark=dark_hover_gradient,
             ),
             "boxShadow": "0 12px 32px rgba(0,0,0,0.16)",
         }
@@ -189,7 +176,7 @@ def _submenu_item(child: dict) -> rx.Component:
         padding="0.85rem 0.95rem",
         border_radius="10px",
         width="100%",
-        style=base_style,
+        **base_props,
     )
 
 
@@ -290,18 +277,17 @@ def command_palette_button() -> rx.Component:
         padding="0.4rem 0.85rem",
         border_radius="12px",
         border=f"1px solid {BORDER_COLOR}",
-        background_color=rx.cond(
-            State.theme_mode == "light",
-            "rgba(255, 255, 255, 0.65)",
-            "rgba(12, 18, 26, 0.6)",
+        background_color=rx.color_mode_cond(
+            light="rgba(255, 255, 255, 0.65)",
+            dark="rgba(12, 18, 26, 0.6)",
         ),
         backdrop_filter="blur(16px)",
         color=TEXT_PRIMARY,
+        transition="all 0.2s ease",
         _hover={
             "borderColor": ACCENT,
             "color": ACCENT,
         },
-        style={"transition": "all 0.2s ease"},
     )
 
 
@@ -333,10 +319,8 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
                         padding="0.8rem 0.9rem",
                         border_radius="10px",
                         width="100%",
-                        style={
-                            "transition": "transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
-                            "display": "block",
-                        },
+                        transition="transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
+                        display="block",
                     )
                     for child in items
                 ],
@@ -423,10 +407,7 @@ def mobile_nav_panel() -> rx.Component:
             box_shadow="none",
             max_height="70vh",
             overflow_y="auto",
-            style={
-                "display": "block",
-                MD_MEDIA: {"display": "none"},
-            },
+            display=rx.breakpoints(initial="block", lg="none"),
         ),
         rx.box(),
     )
@@ -434,18 +415,16 @@ def mobile_nav_panel() -> rx.Component:
 
 def nav_bar() -> rx.Component:
     """Professional navigation bar."""
-    border_color = rx.cond(
-        State.theme_mode == "light",
-        "1px solid rgba(15, 23, 42, 0.08)",
-        "1px solid rgba(255, 255, 255, 0.12)",
+    border_color = rx.color_mode_cond(
+        light="1px solid rgba(15, 23, 42, 0.08)",
+        dark="1px solid rgba(255, 255, 255, 0.12)",
     )
-    base_shadow = rx.cond(
-        State.theme_mode == "light",
-        "0 1px 20px rgba(15, 23, 42, 0.08)",
-        "0 1px 20px rgba(0, 0, 0, 0.35)",
+    base_shadow = rx.color_mode_cond(
+        light="0 1px 20px rgba(15, 23, 42, 0.08)",
+        dark="0 1px 20px rgba(0, 0, 0, 0.35)",
     )
     dropdown_active = _nav_has_dropdown(State.nav_hover_label)
-    box_shadow = base_shadow
+    box_shadow = rx.cond(dropdown_active, "none", base_shadow)
     filter_shadow = "none"
     return rx.box(
         # Background layer for the nav surface (kept separate to avoid stacking context issues)
@@ -457,7 +436,7 @@ def nav_bar() -> rx.Component:
             bottom="0",
             background_color=SURFACE,
             z_index="-1",
-            style={"transition": "background-color 0.3s ease"},
+            transition="background-color 0.3s ease",
         ),
         rx.box(
             rx.box(
@@ -490,10 +469,7 @@ def nav_bar() -> rx.Component:
                         justify="center",
                         align_items="center",
                         flex="1",
-                        style={
-                            "display": "none",
-                            MD_MEDIA: {"display": "flex"},
-                        },
+                        display=rx.breakpoints(initial="none", lg="flex"),
                     ),
                     rx.flex(
                         command_palette_button(),
@@ -509,28 +485,19 @@ def nav_bar() -> rx.Component:
                             on_click=State.toggle_mobile_nav,
                             _hover={"color": ACCENT},
                             _active={"transform": "scale(0.92)"},
-                            style={
-                                "display": "flex",
-                                "alignItems": "center",
-                                "justifyContent": "center",
-                                "height": "2.6rem",
-                                "transition": "color 0.2s ease, transform 0.15s ease",
-                                MD_MEDIA: {"display": "none"},
-                            },
+                            display=rx.breakpoints(initial="flex", lg="none"),
+                            align_items="center",
+                            justify_content="center",
+                            height="2.6rem",
+                            transition="color 0.2s ease, transform 0.15s ease",
                         ),
-                        style={
-                            "gap": "1.25rem",
-                            MD_MEDIA: {"gap": "1rem"},
-                        },
+                        gap="1.25rem",
                         align_items="center",
                     ),
                     align_items="center",
                     width="100%",
+                    gap="1.25rem",
                     justify="between",
-                    style={
-                        "gap": "1.25rem",
-                        MD_MEDIA: {"gap": "1rem", "justifyContent": "start"},
-                    },
                 ),
                 max_width=MAX_CONTENT_WIDTH,
                 margin="0 auto",
@@ -568,10 +535,7 @@ def nav_bar() -> rx.Component:
             padding_left="0",
             padding_right="0",
             z_index="99",
-            style={
-                "display": "none",
-                MD_MEDIA: {"display": "block"},
-            },
+            display=rx.breakpoints(initial="none", lg="block"),
         ),
         mobile_nav_panel(),
         position="sticky",
@@ -579,22 +543,15 @@ def nav_bar() -> rx.Component:
         z_index="100",
         border_bottom=rx.cond(
             dropdown_active,
-            "1px solid transparent",
+            "none",
             rx.cond(State.mobile_nav_open, "1px solid transparent", border_color),
         ),
-        box_shadow="none",
         padding="0.85rem 0",
         width="100%",
         on_mouse_leave=State.clear_nav_hover,
-        style={
-            "filter": "none",
-            "boxShadow": "none",
-            MD_MEDIA: {
-                "filter": filter_shadow,
-                "boxShadow": box_shadow,
-            },
-            "transition": "filter 0.18s ease, box-shadow 0.18s ease",
-        },
+        filter=rx.breakpoints(initial="none", lg=filter_shadow),
+        box_shadow=rx.breakpoints(initial="none", lg=box_shadow),
+        transition="filter 0.18s ease, box-shadow 0.18s ease",
     )
 
 
@@ -605,7 +562,7 @@ def code_block(code: str) -> rx.Component:
             code,
             font_family="'SF Mono', 'Monaco', 'Menlo', 'Courier New', monospace",
             size="2",
-            color=rx.cond(State.theme_mode == "light", "#1f2937", "#c9d1d9"),
+            color=rx.color_mode_cond(light="#1f2937", dark="#c9d1d9"),
             white_space="pre",
             line_height="1.6",
         ),
@@ -615,7 +572,7 @@ def code_block(code: str) -> rx.Component:
         padding="1.5rem",
         overflow_x="auto",
         width="100%",
-        style={"transition": "all 0.3s ease"},
+        transition="all 0.3s ease",
     )
 
 
@@ -704,8 +661,8 @@ def command_palette() -> rx.Component:
     def action_row(action: dict[str, Any]) -> rx.Component:
         arrow = rx.cond(
             action["external"],
-            rx.text("↗", size="3", color=TEXT_MUTED),
-            rx.text("↩", size="3", color=TEXT_MUTED),
+            rx.icon(tag="arrow_up_right", size=18, color=TEXT_MUTED),
+            rx.icon(tag="corner_down_left", size=18, color=TEXT_MUTED),
         )
         is_active = action["id"] == State.command_palette_active_id
 
@@ -717,7 +674,7 @@ def command_palette() -> rx.Component:
                     color=ACCENT,
                     background=ACCENT_SOFT,
                     padding="0.15rem 0.5rem",
-                    border_radius="999px",
+                    border_radius="6px",
                 ),
                 rx.vstack(
                     rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
@@ -735,14 +692,12 @@ def command_palette() -> rx.Component:
             is_external=action["external"],
             on_click=State.close_command_palette,
             on_mouse_enter=State.set_command_palette_selection(action["id"]),
-            style={
-                "padding": "0.85rem 1rem",
-                "borderRadius": "12px",
-                "border": f"1px solid {BORDER_COLOR}",
-                "transition": "all 0.2s ease",
-                "background": rx.cond(is_active, ACCENT_SOFT, "transparent"),
-                "borderColor": rx.cond(is_active, ACCENT, BORDER_COLOR),
-            },
+            padding="0.85rem 1rem",
+            border_radius="12px",
+            border=f"1px solid {BORDER_COLOR}",
+            transition="all 0.2s ease",
+            background=rx.cond(is_active, ACCENT_SOFT, "transparent"),
+            border_color=rx.cond(is_active, ACCENT, BORDER_COLOR),
             _hover={
                 "borderColor": ACCENT,
                 "backgroundColor": ACCENT_SOFT,
@@ -782,55 +737,58 @@ def command_palette() -> rx.Component:
                 rx.center(
                     rx.box(
                         rx.vstack(
-                            rx.hstack(
-                                rx.vstack(
-                                    rx.text("Search Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
-                                    spacing="1",
-                                    align_items="start",
+                            rx.text_field(
+                                rx.text_field.slot(
+                                    rx.button(
+                                        "ESC",
+                                        on_click=State.close_command_palette,
+                                        size="1",
+                                        variant="outline",
+                                        color=TEXT_MUTED,
+                                        border_color=BORDER_COLOR,
+                                        background_color=rx.color_mode_cond(
+                                            light="rgba(255, 255, 255, 0.7)",
+                                            dark="rgba(12, 18, 26, 0.6)",
+                                        ),
+                                        padding="0.1rem 0.6rem",
+                                        font_size="0.75rem",
+                                        cursor="pointer",
+                                        title="Close",
+                                        _hover={
+                                            "color": ACCENT,
+                                            "borderColor": ACCENT,
+                                        },
+                                    ),
+                                    side="right",
                                 ),
-                                rx.spacer(),
-                                rx.text("ESC or", size="2", color=TEXT_MUTED),
-                                rx.button(
-                                    rx.icon(tag="x", size=18),
-                                    on_click=State.close_command_palette,
-                                    size="1",
-                                    variant="ghost",
-                                    color=TEXT_MUTED,
-                                    padding="0.2rem 0.55rem",
-                                    title="Close",
-                                    _hover={"color": ACCENT},
-                                ),
-                                align_items="center",
-                                width="100%",
-                            ),
-                            rx.input(
                                 value=State.command_query,
                                 on_change=State.set_command_query,
                                 placeholder='Try "deterministic python", "research guild", or "foundation contact"',
                                 auto_focus=True,
                                 width="100%",
-                                padding="1.1rem 1rem",
+                                size="3",
+                                radius="medium",
+                                variant="surface",
                                 border=f"1.5px solid {BORDER_COLOR}",
-                                border_radius="8px",
-                                background=rx.cond(
-                                    State.theme_mode == "light",
-                                    "rgba(248, 249, 250, 0.95)",
-                                    "rgba(15, 20, 28, 0.9)",
+                                background=rx.color_mode_cond(
+                                    light="rgba(248, 249, 250, 0.95)",
+                                    dark="rgba(15, 20, 28, 0.9)",
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
+                                line_height="1.5",
                                 style={
-                                    "boxShadow": "none",
-                                    "lineHeight": "1.5",
-                                    "height": "64px",
                                     "& input::placeholder": {
-                                        "color": rx.cond(State.theme_mode == "light", "#4b5563", "#9ca3af"),
+                                        "color": rx.color_mode_cond(light="#4b5563", dark="#9ca3af"),
                                         "opacity": "1",
                                     },
                                 },
                                 _focus={
                                     "borderColor": ACCENT,
                                     "outline": "none",
+                                },
+                                _focus_within={
+                                    "borderColor": ACCENT,
                                 },
                             ),
                             rx.box(
@@ -855,14 +813,6 @@ def command_palette() -> rx.Component:
                                 width="100%",
                                 max_height="360px",
                                 overflow_y="auto",
-                                border=f"1px solid {BORDER_COLOR}",
-                                border_radius="12px",
-                                padding="0.75rem",
-                                background=rx.cond(
-                                    State.theme_mode == "light",
-                                    "rgba(248, 249, 250, 0.7)",
-                                    "rgba(13, 17, 23, 0.8)",
-                                ),
                             ),
                             spacing="4",
                             width="100%",
@@ -872,10 +822,9 @@ def command_palette() -> rx.Component:
                         background=PRIMARY_BG,
                         border_radius="20px",
                         border=f"1px solid {BORDER_COLOR}",
-                        box_shadow=rx.cond(
-                            State.theme_mode == "light",
-                            "0 30px 120px rgba(15, 23, 42, 0.25)",
-                            "0 30px 120px rgba(0, 0, 0, 0.8)",
+                        box_shadow=rx.color_mode_cond(
+                            light="0 30px 120px rgba(15, 23, 42, 0.25)",
+                            dark="0 30px 120px rgba(0, 0, 0, 0.8)",
                         ),
                         padding="2rem",
                         z_index="1001",
@@ -999,7 +948,7 @@ def footer() -> rx.Component:
         ),
         background_color=CODE_BG,
         width="100%",
-        style={"transition": "background-color 0.3s ease"},
+        transition="background-color 0.3s ease",
     )
 
 
@@ -1032,7 +981,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
         background=PRIMARY_BG,
         color=TEXT_PRIMARY,
         min_height="100vh",
-        style={"transition": "background-color 0.3s ease, color 0.3s ease"},
+        transition="background-color 0.3s ease, color 0.3s ease",
     )
 
 
