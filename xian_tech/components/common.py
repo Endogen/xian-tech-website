@@ -661,8 +661,8 @@ def command_palette() -> rx.Component:
     def action_row(action: dict[str, Any]) -> rx.Component:
         arrow = rx.cond(
             action["external"],
-            rx.text("↗", size="3", color=TEXT_MUTED),
-            rx.text("↩", size="3", color=TEXT_MUTED),
+            rx.icon(tag="arrow_up_right", size=18, color=TEXT_MUTED),
+            rx.icon(tag="corner_down_left", size=18, color=TEXT_MUTED),
         )
         is_active = action["id"] == State.command_palette_active_id
 
