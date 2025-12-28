@@ -674,7 +674,7 @@ def command_palette() -> rx.Component:
                     color=ACCENT,
                     background=ACCENT_SOFT,
                     padding="0.15rem 0.5rem",
-                    border_radius="999px",
+                    border_radius="6px",
                 ),
                 rx.vstack(
                     rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
@@ -813,13 +813,6 @@ def command_palette() -> rx.Component:
                                 width="100%",
                                 max_height="360px",
                                 overflow_y="auto",
-                                border=f"1px solid {BORDER_COLOR}",
-                                border_radius="12px",
-                                padding="0.75rem",
-                                background=rx.color_mode_cond(
-                                    light="rgba(248, 249, 250, 0.7)",
-                                    dark="rgba(13, 17, 23, 0.8)",
-                                ),
                             ),
                             spacing="4",
                             width="100%",
