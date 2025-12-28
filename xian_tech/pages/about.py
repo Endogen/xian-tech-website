@@ -87,7 +87,7 @@ def _history_item(event: dict[str, str]) -> rx.Component:
                                 rx.hstack(
                                     rx.text(
                                         event["date"],
-                                        size="2",
+                                        size="4",
                                         weight="bold",
                                         color=ACCENT,
                                         letter_spacing="0.08em",
