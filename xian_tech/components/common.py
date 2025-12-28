@@ -737,45 +737,46 @@ def command_palette() -> rx.Component:
                 rx.center(
                     rx.box(
                         rx.vstack(
-                            rx.hstack(
-                                rx.vstack(
-                                    rx.text("Search Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
-                                    spacing="1",
-                                    align_items="start",
+                            rx.text_field(
+                                rx.text_field.slot(
+                                    rx.button(
+                                        "ESC",
+                                        on_click=State.close_command_palette,
+                                        size="1",
+                                        variant="outline",
+                                        color=TEXT_MUTED,
+                                        border_color=BORDER_COLOR,
+                                        background_color=rx.color_mode_cond(
+                                            light="rgba(255, 255, 255, 0.7)",
+                                            dark="rgba(12, 18, 26, 0.6)",
+                                        ),
+                                        padding="0.1rem 0.6rem",
+                                        font_size="0.75rem",
+                                        cursor="pointer",
+                                        title="Close",
+                                        _hover={
+                                            "color": ACCENT,
+                                            "borderColor": ACCENT,
+                                        },
+                                    ),
+                                    side="right",
                                 ),
-                                rx.spacer(),
-                                rx.text("ESC or", size="2", color=TEXT_MUTED),
-                                rx.button(
-                                    rx.icon(tag="x", size=18),
-                                    on_click=State.close_command_palette,
-                                    size="1",
-                                    variant="ghost",
-                                    color=TEXT_MUTED,
-                                    padding="0.2rem 0.55rem",
-                                    title="Close",
-                                    _hover={"color": ACCENT},
-                                ),
-                                align_items="center",
-                                width="100%",
-                            ),
-                            rx.input(
                                 value=State.command_query,
                                 on_change=State.set_command_query,
                                 placeholder='Try "deterministic python", "research guild", or "foundation contact"',
                                 auto_focus=True,
                                 width="100%",
-                                padding="1.1rem 1rem",
+                                size="3",
+                                radius="medium",
+                                variant="surface",
                                 border=f"1.5px solid {BORDER_COLOR}",
-                                border_radius="8px",
                                 background=rx.color_mode_cond(
                                     light="rgba(248, 249, 250, 0.95)",
                                     dark="rgba(15, 20, 28, 0.9)",
                                 ),
                                 color=TEXT_PRIMARY,
                                 font_size="1.1rem",
-                                box_shadow="none",
                                 line_height="1.5",
-                                height="64px",
                                 style={
                                     "& input::placeholder": {
                                         "color": rx.color_mode_cond(light="#4b5563", dark="#9ca3af"),
@@ -785,6 +786,9 @@ def command_palette() -> rx.Component:
                                 _focus={
                                     "borderColor": ACCENT,
                                     "outline": "none",
+                                },
+                                _focus_within={
+                                    "borderColor": ACCENT,
                                 },
                             ),
                             rx.box(
