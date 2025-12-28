@@ -183,7 +183,6 @@ def history_section() -> rx.Component:
                 position="relative",
                 padding_left="3rem",
                 width="100%",
-                max_width="900px",
             ),
             spacing="6",
             align_items="start",
