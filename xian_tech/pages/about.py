@@ -74,7 +74,8 @@ def _history_item(event: dict[str, str]) -> rx.Component:
             box_shadow=marker_glow,
             position="absolute",
             left="-2.1rem",
-            top="1.6rem",
+            top="50%",
+            transform="translateY(-50%)",
             z_index="1",
         ),
         rx.box(
