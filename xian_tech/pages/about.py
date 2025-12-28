@@ -10,6 +10,8 @@ from ..theme import (
     DARK_ACCENT_GLOW,
     LIGHT_ACCENT,
     LIGHT_ACCENT_GLOW,
+    PRIMARY_BG,
+    SURFACE,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
@@ -19,6 +21,176 @@ LIGHT_CARD_BG = "#f8f9fa"
 LIGHT_CARD_BG_BRIGHT = "#ffffff"
 DARK_CARD_BG = "#0f141c"
 DARK_CARD_BG_BRIGHT = "#192330"
+
+HISTORY_EVENTS = [
+    {
+        "date": "2021",
+        "title": "Foundation charter drafted",
+        "detail": "Defined stewardship boundaries and the mission to keep the Xian stack simple, durable, and production-ready.",
+    },
+    {
+        "date": "2022",
+        "title": "Architecture aligned",
+        "detail": "CometBFT consensus paired with a Python ABCI and contracting engine to deliver deterministic execution.",
+    },
+    {
+        "date": "2023",
+        "title": "Contracting engine hardened",
+        "detail": "Focused on auditability, predictable upgrades, and tooling that keeps contract behavior consistent.",
+    },
+    {
+        "date": "2024",
+        "title": "Tooling & services expanded",
+        "detail": "CLI, SDKs, and the Blockchain Data Service matured to support developers and operators.",
+    },
+    {
+        "date": "2025",
+        "title": "Network validates the stack",
+        "detail": "Xian Network demonstrates the technology in a live environment with real-world usage.",
+    },
+]
+
+
+def _history_item(event: dict[str, str]) -> rx.Component:
+    """Single timeline entry with expandable detail."""
+    hover_shadow = rx.color_mode_cond(
+        light="0 12px 28px rgba(80, 177, 101, 0.16)",
+        dark="0 12px 28px rgba(0, 255, 136, 0.18)",
+    )
+    marker_glow = rx.color_mode_cond(
+        light="0 0 0 6px rgba(80, 177, 101, 0.12)",
+        dark="0 0 0 6px rgba(0, 255, 136, 0.16)",
+    )
+
+    return rx.box(
+        rx.box(
+            width="12px",
+            height="12px",
+            border_radius="999px",
+            background=PRIMARY_BG,
+            border_width="2px",
+            border_style="solid",
+            border_color=ACCENT,
+            box_shadow=marker_glow,
+            position="absolute",
+            left="-2.1rem",
+            top="1.6rem",
+            z_index="1",
+        ),
+        rx.box(
+            rx.accordion.root(
+                rx.accordion.item(
+                    rx.accordion.header(
+                        rx.accordion.trigger(
+                            rx.hstack(
+                                rx.hstack(
+                                    rx.text(
+                                        event["date"],
+                                        size="2",
+                                        weight="bold",
+                                        color=ACCENT,
+                                        letter_spacing="0.08em",
+                                    ),
+                                    rx.text(
+                                        event["title"],
+                                        size="4",
+                                        weight="bold",
+                                        color=TEXT_PRIMARY,
+                                    ),
+                                    spacing="3",
+                                    align_items="baseline",
+                                ),
+                                rx.accordion.icon(color=TEXT_MUTED),
+                                justify="between",
+                                align_items="center",
+                                width="100%",
+                            ),
+                            padding="0",
+                            background="transparent",
+                            box_shadow="none",
+                            color=TEXT_PRIMARY,
+                            cursor="pointer",
+                            _hover={"backgroundColor": "transparent"},
+                        )
+                    ),
+                    rx.accordion.content(
+                        rx.text(
+                            event["detail"],
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.7",
+                        ),
+                        padding_top="0",
+                        padding_bottom="0",
+                        padding_left="0",
+                        padding_right="0",
+                        color=TEXT_MUTED,
+                    ),
+                    value=f"history-{event['date']}",
+                    width="100%",
+                ),
+                type="single",
+                collapsible=True,
+                variant="ghost",
+                width="100%",
+            ),
+            padding="1.5rem",
+            background=SURFACE,
+            border_radius="14px",
+            border_width="1px",
+            border_style="solid",
+            border_color=BORDER_COLOR,
+            transition="all 0.2s ease",
+            _hover={
+                "borderColor": ACCENT,
+                "boxShadow": hover_shadow,
+            },
+        ),
+        position="relative",
+        width="100%",
+    )
+
+
+def history_section() -> rx.Component:
+    """Timeline of notable foundation milestones."""
+    return section(
+        rx.vstack(
+            rx.heading("History", size="7", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "Notable milestones that mark the evolution of the foundation and the Xian stack.",
+                size="4",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                max_width="900px",
+            ),
+            rx.box(
+                rx.box(
+                    width="2px",
+                    background=ACCENT_GLOW,
+                    border_radius="999px",
+                    position="absolute",
+                    top="0",
+                    bottom="0",
+                    left="1.25rem",
+                ),
+                rx.vstack(
+                    *[_history_item(event) for event in HISTORY_EVENTS],
+                    spacing="5",
+                    align_items="stretch",
+                    width="100%",
+                ),
+                position="relative",
+                padding_left="3rem",
+                width="100%",
+                max_width="900px",
+            ),
+            spacing="6",
+            align_items="start",
+            width="100%",
+        ),
+        padding_top="3rem",
+    )
+
 
 def _connectors_svg() -> rx.Component:
     """SVG connectors showing Foundation connecting to Technology and Network."""
@@ -213,6 +385,7 @@ def about_page() -> rx.Component:
             ),
             padding_top="0",
         ),
+        history_section(),
     )
 
 
