@@ -113,10 +113,57 @@ def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.C
     )
 
 
+def nav_label(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.Component:
+    """Navigation label for dropdown triggers (non-clickable)."""
+    return rx.box(
+        rx.box(
+            rx.vstack(
+                rx.hstack(
+                    rx.text(
+                        link["label"],
+                        size="3",
+                        weight="medium",
+                        color=TEXT_MUTED,
+                    ),
+                    extra if extra is not None else rx.box(),
+                    align_items="center",
+                    gap="0.35rem",
+                ),
+                rx.box(
+                    bg=ACCENT,
+                    height="2px",
+                    width=rx.cond(
+                        State.nav_hover_label == link["label"],
+                        "100%",
+                        "0%",
+                    ),
+                    transition="width 0.2s ease",
+                    border_radius="999px",
+                ),
+                spacing="1",
+                align_items="start",
+            ),
+            padding="0.35rem 0",
+        ),
+        padding="0.35rem 0.1rem",
+        transition="all 0.2s ease",
+        display="inline-flex",
+        align_items="center",
+        gap="0.35rem",
+        cursor="pointer",
+        role="button",
+        tab_index=0,
+        _hover={
+            "textDecoration": "none",
+            "color": ACCENT,
+        },
+    )
+
+
 def nav_item(link: dict[str, Any]) -> rx.Component:
     """Navigation item with hover tracking for mega menu."""
     return rx.box(
-        nav_link(link),
+        nav_label(link) if link.get("children") else nav_link(link),
         on_mouse_enter=State.set_nav_hover(link["label"]),
         on_focus=State.set_nav_hover(link["label"]),
         display="inline-flex",
