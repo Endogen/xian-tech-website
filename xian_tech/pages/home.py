@@ -1,7 +1,7 @@
 import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
-from ..data import CORE_COMPONENTS
+from ..data import CORE_COMPONENTS, NOTEWORTHY_QUOTES
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -16,6 +16,19 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
+
+QUOTE_MARQUEE_STYLE = """
+@keyframes quote-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-track {
+    animation-play-state: paused !important;
+  }
+}
+"""
 
 
 def hero_section() -> rx.Component:
@@ -476,54 +489,30 @@ def why_python() -> rx.Component:
 
 def noteworthy_quotes() -> rx.Component:
     """Showcase notable quotes about Python and technology."""
-    quotes = [
-        {
-            "quote": (
-                "Mastery of technology must infuse everything we do. Not just in our labs, but in the field, in our tradecraft, "
-                "and even more importantly, in the mindset of every officer. We must be as comfortable with lines of code as we are "
-                "with human sources, as fluent in Python as we are in multiple languages."
-            ),
-            "author": "Blaise Metreweli — Head of MI6",
-            "source": "https://www.theguardian.com/uk-news/2025/dec/15/new-mi6-head-blaise-metreweli-speech-russia-threat",
-        },
-        {
-            "quote": (
-                "Python is now the most used language on GitHub as global open source activity continues to extend beyond traditional "
-                "software development. We saw Python emerge for the first time as the most used language on GitHub (more on that later). "
-                "Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation fields among others."
-            ),
-            "author": "GitHub Staff — Octoverse 2024",
-            "source": "https://github.blog/news-insights/octoverse/octoverse-2024/",
-        },
-        {
-            "quote": (
-                "Python is approachable because it's designed for developers who are learning, tinkering, and exploring. Python's future remains bright "
-                "because its values align with how developers actually learn and build: readability, approachability, stability, and a touch of irreverence."
-            ),
-            "author": "Guido van Rossum — Python Creator",
-            "source": "https://github.blog/developer-skills/programming-languages-and-frameworks/why-developers-still-flock-to-python-guido-van-rossum-on-readability-ai-and-the-future-of-programming",
-        },
-    ]
+    quotes = NOTEWORTHY_QUOTES
+    items = quotes if len(quotes) == 1 else quotes + quotes
+    card_width = rx.breakpoints(initial="260px", sm="300px", md="340px")
+    animation_style = "quote-marquee 55s linear infinite" if len(quotes) > 1 else "none"
 
     def quote_card(item: dict[str, str]) -> rx.Component:
         return rx.box(
             rx.vstack(
-                rx.text("“", size="9", color=ACCENT, weight="bold", line_height="0.6"),
-                rx.text(item["quote"], size="4", color=TEXT_MUTED, line_height="1.8", font_style="italic"),
+                rx.text("“", size="7", color=ACCENT, weight="bold", line_height="0.6"),
+                rx.text(item["quote"], size="3", color=TEXT_MUTED, line_height="1.6", font_style="italic"),
                 rx.hstack(
                     rx.spacer(),
-                    rx.text("”", size="9", color=ACCENT, weight="bold", line_height="0.6"),
+                    rx.text("”", size="7", color=ACCENT, weight="bold", line_height="0.6"),
                     width="100%",
                 ),
                 rx.hstack(
-                    rx.box(width="6px", height="6px", border_radius="50%", background=ACCENT),
-                    rx.text(item["author"], size="2", color=TEXT_MUTED, weight="medium"),
+                    rx.box(width="5px", height="5px", border_radius="50%", background=ACCENT),
+                    rx.text(item["author"], size="1", color=TEXT_MUTED, weight="medium"),
                     rx.link(
                         "Source",
                         href=item["source"],
                         is_external=True,
                         color=ACCENT,
-                        size="2",
+                        size="1",
                         _hover={"textDecoration": "none"},
                     ),
                     gap="0.6rem",
@@ -534,24 +523,40 @@ def noteworthy_quotes() -> rx.Component:
                 align_items="start",
                 width="100%",
             ),
-            padding="1.25rem",
+            padding="1rem",
             background=rx.color_mode_cond(
                 light="rgba(0, 179, 92, 0.14)",
                 dark=ACCENT_SOFT,
             ),
-            border_radius="14px",
+            border_radius="12px",
             box_shadow=f"0 0 18px {ACCENT_SOFT}",
-            width="100%",
+            width=card_width,
+            min_width=card_width,
+            flex="0 0 auto",
         )
 
     return section(
         rx.vstack(
             rx.heading("Noteworthy quotes", size="6", color=TEXT_PRIMARY, weight="bold"),
-            rx.grid(
-                *[quote_card(item) for item in quotes],
-                template_columns={"initial": "1fr"},
-                gap="1.5rem",
+            rx.el.style(QUOTE_MARQUEE_STYLE),
+            rx.box(
+                rx.flex(
+                    *[quote_card(item) for item in items],
+                    class_name="quote-track",
+                    direction="row",
+                    gap="1.5rem",
+                    align_items="stretch",
+                    style={
+                        "width": "max-content",
+                        "animation": animation_style,
+                        "animationPlayState": "running",
+                    },
+                    _hover={
+                        "animationPlayState": "paused",
+                    },
+                ),
                 width="100%",
+                overflow="hidden",
             ),
             spacing="4",
             align_items="start",

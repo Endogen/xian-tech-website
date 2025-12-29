@@ -154,7 +154,7 @@ class State(rx.State):
         active = self.command_palette_active_action
         if not active["placeholder"]:
             self.close_command_palette()
-            return rx.redirect(active["href"])
+        return rx.redirect(active["href"])
 
     @rx.var
     def command_palette_actions(self) -> list[CommandAction]:

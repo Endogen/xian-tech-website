@@ -72,6 +72,35 @@ CORE_COMPONENTS = [
     },
 ]
 
+NOTEWORTHY_QUOTES = [
+    {
+        "quote": (
+            "Mastery of technology must infuse everything we do. Not just in our labs, but in the field, in our tradecraft, "
+            "and even more importantly, in the mindset of every officer. We must be as comfortable with lines of code as we are "
+            "with human sources, as fluent in Python as we are in multiple languages."
+        ),
+        "author": "Blaise Metreweli — Head of MI6",
+        "source": "https://www.theguardian.com/uk-news/2025/dec/15/new-mi6-head-blaise-metreweli-speech-russia-threat",
+    },
+    {
+        "quote": (
+            "Python is now the most used language on GitHub as global open source activity continues to extend beyond traditional "
+            "software development. We saw Python emerge for the first time as the most used language on GitHub (more on that later). "
+            "Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation fields among others."
+        ),
+        "author": "GitHub Staff — Octoverse 2024",
+        "source": "https://github.blog/news-insights/octoverse/octoverse-2024/",
+    },
+    {
+        "quote": (
+            "Python is approachable because it's designed for developers who are learning, tinkering, and exploring. Python's future remains bright "
+            "because its values align with how developers actually learn and build: readability, approachability, stability, and a touch of irreverence."
+        ),
+        "author": "Guido van Rossum — Python Creator",
+        "source": "https://github.blog/developer-skills/programming-languages-and-frameworks/why-developers-still-flock-to-python-guido-van-rossum-on-readability-ai-and-the-future-of-programming",
+    },
+]
+
 BDS_COMPONENTS = [
     {
         "title": "Opt-in at install",
@@ -430,6 +459,7 @@ __all__ = [
     "COMMUNITY_STREAMS",
     "ECOSYSTEM_INITIATIVES",
     "NAV_LINKS",
+    "NOTEWORTHY_QUOTES",
     "SEARCH_ENTRIES",
     "TECHNOLOGY_TRACKS",
 ]
