@@ -498,7 +498,7 @@ def noteworthy_quotes() -> rx.Component:
         return rx.box(
             rx.vstack(
                 rx.text("“", size="7", color=ACCENT, weight="bold", line_height="0.6"),
-                rx.text(item["quote"], size="3", color=TEXT_MUTED, line_height="1.6", font_style="italic"),
+                rx.text(item["quote"], size="2", color=TEXT_MUTED, line_height="1.6", font_style="italic"),
                 rx.hstack(
                     rx.spacer(),
                     rx.text("”", size="7", color=ACCENT, weight="bold", line_height="0.6"),
@@ -537,7 +537,7 @@ def noteworthy_quotes() -> rx.Component:
 
     return section(
         rx.vstack(
-            rx.heading("Noteworthy quotes", size="6", color=TEXT_PRIMARY, weight="bold"),
+            rx.heading("Noteworthy quotes about Python", size="6", color=TEXT_PRIMARY, weight="bold"),
             rx.el.style(QUOTE_MARQUEE_STYLE),
             rx.box(
                 rx.flex(
