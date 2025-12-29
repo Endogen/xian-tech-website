@@ -493,6 +493,14 @@ def noteworthy_quotes() -> rx.Component:
     items = quotes if len(quotes) == 1 else quotes + quotes
     card_width = rx.breakpoints(initial="260px", sm="300px", md="340px")
     animation_style = "quote-marquee 55s linear infinite" if len(quotes) > 1 else "none"
+    fade_left = rx.color_mode_cond(
+        light="linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%)",
+        dark="linear-gradient(90deg, #0a0e14 0%, rgba(10, 14, 20, 0) 100%)",
+    )
+    fade_right = rx.color_mode_cond(
+        light="linear-gradient(270deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%)",
+        dark="linear-gradient(270deg, #0a0e14 0%, rgba(10, 14, 20, 0) 100%)",
+    )
 
     def quote_card(item: dict[str, str]) -> rx.Component:
         return rx.box(
@@ -555,8 +563,29 @@ def noteworthy_quotes() -> rx.Component:
                         "animationPlayState": "paused",
                     },
                 ),
+                rx.box(
+                    position="absolute",
+                    top="0",
+                    bottom="0",
+                    left="0",
+                    width=rx.breakpoints(initial="2.5rem", md="4rem"),
+                    background=fade_left,
+                    pointer_events="none",
+                    z_index="1",
+                ),
+                rx.box(
+                    position="absolute",
+                    top="0",
+                    bottom="0",
+                    right="0",
+                    width=rx.breakpoints(initial="2.5rem", md="4rem"),
+                    background=fade_right,
+                    pointer_events="none",
+                    z_index="1",
+                ),
                 width="100%",
                 overflow="hidden",
+                position="relative",
             ),
             spacing="4",
             align_items="start",
