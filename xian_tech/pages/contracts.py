@@ -66,7 +66,7 @@ def read_result():
 HIGHLIGHTS = [
     {
         "title": "Python-first by design",
-        "icon": "🐍",
+        "icon": "code",
         "body": (
             "No custom DSLs or transpilers. Contracts are idiomatic Python, making audits and upgrades straightforward "
             "and letting teams use the language they already know."
@@ -74,7 +74,7 @@ HIGHLIGHTS = [
     },
     {
         "title": "Native value semantics",
-        "icon": "⚖️",
+        "icon": "scale",
         "body": (
             "We avoid bespoke integer abstractions for balances. The engine stays Python-native rather than inventing "
             "a special-purpose blockchain language."
@@ -82,7 +82,7 @@ HIGHLIGHTS = [
     },
     {
         "title": "Standalone & portable",
-        "icon": "🔌",
+        "icon": "plug",
         "body": (
             "The contracting library can run independently and could integrate with other node systems—not just CometBFT—"
             "or power entirely different use cases."
@@ -90,7 +90,7 @@ HIGHLIGHTS = [
     },
     {
         "title": "Upgradable patterns",
-        "icon": "🧩",
+        "icon": "puzzle",
         "body": (
             "With the right design patterns, you can ship upgradable contracts when you need them—without forcing "
             "complexity on contracts that don't."
@@ -177,7 +177,7 @@ def contracts_page() -> rx.Component:
                         rx.box(
                             rx.vstack(
                                 rx.hstack(
-                                    rx.text(item["icon"], size="7", line_height="1"),
+                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
                                     rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
                                     align_items="center",
                                     gap="0.75rem",

@@ -140,7 +140,7 @@ def stack_overview() -> rx.Component:
                         rx.box(
                             rx.vstack(
                                 rx.flex(
-                                    rx.text(item["icon"], size="7", line_height="1"),
+                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
                                     rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
                                     direction={"base": "row", "lg": "column"},
                                     align={"base": "center", "lg": "start"},

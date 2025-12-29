@@ -151,7 +151,7 @@ def roadmap_section() -> rx.Component:
                     rx.grid(
                         rx.box(
                             rx.vstack(
-                                rx.text("🧱", size="7", line_height="1"),
+                                rx.icon(tag="brick_wall", size=28, color=ACCENT),
                                 rx.text("In Progress", size="4", weight="bold", color=TEXT_PRIMARY),
                                 rx.text("Active engineering sprints", size="2", color=TEXT_MUTED, text_align="center"),
                                 spacing="3",
@@ -164,7 +164,7 @@ def roadmap_section() -> rx.Component:
                         ),
                         rx.box(
                             rx.vstack(
-                                rx.text("🧪", size="7", line_height="1"),
+                                rx.icon(tag="beaker", size=28, color=ACCENT),
                                 rx.text("Testing", size="4", weight="bold", color=TEXT_PRIMARY),
                                 rx.text("Formal verification & audits", size="2", color=TEXT_MUTED, text_align="center"),
                                 spacing="3",
@@ -177,7 +177,7 @@ def roadmap_section() -> rx.Component:
                         ),
                         rx.box(
                             rx.vstack(
-                                rx.text("✅", size="7", line_height="1"),
+                                rx.icon(tag="badge_check", size=28, color=ACCENT),
                                 rx.text("Completed", size="4", weight="bold", color=TEXT_PRIMARY),
                                 rx.text("Shipped improvements", size="2", color=TEXT_MUTED, text_align="center"),
                                 spacing="3",

@@ -627,7 +627,7 @@ def feature_card(title: str, description: str, icon: str) -> rx.Component:
     """Feature card with hover affordances."""
     return rx.box(
         rx.vstack(
-            rx.text(icon, size="9", line_height="1"),
+            rx.icon(tag=icon, size=28, color=ACCENT),
             rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
                 description,
@@ -976,11 +976,17 @@ def footer() -> rx.Component:
                     align_items={"initial": "start", "md": "start"},
                 ),
                 rx.box(
-                    rx.text(
-                        "© 2025 Xian Technology Foundation. Built with ❤️ and 🐍.",
-                        size="2",
-                        color=TEXT_MUTED,
-                        text_align="center",
+                    rx.flex(
+                        rx.text("© 2025 Xian Technology Foundation. Built with", size="2", color=TEXT_MUTED),
+                        rx.icon(tag="heart", size=14, color=TEXT_MUTED),
+                        rx.text("and", size="2", color=TEXT_MUTED),
+                        rx.icon(tag="code", size=14, color=TEXT_MUTED),
+                        rx.text(".", size="2", color=TEXT_MUTED),
+                        gap="0.35rem",
+                        align_items="center",
+                        justify="center",
+                        wrap="wrap",
+                        width="100%",
                     ),
                     padding_top="3rem",
                     border_top=f"1px solid {BORDER_COLOR}",

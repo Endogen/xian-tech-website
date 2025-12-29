@@ -50,25 +50,25 @@ CORE_COMPONENTS = [
         "title": "CometBFT Consensus Engine",
         "description": "Byzantine fault-tolerant, deterministic state machine replication securing every block.",
         "href": "/consensus",
-        "icon": "🛰️",
+        "icon": "satellite",
     },
     {
         "title": "Python Smart Contract Engine",
         "description": "Pure Python contracts with deterministic execution—no transpilers or alternate languages.",
         "href": "/contracts",
-        "icon": "🐍",
+        "icon": "code",
     },
     {
         "title": "Python ABCI for CometBFT",
         "description": "ABCI application in Python bridging consensus with the contracting runtime and state patches.",
         "href": "/abci",
-        "icon": "🔗",
+        "icon": "link",
     },
     {
         "title": "Tooling & Interfaces",
         "description": "xian-py SDK plus BDS GraphQL for querying chain data and building integrations.",
         "href": "/tooling",
-        "icon": "🛠️",
+        "icon": "wrench",
     },
 ]
 
@@ -105,24 +105,24 @@ BDS_COMPONENTS = [
     {
         "title": "Opt-in at install",
         "description": "Enable BDS when provisioning the node. It runs inside the ABCI app—no extra daemon to manage.",
-        "icon": "🛰️",
+        "icon": "plug",
     },
     {
         "title": "Complete transaction history",
         "description": "Capture every transaction—successes and failures—with status, stamps, contract/function, and block metadata for auditing.",
-        "icon": "🐍",
+        "icon": "history",
     },
     {
         "title": "PostgreSQL + GraphQL",
         "description": "Data lands in PostgreSQL and is served through PostGraphile, so you can query with GraphQL or tap Postgres directly.",
-        "icon": "🔗",
+        "icon": "database",
     },
 ]
 
 TECHNOLOGY_TRACKS = [
     {
         "title": "Pure Python Contracts",
-        "icon": "🐍",
+        "icon": "code",
         "description": (
             "Advance libraries that let developers express complex financial and governance "
             "logic in idiomatic Python, with deterministic execution and precise tooling."
@@ -142,7 +142,7 @@ TECHNOLOGY_TRACKS = [
     },
     {
         "title": "High-Assurance Node",
-        "icon": "⚡",
+        "icon": "zap",
         "description": (
             "Refine the Xian node with next generation instrumentation, blazing sync times, "
             "and transparent performance dashboards for operators."
@@ -163,7 +163,7 @@ TECHNOLOGY_TRACKS = [
     },
     {
         "title": "Secure Upgrades",
-        "icon": "🔒",
+        "icon": "shield",
         "description": (
             "Provide governance tooling that keeps production contracts evolving without "
             "downtime, leveraging migration kits and formal verification hooks."
@@ -187,7 +187,7 @@ TECHNOLOGY_TRACKS = [
 ECOSYSTEM_INITIATIVES = [
     {
         "title": "Research Guild",
-        "emoji": "🔬",
+        "icon": "microscope",
         "description": (
             "Collaborative working group dedicated to provable correctness, type-safe "
             "smart contract patterns, and cryptographic resilience."
@@ -196,7 +196,7 @@ ECOSYSTEM_INITIATIVES = [
     },
     {
         "title": "Builder Studio",
-        "emoji": "🏗️",
+        "icon": "construction",
         "description": (
             "Hands-on support for teams shipping production dApps on Xian Network, "
             "from architecture reviews to on-call debugging."
@@ -205,7 +205,7 @@ ECOSYSTEM_INITIATIVES = [
     },
     {
         "title": "Education Program",
-        "emoji": "📚",
+        "icon": "book_open",
         "description": (
             "Curriculum, workshops, and tooling walkthroughs that help Python engineers "
             "become confident blockchain developers in weeks, not months."
