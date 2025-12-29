@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import code_block, page_layout, section, terminal_prompt
+from ..components.common import page_layout, section, terminal_prompt
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -60,7 +60,7 @@ def add(a: int, b: int):
 
 @export
 def read_result():
-    return result
+    return result.get()
 """
 
 HIGHLIGHTS = [
@@ -134,7 +134,11 @@ def contracts_page() -> rx.Component:
             rx.grid(
                 rx.vstack(
                     rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    code_block(ALG_CONTRACT),
+                    rx.code_block(
+                        ALG_CONTRACT,
+                        language="python",
+                        show_line_numbers=True,
+                    ),
                     rx.text(
                         "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
                         size="3",
@@ -146,7 +150,11 @@ def contracts_page() -> rx.Component:
                 ),
                 rx.vstack(
                     rx.heading("Xian Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    code_block(XIAN_CONTRACT),
+                    rx.code_block(
+                        XIAN_CONTRACT,
+                        language="python",
+                        show_line_numbers=True,
+                    ),
                     rx.text(
                         "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
                         size="3",
