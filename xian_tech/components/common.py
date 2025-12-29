@@ -920,7 +920,7 @@ def footer() -> rx.Component:
                 rx.flex(
                     rx.vstack(
                         rx.text("Xian Technology Foundation", size="4", weight="bold", color=TEXT_PRIMARY),
-                        rx.text("Python-native blockchain infrastructure", size="3", color=TEXT_MUTED, line_height="1.6"),
+                        rx.text("Python-native contracting", size="3", color=TEXT_MUTED, line_height="1.6"),
                         spacing="2",
                         align_items="start",
                     ),
