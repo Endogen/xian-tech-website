@@ -382,7 +382,7 @@ def why_another_blockchain() -> rx.Component:
             rx.box(
                 rx.box(
                     rx.image(
-                        src="/languages.png",
+                        src="/python.png",
                         alt="Programming languages",
                         width="100%",
                         border_radius="12px",
@@ -420,6 +420,36 @@ def why_another_blockchain() -> rx.Component:
 
 def why_python() -> rx.Component:
     """Explain the Python-first choice."""
+    def trend_image(src: str, alt: str, source: str) -> rx.Component:
+        return rx.box(
+            rx.image(
+                src=src,
+                alt=alt,
+                width="100%",
+                height=rx.breakpoints(initial="200px", md="220px", lg="240px"),
+                border_radius="12px",
+                object_fit="cover",
+                box_shadow=f"0 0 18px {ACCENT_SOFT}",
+            ),
+            rx.link(
+                rx.badge(
+                    "Source",
+                    variant="soft",
+                    color_scheme="green",
+                    radius="medium",
+                    size="2",
+                ),
+                href=source,
+                is_external=True,
+                position="absolute",
+                bottom="0.33rem",
+                right="0.33rem",
+                _hover={"textDecoration": "none"},
+            ),
+            position="relative",
+            width="100%",
+        )
+
     return section(
         rx.grid(
             rx.vstack(
@@ -449,32 +479,26 @@ def why_python() -> rx.Component:
                 align_items="start",
             ),
             rx.box(
-                rx.box(
-                    rx.image(
-                        src="/languages.png",
-                        alt="Programming languages",
-                        width="100%",
-                        border_radius="12px",
-                        object_fit="cover",
-                        box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                rx.grid(
+                    trend_image(
+                        "/python.png",
+                        "Programming languages on GitHub",
+                        "https://github.blog/news-insights/octoverse/octoverse-2024",
                     ),
-                    rx.link(
-                        rx.badge(
-                            "Source",
-                            variant="soft",
-                            color_scheme="green",
-                            radius="medium",
-                            size="2",
-                        ),
-                        href="https://github.blog/news-insights/octoverse/octoverse-2024",
-                        is_external=True,
-                        position="absolute",
-                        bottom="0.33rem",
-                        right="0.33rem",
-                        _hover={"textDecoration": "none"},
+                    trend_image(
+                        "/languish.png",
+                        "Programming language trends from Languish",
+                        "https://tjpalmer.github.io/languish",
                     ),
-                    position="relative",
+                    trend_image(
+                        "/tiobe.png",
+                        "TIOBE index ranking snapshot",
+                        "https://www.tiobe.com/tiobe-index",
+                    ),
+                    columns={"base": "1fr", "md": "repeat(3, minmax(0, 1fr))"},
+                    spacing="4",
                     width="100%",
+                    align="stretch",
                 ),
                 display="flex",
                 justify_content="center",
