@@ -2,6 +2,7 @@ import reflex as rx
 
 from ..components.common import feature_card, page_layout, section, terminal_prompt
 from ..data import CORE_COMPONENTS, NOTEWORTHY_QUOTES
+from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -444,10 +445,13 @@ def why_python() -> rx.Component:
                 position="absolute",
                 bottom="0.33rem",
                 right="0.33rem",
+                on_click=rx.stop_propagation,
                 _hover={"textDecoration": "none"},
             ),
             position="relative",
             width="100%",
+            cursor="zoom-in",
+            on_click=State.open_image_lightbox(src, alt),
         )
 
     return section(
@@ -505,6 +509,57 @@ def why_python() -> rx.Component:
             ),
             template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
             gap="2rem",
+        ),
+        rx.button(
+            on_click=State.close_image_lightbox,
+            id="image-lightbox-close",
+            display="none",
+        ),
+        rx.cond(
+            State.image_lightbox_open,
+            rx.center(
+                rx.box(
+                    rx.button(
+                        rx.icon(tag="x", size=20),
+                        on_click=State.close_image_lightbox,
+                        size="2",
+                        variant="ghost",
+                        color=TEXT_MUTED,
+                        position="absolute",
+                        top="0.75rem",
+                        right="0.75rem",
+                        cursor="pointer",
+                        _hover={"color": ACCENT},
+                    ),
+                    rx.image(
+                        src=State.image_lightbox_src,
+                        alt=State.image_lightbox_alt,
+                        width="100%",
+                        max_width="min(92vw, 1200px)",
+                        max_height="82vh",
+                        object_fit="contain",
+                        border_radius="14px",
+                        box_shadow=rx.color_mode_cond(
+                            light="0 30px 120px rgba(15, 23, 42, 0.25)",
+                            dark="0 30px 120px rgba(0, 0, 0, 0.8)",
+                        ),
+                    ),
+                    on_click=rx.stop_propagation,
+                    width="min(92vw, 1200px)",
+                    position="relative",
+                ),
+                position="fixed",
+                top="0",
+                left="0",
+                width="100%",
+                height="100vh",
+                z_index="1002",
+                background="rgba(6, 11, 17, 0.65)",
+                backdrop_filter="blur(12px)",
+                on_click=State.close_image_lightbox,
+                id="image-lightbox-container",
+            ),
+            rx.box(),
         ),
         padding_top="2rem",
         padding_bottom="3rem",

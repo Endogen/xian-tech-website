@@ -662,6 +662,8 @@ COMMAND_SCRIPT = """
   const moveUp = () => document.getElementById("command-palette-up")?.click();
   const moveDown = () => document.getElementById("command-palette-down")?.click();
   const selectActive = () => document.getElementById("command-palette-select")?.click();
+  const closeLightbox = () => document.getElementById("image-lightbox-close")?.click();
+  const isLightboxOpen = () => document.getElementById("image-lightbox-container");
   const scrollToActive = () => {
     setTimeout(() => {
       const active = document.getElementById("palette-active-item");
@@ -677,7 +679,11 @@ COMMAND_SCRIPT = """
       trigger();
     }
     if (key === "escape") {
-      close();
+      if (isLightboxOpen()) {
+        closeLightbox();
+      } else {
+        close();
+      }
     }
     if (key === "arrowup") {
       event.preventDefault();

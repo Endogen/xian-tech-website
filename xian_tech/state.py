@@ -49,6 +49,9 @@ class State(rx.State):
     command_palette_open: bool = False
     command_query: str = ""
     command_palette_active_id: str | None = None
+    image_lightbox_open: bool = False
+    image_lightbox_src: str = ""
+    image_lightbox_alt: str = ""
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -113,6 +116,18 @@ class State(rx.State):
         else:
             idx = ids.index(current)
             self.command_palette_active_id = ids[idx + 1] if idx < len(ids) - 1 else ids[0]
+
+    def open_image_lightbox(self, src: str, alt: str = ""):
+        """Show the image lightbox."""
+        self.image_lightbox_open = True
+        self.image_lightbox_src = src
+        self.image_lightbox_alt = alt
+
+    def close_image_lightbox(self):
+        """Hide the image lightbox."""
+        self.image_lightbox_open = False
+        self.image_lightbox_src = ""
+        self.image_lightbox_alt = ""
 
     def submit_contact_form(self, form_data: dict[str, Any]):
         """Open a pre-filled email draft with the contact form details."""
