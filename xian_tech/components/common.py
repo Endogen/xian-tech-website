@@ -977,11 +977,7 @@ def footer() -> rx.Component:
                 ),
                 rx.box(
                     rx.flex(
-                        rx.text("© 2025 Xian Technology Foundation. Built with", size="2", color=TEXT_MUTED),
-                        rx.icon(tag="heart", size=14, color=TEXT_MUTED),
-                        rx.text("and", size="2", color=TEXT_MUTED),
-                        rx.icon(tag="code", size=14, color=TEXT_MUTED),
-                        rx.text(".", size="2", color=TEXT_MUTED),
+                        rx.text("© 2025 Xian Technology Foundation. Built with 💚 and 🐍", size="2", color=TEXT_MUTED),
                         gap="0.35rem",
                         align_items="center",
                         justify="center",
