@@ -969,6 +969,12 @@ def footer() -> rx.Component:
                                 is_external=True,
                                 _hover={"color": ACCENT},
                             ),
+                            rx.link(
+                                rx.icon(tag="youtube", size=20, color=TEXT_PRIMARY),
+                                href="https://www.youtube.com/xian-technology",
+                                is_external=True,
+                                _hover={"color": ACCENT},
+                            ),
                             spacing="3",
                             align_items="center",
                         ),
