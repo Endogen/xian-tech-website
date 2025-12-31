@@ -421,7 +421,7 @@ def why_another_blockchain() -> rx.Component:
 
 def why_python() -> rx.Component:
     """Explain the Python-first choice."""
-    def trend_image(src: str, alt: str, source: str) -> rx.Component:
+    def trend_image(src: str, alt: str, source: str, description: str) -> rx.Component:
         overlay_bg = rx.color_mode_cond(
             light="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.82) 45%, rgba(255, 255, 255, 0.95) 100%)",
             dark="linear-gradient(180deg, rgba(10, 14, 20, 0) 0%, rgba(10, 14, 20, 0.78) 45%, rgba(10, 14, 20, 0.95) 100%)",
@@ -436,7 +436,7 @@ def why_python() -> rx.Component:
             ),
             rx.box(
                 rx.text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.",
+                    description,
                     size="2",
                     color=TEXT_PRIMARY,
                     line_height="1.6",
@@ -525,16 +525,19 @@ def why_python() -> rx.Component:
                         "/github.png",
                         "Programming languages on GitHub",
                         "https://github.blog/news-insights/octoverse/octoverse-2024",
+                        "Top programming languages on GitHub, ranked by the number of distinct contributors per language.",
                     ),
                     trend_image(
                         "/languish.png",
                         "Programming language trends from Languish",
                         "https://tjpalmer.github.io/languish",
+                        "Language trends based on the mean of GitHub stars and Stack Overflow question counts.",
                     ),
                     trend_image(
                         "/tiobe.png",
                         "TIOBE index ranking snapshot",
                         "https://www.tiobe.com/tiobe-index",
+                        "The TIOBE index tracks language popularity using signals like global engineer counts, courses, and vendors.",
                     ),
                     columns={"base": "1fr", "md": "repeat(3, minmax(0, 1fr))"},
                     spacing="4",
