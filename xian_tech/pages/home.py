@@ -431,6 +431,7 @@ def why_python() -> rx.Component:
                 border_radius="12px",
                 object_fit="cover",
                 box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                border=f"2px solid {BORDER_COLOR}",
             ),
             rx.link(
                 rx.badge(
