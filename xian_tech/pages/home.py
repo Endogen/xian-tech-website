@@ -383,7 +383,7 @@ def why_another_blockchain() -> rx.Component:
             rx.box(
                 rx.box(
                     rx.image(
-                        src="/python.png",
+                        src="/github.png",
                         alt="Programming languages",
                         width="100%",
                         border_radius="12px",
@@ -486,7 +486,7 @@ def why_python() -> rx.Component:
             rx.box(
                 rx.grid(
                     trend_image(
-                        "/python.png",
+                        "/github.png",
                         "Programming languages on GitHub",
                         "https://github.blog/news-insights/octoverse/octoverse-2024",
                     ),
