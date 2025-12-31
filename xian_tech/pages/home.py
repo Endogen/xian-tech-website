@@ -422,16 +422,40 @@ def why_another_blockchain() -> rx.Component:
 def why_python() -> rx.Component:
     """Explain the Python-first choice."""
     def trend_image(src: str, alt: str, source: str) -> rx.Component:
+        overlay_bg = rx.color_mode_cond(
+            light="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.82) 45%, rgba(255, 255, 255, 0.95) 100%)",
+            dark="linear-gradient(180deg, rgba(10, 14, 20, 0) 0%, rgba(10, 14, 20, 0.78) 45%, rgba(10, 14, 20, 0.95) 100%)",
+        )
         return rx.box(
             rx.image(
                 src=src,
                 alt=alt,
                 width="100%",
                 height=rx.breakpoints(initial="200px", md="220px", lg="240px"),
-                border_radius="12px",
                 object_fit="cover",
-                box_shadow=f"0 0 18px {ACCENT_SOFT}",
-                border=f"2px solid {BORDER_COLOR}",
+            ),
+            rx.box(
+                rx.text(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.",
+                    size="2",
+                    color=TEXT_PRIMARY,
+                    line_height="1.6",
+                ),
+                class_name="trend-overlay",
+                position="absolute",
+                bottom="0",
+                left="0",
+                right="0",
+                height="75%",
+                padding="1rem",
+                background=overlay_bg,
+                transform="translateY(100%)",
+                opacity="0",
+                transition="transform 0.35s ease, opacity 0.35s ease",
+                pointer_events="none",
+                z_index="1",
+                align_items="end",
+                display="flex",
             ),
             rx.link(
                 rx.badge(
@@ -447,12 +471,24 @@ def why_python() -> rx.Component:
                 bottom="0.33rem",
                 right="0.33rem",
                 on_click=rx.stop_propagation,
+                z_index="2",
                 _hover={"textDecoration": "none"},
             ),
             position="relative",
             width="100%",
             cursor="zoom-in",
             on_click=State.open_image_lightbox(src, alt),
+            border_radius="12px",
+            border=f"2px solid {BORDER_COLOR}",
+            box_shadow=f"0 0 18px {ACCENT_SOFT}",
+            overflow="hidden",
+            style={
+                "&:hover .trend-overlay": {
+                    "transform": "translateY(0)",
+                    "opacity": "1",
+                }
+            },
+            class_name="trend-image",
         )
 
     return section(
