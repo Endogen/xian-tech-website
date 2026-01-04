@@ -925,7 +925,7 @@ def footer() -> rx.Component:
             rx.vstack(
                 rx.flex(
                     rx.vstack(
-                        rx.text("Xian Technology Foundation", size="4", weight="bold", color=TEXT_PRIMARY),
+                        rx.text("Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
                         rx.text("Python-native contracting", size="3", color=TEXT_MUTED, line_height="1.6"),
                         spacing="2",
                         align_items="start",
@@ -989,7 +989,7 @@ def footer() -> rx.Component:
                 ),
                 rx.box(
                     rx.flex(
-                        rx.text("© 2025 Xian Technology Foundation. Built with 💚 and 🐍", size="2", color=TEXT_MUTED),
+                        rx.text("© 2025 Xian Technology. Built with 💚 and 🐍", size="2", color=TEXT_MUTED),
                         gap="0.35rem",
                         align_items="center",
                         justify="center",

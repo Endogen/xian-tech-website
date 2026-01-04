@@ -283,7 +283,7 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
 def about_page() -> rx.Component:
     """Explain key Xian terms and their relationship."""
     foundation = _term_card(
-        "Xian Technology Foundation",
+        "Xian Foundation",
         "An independent group advancing the Xian Technology stack, led by one of the three core developers; separate from the live Xian Network.",
         highlight=True,
     )
@@ -325,7 +325,7 @@ def about_page() -> rx.Component:
                     border_radius="8px",
                 ),
                 rx.heading(
-                    "About the Xian Technology Foundation",
+                    "About us",
                     size="8",
                     color=TEXT_PRIMARY,
                     weight="bold",
@@ -338,22 +338,6 @@ def about_page() -> rx.Component:
                     line_height="1.7",
                     max_width="900px",
                 ),
-                rx.heading(
-                    "Who is who in Xian",
-                    size="6",
-                    color=TEXT_PRIMARY,
-                    weight="bold",
-                    line_height="1.3",
-                ),
-                rx.text(
-                    "Keep the distinctions clear: the technology stack, the foundation stewarding it, and the production network that proves it works.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    max_width="900px",
-                ),
-                spacing="6",
-                align_items="start",
             ),
             padding_bottom="3rem",
         ),
