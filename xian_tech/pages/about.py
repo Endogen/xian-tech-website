@@ -65,34 +65,66 @@ TEAM_MEMBERS = [
 
 HISTORY_EVENTS = [
     {
-        "date": "2021",
-        "title": "Foundation charter drafted",
-        "detail": "Defined stewardship boundaries and the mission to keep the Xian stack simple, durable, and production-ready.",
+        "date": "May 1, 2017",
+        "title": "Start of Lamden",
+        "detail": (
+            "Lamden launched in 2017 as a Python-first blockchain project and introduced the original Python "
+            "smart-contracting library that later influenced Xian. The project was created by Stuart Farmer "
+            "and funded through token rounds; ICO Drops reports $12.65M raised across four rounds, including the ICO."
+        ),
+        "sources": [
+            {"label": "ICO Drops", "href": "https://icodrops.com/lamden"},
+            {"label": "Stuart Farmer (LinkedIn)", "href": "https://www.linkedin.com/in/stuartfarmer"},
+            {"label": "Lamden Contracting", "href": "https://github.com/lamden/contracting"},
+        ],
     },
     {
-        "date": "2022",
-        "title": "Architecture aligned",
-        "detail": "CometBFT consensus paired with a Python ABCI and contracting engine to deliver deterministic execution.",
+        "date": "Sep 1, 2023",
+        "title": "End of Lamden",
+        "detail": (
+            "In his farewell, Stuart Farmer described the market shift away from maker culture, early "
+            "missteps, and a treasury loan default that eliminated Lamden’s runway. The team chose to "
+            "hand stewardship to the community, open the software license for reuse, and place protocol "
+            "assets under DAO control, while the original Python node was no longer maintained and the "
+            "network went offline."
+        ),
+        "sources": [
+            {"label": "Lamden Farewell", "href": "https://medium.com/lamden/farewell-ad8bb90caad"},
+            {"label": "Contracting License", "href": "https://github.com/lamden/contracting/blob/master/LICENSE"},
+        ],
     },
     {
-        "date": "2023",
-        "title": "Contracting engine hardened",
-        "detail": "Focused on auditability, predictable upgrades, and tooling that keeps contract behavior consistent.",
+        "date": "Dec 19, 2023",
+        "title": "Start of the Xian Project",
+        "detail": (
+            "The Xian project began with the creation of core GitHub repositories like xian-core and "
+            "xian-contracting. Community developers Duelingbenjos, Endogen, and Crosschainer kept the Python "
+            "contracting library but replaced the Lamden node with CometBFT to secure a reliable consensus layer."
+        ),
+        "sources": [
+            {"label": "xian-core repo", "href": "https://github.com/xian-network/xian-core"},
+            {"label": "xian-contracting repo", "href": "https://github.com/xian-network/xian-contracting"},
+            {"label": "CometBFT mention", "href": "https://github.com/xian-network/xian-core#xian"},
+        ],
     },
     {
-        "date": "2024",
-        "title": "Tooling & services expanded",
-        "detail": "CLI, SDKs, and the Blockchain Data Service matured to support developers and operators.",
-    },
-    {
-        "date": "2025",
-        "title": "Network validates the stack",
-        "detail": "Xian Network demonstrates the technology in a live environment with real-world usage.",
+        "date": "Nov 8, 2025",
+        "title": "Xian Technology Foundation created",
+        "detail": (
+            "The project formalized into the Xian Technology Foundation, launching the public website and "
+            "related properties like the Playground and Contracting Hub. The focus shifted to delivering a polished, "
+            "out-of-the-box stack, positioning Xian Technology as an Anaconda-style distribution for Python blockchain development."
+        ),
+        "sources": [
+            {"label": "Xian Technology", "href": "https://www.xian.technology"},
+            {"label": "Xian Technology GitHub", "href": "https://github.com/xian-technology"},
+            {"label": "Playground", "href": "https://playground.xian.technology"},
+        ],
     },
 ]
 
 
-def _history_item(event: dict[str, str]) -> rx.Component:
+def _history_item(event: dict[str, Any]) -> rx.Component:
     """Single timeline entry with expandable detail."""
     hover_shadow = rx.color_mode_cond(
         light="0 12px 28px rgba(80, 177, 101, 0.16)",
@@ -102,6 +134,40 @@ def _history_item(event: dict[str, str]) -> rx.Component:
         light="0 0 0 6px rgba(80, 177, 101, 0.12)",
         dark="0 0 0 6px rgba(0, 255, 136, 0.16)",
     )
+
+    sources = event.get("sources", [])
+    content_children: list[rx.Component] = [
+        rx.text(
+            event["detail"],
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.7",
+        )
+    ]
+    if sources:
+        content_children.append(
+            rx.flex(
+                rx.text("Sources:", size="2", color=TEXT_MUTED),
+                rx.flex(
+                    *[
+                        rx.link(
+                            source["label"],
+                            href=source["href"],
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            size="2",
+                            _hover={"color": ACCENT},
+                        )
+                        for source in sources
+                    ],
+                    gap="0.5rem",
+                    wrap="wrap",
+                ),
+                gap="0.5rem",
+                align_items="center",
+                wrap="wrap",
+            )
+        )
 
     return rx.box(
         rx.box(
@@ -158,11 +224,10 @@ def _history_item(event: dict[str, str]) -> rx.Component:
                     ),
                     rx.accordion.content(
                         rx.box(
-                            rx.text(
-                                event["detail"],
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.7",
+                            rx.vstack(
+                                *content_children,
+                                spacing="3",
+                                align_items="start",
                             ),
                             padding_left="1.5rem",
                             padding_right="1.5rem",
