@@ -159,7 +159,7 @@ def history_section() -> rx.Component:
         rx.vstack(
             rx.heading("History", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
-                "Notable milestones that mark the evolution of the foundation and the Xian stack.",
+                "Notable milestones that mark the evolution of Xian.",
                 size="4",
                 color=TEXT_MUTED,
                 line_height="1.7",
@@ -284,16 +284,16 @@ def about_page() -> rx.Component:
     """Explain key Xian terms and their relationship."""
     foundation = _term_card(
         "Xian Foundation",
-        "An independent group advancing the Xian Technology stack, led by one of the three core developers; separate from the live Xian Network.",
+        "An independent group advancing the Xian Technology stack, led by the core developers of the Xian Network.",
         highlight=True,
     )
     technology = _term_card(
         "Xian Technology",
-        "The stack combining CometBFT consensus, a custom Python ABCI, the Python contracting engine, and Python tooling to run robust blockchain networks.",
+        "The software stack combining CometBFT consensus, a custom Python ABCI, the Python contracting engine, and tooling.",
     )
     network = _term_card(
         "Xian Network",
-        "A production blockchain demonstrating the Xian Technology stack in real-world use.",
+        "A live blockchain network demonstrating the Xian Technology stack in real-world use.",
     )
 
     connectors = _connectors_svg()
@@ -325,18 +325,11 @@ def about_page() -> rx.Component:
                     border_radius="8px",
                 ),
                 rx.heading(
-                    "About us",
+                    "About Xian",
                     size="8",
                     color=TEXT_PRIMARY,
                     weight="bold",
                     line_height="1.2",
-                ),
-                rx.text(
-                    "This page will outline the foundation's mission, focus areas, and the role we play in the Xian ecosystem.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    max_width="900px",
                 ),
             ),
             padding_bottom="3rem",
