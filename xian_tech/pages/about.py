@@ -418,7 +418,7 @@ def about_page() -> rx.Component:
     )
     network = _term_card(
         "Xian Network",
-        "A live blockchain network demonstrating the Xian Technology stack in real-world use.",
+        "A decentralized blockchain, governed by a DAO, that demonstrates the Xian Technology stack in real-world use.",
     )
 
     connectors = _connectors_svg()
