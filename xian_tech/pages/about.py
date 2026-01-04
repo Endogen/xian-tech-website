@@ -1,3 +1,5 @@
+from typing import Any
+
 import reflex as rx
 
 from ..components.common import page_layout, section
@@ -21,6 +23,42 @@ LIGHT_CARD_BG = "#f8f9fa"
 LIGHT_CARD_BG_BRIGHT = "#ffffff"
 DARK_CARD_BG = "#0f141c"
 DARK_CARD_BG_BRIGHT = "#192330"
+
+TEAM_MEMBERS = [
+    {
+        "name": "Jordan Blake",
+        "role": "Core Engineering",
+        "bio": "Leads the foundation engineering roadmap across the ABCI layer, contracting runtime, and infrastructure.",
+        "image": "/xian.jpg",
+        "socials": [
+            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
+            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
+            {"icon": "x", "href": "https://x.com", "label": "X"},
+        ],
+    },
+    {
+        "name": "Casey Morgan",
+        "role": "Protocol Research",
+        "bio": "Focuses on correctness, deterministic execution, and the long-term integrity of the Xian stack.",
+        "image": "/xian.jpg",
+        "socials": [
+            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
+            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
+            {"icon": "x", "href": "https://x.com", "label": "X"},
+        ],
+    },
+    {
+        "name": "Riley Chen",
+        "role": "Ecosystem & Partnerships",
+        "bio": "Supports builders, partners, and operators shipping production applications on Xian.",
+        "image": "/xian.jpg",
+        "socials": [
+            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
+            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
+            {"icon": "x", "href": "https://x.com", "label": "X"},
+        ],
+    },
+]
 
 HISTORY_EVENTS = [
     {
@@ -150,6 +188,90 @@ def _history_item(event: dict[str, str]) -> rx.Component:
         ),
         position="relative",
         width="100%",
+    )
+
+
+def _team_card(member: dict[str, Any]) -> rx.Component:
+    """Profile card for a team member."""
+    return rx.box(
+        rx.flex(
+            rx.image(
+                src=member["image"],
+                alt=f"{member['name']} portrait",
+                width="100%",
+                height="220px",
+                object_fit="cover",
+                border_radius="12px",
+                border=f"1px solid {BORDER_COLOR}",
+            ),
+            rx.box(
+                rx.vstack(
+                    rx.text(member["name"], size="4", weight="bold", color=TEXT_PRIMARY),
+                    rx.text(member["role"], size="2", color=TEXT_MUTED, text_transform="uppercase", letter_spacing="0.12em"),
+                    rx.text(member["bio"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                    spacing="2",
+                    align_items="start",
+                ),
+                width="100%",
+                flex="1",
+            ),
+            rx.hstack(
+                *[
+                    rx.link(
+                        rx.icon(tag=social["icon"], size=18),
+                        href=social["href"],
+                        is_external=True,
+                        color=TEXT_MUTED,
+                        title=social["label"],
+                        _hover={"color": ACCENT},
+                    )
+                    for social in member["socials"]
+                ],
+                spacing="3",
+                align_items="center",
+            ),
+            direction="column",
+            gap="1rem",
+            align_items="start",
+            height="100%",
+        ),
+        padding="1.5rem",
+        background=SURFACE,
+        border=f"1px solid {BORDER_COLOR}",
+        border_radius="16px",
+        transition="all 0.25s ease",
+        _hover={
+            "borderColor": ACCENT,
+            "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
+        },
+        height="100%",
+    )
+
+
+def team_section() -> rx.Component:
+    """Team overview section."""
+    return section(
+        rx.vstack(
+            rx.heading("Team", size="7", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(
+                "The foundation is led by a small group of operators, researchers, and engineers stewarding the Xian stack.",
+                size="4",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                max_width="900px",
+            ),
+            rx.grid(
+                *[_team_card(member) for member in TEAM_MEMBERS],
+                columns={"base": "1fr", "md": "repeat(3, minmax(0, 1fr))"},
+                spacing="4",
+                width="100%",
+                align="stretch",
+            ),
+            spacing="6",
+            align_items="start",
+            width="100%",
+        ),
+        padding_top="0",
     )
 
 
@@ -363,6 +485,7 @@ def about_page() -> rx.Component:
             ),
             padding_top="0",
         ),
+        team_section(),
         history_section(),
     )
 
