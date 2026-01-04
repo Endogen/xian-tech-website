@@ -26,24 +26,26 @@ DARK_CARD_BG_BRIGHT = "#192330"
 
 TEAM_MEMBERS = [
     {
-        "name": "Jordan Blake",
+        "name": "David Strohmayer",
         "role": "Core Engineering",
         "bio": "Leads the foundation engineering roadmap across the ABCI layer, contracting runtime, and infrastructure.",
-        "image": "/xian.jpg",
+        "image": "/david.png",
         "socials": [
-            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
-            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
-            {"icon": "x", "href": "https://x.com", "label": "X"},
+            {"icon": "linkedin", "href": "https://www.linkedin.com/in/david-s-7501b6221", "label": "LinkedIn"},
+            {"icon": "github", "href": "https://github.com/Endogen", "label": "GitHub"},
+            {"icon": "send", "href": "https://t.me/endogen", "label": "Telegram"},
+            {"icon": "x", "href": "https://x.com/Endogen_XIAN", "label": "X"},
         ],
     },
     {
-        "name": "Casey Morgan",
+        "name": "Benjamin Gogan",
         "role": "Protocol Research",
         "bio": "Focuses on correctness, deterministic execution, and the long-term integrity of the Xian stack.",
-        "image": "/xian.jpg",
+        "image": "/benji.png",
         "socials": [
-            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
-            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
+            {"icon": "linkedin", "href": "https://www.linkedin.com/in/benjamingogan", "label": "LinkedIn"},
+            {"icon": "github", "href": "https://github.com/duelingbenjos", "label": "GitHub"},
+            {"icon": "send", "href": "http://t.me/duckfever", "label": "Telegram"},
             {"icon": "x", "href": "https://x.com", "label": "X"},
         ],
     },
@@ -55,6 +57,7 @@ TEAM_MEMBERS = [
         "socials": [
             {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
             {"icon": "github", "href": "https://github.com", "label": "GitHub"},
+            {"icon": "send", "href": "https://t.me/xian_technology", "label": "Telegram"},
             {"icon": "x", "href": "https://x.com", "label": "X"},
         ],
     },
@@ -254,7 +257,7 @@ def team_section() -> rx.Component:
         rx.vstack(
             rx.heading("Team", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
-                "The foundation is led by a small group of operators, researchers, and engineers stewarding the Xian stack.",
+                "The Xian Foundation is led by a small group of researchers and engineers stewarding the Xian stack.",
                 size="4",
                 color=TEXT_MUTED,
                 line_height="1.7",
