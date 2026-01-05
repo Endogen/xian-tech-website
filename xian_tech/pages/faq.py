@@ -44,6 +44,21 @@ FAQ_ITEMS = [
         ],
     },
     {
+        "id": "xian-performance",
+        "question": "How fast can a Xian Technology based blockchain be, and what's the TPS?",
+        "answer": [
+            (
+                "Because every transaction is a Python contract call, performance is constrained by Python's execution speed. "
+                "Even so, early stress tests during Xian Network development observed roughly 2,200 transactions per 2-second block "
+                "(about 1,100 TPS)."
+            ),
+            (
+                "The current ABCI app runs transactions sequentially and has not yet been optimized for throughput. Parallelism and "
+                "further tuning are planned, but the existing performance is already sufficient for current needs."
+            ),
+        ],
+    },
+    {
         "id": "lamden-connection",
         "question": "What's the connection between Lamden and Xian?",
         "answer": [
