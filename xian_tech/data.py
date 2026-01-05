@@ -39,7 +39,7 @@ NAV_LINKS = [
         "href": "/about",
         "children": [
             {"label": "About", "href": "/about", "description": "Mission, approach, and what we are building."},
-            {"label": "Team", "href": "/team", "description": "Meet the contributors behind the Xian stack."},
+            {"label": "FAQ", "href": "/faq", "description": "Common questions about Xian."},
             {"label": "Contact", "href": "/contact", "description": "Reach out for support, partnerships, or questions."},
         ],
     },
@@ -247,6 +247,7 @@ def _build_search_entries() -> list[dict[str, str]]:
         "/community": "Calls to join missions, open grants, and validator collectives.",
         "/developers": "Hub for playground, curated contracts, docs, SDKs, and APIs.",
         "/about": "Foundation mission, team, and contact.",
+        "/faq": "Answers to common questions about the foundation and the stack.",
     }
 
     for link in NAV_LINKS:

@@ -4,27 +4,27 @@ from ..components.common import page_layout, section
 from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, TEXT_MUTED, TEXT_PRIMARY
 
 
-def team_page() -> rx.Component:
-    """Placeholder team page."""
+def faq_page() -> rx.Component:
+    """Placeholder FAQ page."""
     return page_layout(
         section(
             rx.vstack(
                 rx.box(
-                    rx.text("TEAM", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
+                    rx.text("FAQ", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
                     padding="0.625rem 1.25rem",
                     background=ACCENT_SOFT,
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
                 rx.heading(
-                    "Meet the Team",
+                    "Frequently Asked Questions",
                     size="8",
                     color=TEXT_PRIMARY,
                     weight="bold",
                     line_height="1.2",
                 ),
                 rx.text(
-                    "This page will introduce the contributors and roles behind the Xian Technology Foundation.",
+                    "This page will answer common questions about the foundation, the Xian stack, and how to get involved.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
@@ -37,4 +37,4 @@ def team_page() -> rx.Component:
     )
 
 
-__all__ = ["team_page"]
+__all__ = ["faq_page"]
