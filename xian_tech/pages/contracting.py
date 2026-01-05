@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section, terminal_prompt
+from ..components.common import page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -13,20 +13,6 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
-from ..theme import (
-    ACCENT,
-    ACCENT_GLOW,
-    ACCENT_SOFT,
-    BORDER_BRIGHT,
-    BORDER_COLOR,
-    PRIMARY_BG,
-    SURFACE,
-    SURFACE_HOVER,
-    TEXT_MUTED,
-    TEXT_PRIMARY,
-)
-
-
 ALG_CONTRACT = """import beaker as bk
 import pyteal as pt
 
@@ -128,13 +114,13 @@ HIGHLIGHTS = [
 ]
 
 
-def contracts_page() -> rx.Component:
+def contracting_page() -> rx.Component:
     """Python smart contract engine overview."""
     return page_layout(
         section(
             rx.vstack(
                 rx.box(
-                    rx.text("CONTRACTS", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
+                    rx.text("CONTRACTING", size="2", letter_spacing="0.15em", color=ACCENT, weight="medium"),
                     padding="0.625rem 1.25rem",
                     background=ACCENT_SOFT,
                     border=f"1px solid {ACCENT_GLOW}",
@@ -304,4 +290,4 @@ def contracts_page() -> rx.Component:
     )
 
 
-__all__ = ["contracts_page"]
+__all__ = ["contracting_page"]

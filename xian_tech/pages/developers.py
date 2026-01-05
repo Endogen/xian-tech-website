@@ -14,7 +14,7 @@ DEV_LINKS = [
     {
         "title": "Contracting Hub",
         "description": "Curated, deploy-ready contracts with metadata and one-click launch into the playground.",
-        "href": "/contracts",
+        "href": "/contracting",
     },
     {
         "title": "Documentation",
