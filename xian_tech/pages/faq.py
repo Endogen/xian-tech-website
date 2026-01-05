@@ -1,11 +1,195 @@
+from typing import Any
+
 import reflex as rx
 
 from ..components.common import page_layout, section
-from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, TEXT_MUTED, TEXT_PRIMARY
+from ..theme import (
+    ACCENT,
+    ACCENT_GLOW,
+    ACCENT_SOFT,
+    BORDER_COLOR,
+    SURFACE,
+    TEXT_MUTED,
+    TEXT_PRIMARY,
+)
+
+FAQ_ITEMS = [
+    {
+        "id": "xian-network",
+        "question": "What is the Xian Network and what is its goal?",
+        "answer": [
+            (
+                "The Xian Network is an independent Layer 1 blockchain that runs on the Xian Technology stack. "
+                "Its goal is to prove that the stack works in a real-world environment while staying simple to use."
+            ),
+            (
+                "It is not a demo network. It is a live cryptocurrency project with a bridge to Solana and exchange "
+                "listings, integrated into the broader crypto ecosystem. The long-term goal is full decentralization "
+                "and a strong platform for Python developers to build smart contracts and applications. Learn more at xian.org."
+            ),
+        ],
+    },
+    {
+        "id": "top-100",
+        "question": "Can the Xian Network become a top 100 cryptocurrency?",
+        "answer": [
+            (
+                "In theory, yes. The network is fast, offers Ethereum-class contract capabilities, and lowers the barrier "
+                "to entry by using Python."
+            ),
+            (
+                "Realistically, a top-100 position is unlikely without significant funding and marketing. The network was "
+                "built with roughly $150k from supporters, which is not enough for large-scale promotion in a crowded market."
+            ),
+        ],
+    },
+    {
+        "id": "lamden-connection",
+        "question": "What's the connection between Lamden and Xian?",
+        "answer": [
+            (
+                "Lamden was a cryptocurrency project created in 2017 by Stuart Farmer and the original source of the "
+                "Python contracting engine."
+            ),
+            (
+                "Lamden was discontinued in 2023 due largely to financial constraints. Xian was created by Lamden community "
+                "developers (Duelingbenjos, Endogen, and Crosschainer) to continue advancing the contracting engine, but "
+                "they replaced Lamden's custom node with CometBFT, which now anchors the Xian Technology stack."
+            ),
+        ],
+    },
+    {
+        "id": "foundation-connection",
+        "question": "What exactly is the Xian Foundation and what is its connection to the Xian Network?",
+        "answer": [
+            (
+                "The Xian Foundation is a small group of software engineers focused on advancing the Xian Technology stack "
+                "into a complete, easy-to-integrate platform."
+            ),
+            (
+                "It is a working group rather than a registered legal entity, and it does not hold or require assets to "
+                "execute its mission. The foundation is led by David Strohmayer, who is also a founder and core developer "
+                "of the Xian Network, while the network itself remains independent."
+            ),
+        ],
+    },
+    {
+        "id": "foundation-origin",
+        "question": "How and why was the Xian Foundation created?",
+        "answer": [
+            (
+                "The foundation was created by David Strohmayer to focus on the technology itself. The Xian Network's day-to-day "
+                "needs prioritized adoption and ecosystem growth, leaving less room to refine the core stack."
+            ),
+            (
+                "The foundation exists to close that gap by driving the software platform forward and improving the out-of-the-box "
+                "developer experience."
+            ),
+        ],
+    },
+    {
+        "id": "foundation-vision",
+        "question": "What's the vision of the Xian Foundation?",
+        "answer": [
+            (
+                "Build Xian Technology into a robust stack that individuals, communities, and companies can set up quickly."
+            ),
+            (
+                "The aim is to make launching decentralized or distributed networks simple, with sensible defaults and enough "
+                "flexibility to customize when needed."
+            ),
+        ],
+    },
+    {
+        "id": "use-xian-tech",
+        "question": "Can I use Xian Technology for my own crypto project?",
+        "answer": [
+            (
+                "Yes. The software is open source, and the contracting engine is licensed under GPLv3. As long as you comply "
+                "with the license, you can use it and other parts of the stack in your own projects."
+            )
+        ],
+    },
+]
+
+
+def _faq_item(item: dict[str, Any]) -> rx.Component:
+    """Single FAQ entry with expandable detail."""
+    hover_shadow = rx.color_mode_cond(
+        light="0 12px 28px rgba(80, 177, 101, 0.16)",
+        dark="0 12px 28px rgba(0, 255, 136, 0.18)",
+    )
+    answer_blocks = [
+        rx.text(
+            paragraph,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.7",
+        )
+        for paragraph in item["answer"]
+    ]
+
+    return rx.box(
+        rx.accordion.root(
+            rx.accordion.item(
+                rx.accordion.header(
+                    rx.accordion.trigger(
+                        rx.hstack(
+                            rx.text(
+                                item["question"],
+                                size="4",
+                                weight="bold",
+                                color=TEXT_PRIMARY,
+                            ),
+                            rx.accordion.icon(color=TEXT_MUTED),
+                            justify="between",
+                            align_items="center",
+                            width="100%",
+                        ),
+                        padding="1.5rem",
+                        background="transparent",
+                        box_shadow="none",
+                        color=TEXT_PRIMARY,
+                        cursor="pointer",
+                        width="100%",
+                        _hover={"backgroundColor": "transparent"},
+                    )
+                ),
+                rx.accordion.content(
+                    rx.box(
+                        rx.vstack(
+                            *answer_blocks,
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding_left="1.5rem",
+                        padding_right="1.5rem",
+                        padding_bottom="1.5rem",
+                    ),
+                    color=TEXT_MUTED,
+                ),
+                value=f"faq-{item['id']}",
+                width="100%",
+            ),
+            type="single",
+            collapsible=True,
+            variant="ghost",
+            width="100%",
+        ),
+        background=SURFACE,
+        border_radius="14px",
+        border=f"1px solid {BORDER_COLOR}",
+        transition="all 0.2s ease",
+        _hover={
+            "borderColor": ACCENT,
+            "boxShadow": hover_shadow,
+        },
+        width="100%",
+    )
 
 
 def faq_page() -> rx.Component:
-    """Placeholder FAQ page."""
+    """FAQ page."""
     return page_layout(
         section(
             rx.vstack(
@@ -24,14 +208,21 @@ def faq_page() -> rx.Component:
                     line_height="1.2",
                 ),
                 rx.text(
-                    "This page will answer common questions about the foundation, the Xian stack, and how to get involved.",
+                    "Answers to common questions about the foundation, the Xian stack, and how to get involved.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
                     max_width="900px",
                 ),
+                rx.vstack(
+                    *[_faq_item(item) for item in FAQ_ITEMS],
+                    spacing="4",
+                    align_items="stretch",
+                    width="100%",
+                ),
                 spacing="6",
                 align_items="start",
+                width="100%",
             )
         )
     )
