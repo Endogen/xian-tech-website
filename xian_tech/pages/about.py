@@ -3,6 +3,7 @@ from typing import Any
 import reflex as rx
 
 from ..components.common import page_layout, section
+from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -26,6 +27,7 @@ DARK_CARD_BG_BRIGHT = "#192330"
 
 TEAM_MEMBERS = [
     {
+        "id": "david-strohmayer",
         "name": "David Strohmayer",
         "role": "Core Engineering",
         "bio": "Leads the foundation engineering roadmap across the ABCI layer, contracting runtime, and infrastructure.",
@@ -38,6 +40,7 @@ TEAM_MEMBERS = [
         ],
     },
     {
+        "id": "benjamin-gogan",
         "name": "Benjamin Gogan",
         "role": "Protocol Research",
         "bio": "Focuses on correctness, deterministic execution, and the long-term integrity of the Xian stack.",
@@ -50,6 +53,7 @@ TEAM_MEMBERS = [
         ],
     },
     {
+        "id": "riley-chen",
         "name": "Riley Chen",
         "role": "Ecosystem & Partnerships",
         "bio": "Supports builders, partners, and operators shipping production applications on Xian.",
@@ -270,8 +274,12 @@ def _team_card(member: dict[str, Any]) -> rx.Component:
                     width="100%",
                     height="220px",
                     object_fit="cover",
+                    transform=rx.cond(
+                        State.team_hover_id == member["id"],
+                        "scale(1.04)",
+                        "scale(1)",
+                    ),
                     transition="transform 0.35s ease",
-                    _hover={"transform": "scale(1.04)"},
                 ),
                 border_radius="12px",
                 border=f"1px solid {BORDER_COLOR}",
@@ -314,6 +322,8 @@ def _team_card(member: dict[str, Any]) -> rx.Component:
         border=f"1px solid {BORDER_COLOR}",
         border_radius="16px",
         transition="all 0.25s ease",
+        on_mouse_enter=State.set_team_hover(member["id"]),
+        on_mouse_leave=State.clear_team_hover,
         _hover={
             "borderColor": ACCENT,
             "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
