@@ -263,14 +263,20 @@ def _team_card(member: dict[str, Any]) -> rx.Component:
     """Profile card for a team member."""
     return rx.box(
         rx.flex(
-            rx.image(
-                src=member["image"],
-                alt=f"{member['name']} portrait",
-                width="100%",
-                height="220px",
-                object_fit="cover",
+            rx.box(
+                rx.image(
+                    src=member["image"],
+                    alt=f"{member['name']} portrait",
+                    width="100%",
+                    height="220px",
+                    object_fit="cover",
+                    transition="transform 0.35s ease",
+                    _hover={"transform": "scale(1.04)"},
+                ),
                 border_radius="12px",
                 border=f"1px solid {BORDER_COLOR}",
+                overflow="hidden",
+                width="100%",
             ),
             rx.box(
                 rx.vstack(
