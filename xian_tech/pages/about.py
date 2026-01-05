@@ -196,12 +196,16 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
                         rx.accordion.trigger(
                             rx.hstack(
                                 rx.hstack(
-                                    rx.text(
-                                        event["date"],
-                                        size="4",
-                                        weight="bold",
-                                        color=ACCENT,
-                                        letter_spacing="0.08em",
+                                    rx.box(
+                                        rx.text(
+                                            event["date"],
+                                            size="4",
+                                            weight="bold",
+                                            color=ACCENT,
+                                            letter_spacing="0.08em",
+                                        ),
+                                        min_width=rx.breakpoints(initial="auto", md="150px"),
+                                        flex_shrink="0",
                                     ),
                                     rx.text(
                                         event["title"],
