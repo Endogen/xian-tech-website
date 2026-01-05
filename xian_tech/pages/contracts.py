@@ -153,12 +153,55 @@ def contracts_page() -> rx.Component:
             )
         ),
         section(
-            rx.text(
-                "Let’s compare a simple add-and-read contract across stacks:",
-                size="3",
-                color=TEXT_MUTED,
-                line_height="1.7",
-                padding_bottom="0.5rem",
+            rx.vstack(
+                rx.grid(
+                    *[
+                        rx.box(
+                            rx.vstack(
+                                rx.hstack(
+                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
+                                    rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
+                                    align_items="center",
+                                    gap="0.75rem",
+                                ),
+                                rx.text(item["body"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                                spacing="3",
+                                align_items="start",
+                            ),
+                            padding="2.25rem",
+                            background=SURFACE,
+                            border=f"1px solid {BORDER_COLOR}",
+                            border_radius="14px",
+                            border_left=f"4px solid {ACCENT}",
+                            transition="all 0.3s ease",
+                            _hover={
+                                "borderColor": BORDER_BRIGHT,
+                                "backgroundColor": SURFACE_HOVER,
+                            },
+                            height="100%",
+                        )
+                        for item in HIGHLIGHTS
+                    ],
+                    template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
+                    gap="1.25rem",
+                ),
+                spacing="5",
+                align_items="start",
+            ),
+            padding_top="0",
+        ),
+        section(
+            rx.vstack(
+                rx.heading("Compare Contracting Platforms", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.text(
+                    "Let’s compare a simple add-and-read contract across stacks:",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
+                spacing="2",
+                align_items="start",
+                width="100%",
             ),
             rx.tabs.root(
                 rx.tabs.list(
@@ -255,45 +298,6 @@ def contracts_page() -> rx.Component:
                 ),
                 default_value="xian",
                 width="100%",
-            ),
-            padding_top="0",
-        ),
-        section(
-            rx.vstack(
-                rx.heading("Why the Xian contracting model?", size="6", color=TEXT_PRIMARY, weight="bold"),
-                rx.grid(
-                    *[
-                        rx.box(
-                            rx.vstack(
-                                rx.hstack(
-                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
-                                    rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
-                                    align_items="center",
-                                    gap="0.75rem",
-                                ),
-                                rx.text(item["body"], size="3", color=TEXT_MUTED, line_height="1.7"),
-                                spacing="3",
-                                align_items="start",
-                            ),
-                            padding="2.25rem",
-                            background=SURFACE,
-                            border=f"1px solid {BORDER_COLOR}",
-                            border_radius="14px",
-                            border_left=f"4px solid {ACCENT}",
-                            transition="all 0.3s ease",
-                            _hover={
-                                "borderColor": BORDER_BRIGHT,
-                                "backgroundColor": SURFACE_HOVER,
-                            },
-                            height="100%",
-                        )
-                        for item in HIGHLIGHTS
-                    ],
-                    template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
-                    gap="1.25rem",
-                ),
-                spacing="5",
-                align_items="start",
             ),
             padding_top="0",
         ),
