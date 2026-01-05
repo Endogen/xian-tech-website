@@ -115,10 +115,6 @@ FAQ_ITEMS = [
 
 def _faq_item(item: dict[str, Any]) -> rx.Component:
     """Single FAQ entry with expandable detail."""
-    hover_shadow = rx.color_mode_cond(
-        light="0 12px 28px rgba(80, 177, 101, 0.16)",
-        dark="0 12px 28px rgba(0, 255, 136, 0.18)",
-    )
     answer_blocks = [
         rx.text(
             paragraph,
@@ -129,60 +125,65 @@ def _faq_item(item: dict[str, Any]) -> rx.Component:
         for paragraph in item["answer"]
     ]
 
-    return rx.box(
-        rx.accordion.root(
-            rx.accordion.item(
-                rx.accordion.header(
-                    rx.accordion.trigger(
-                        rx.hstack(
-                            rx.text(
-                                item["question"],
-                                size="4",
-                                weight="bold",
-                                color=TEXT_PRIMARY,
-                            ),
-                            rx.accordion.icon(color=TEXT_MUTED),
-                            justify="between",
-                            align_items="center",
-                            width="100%",
-                        ),
-                        padding="1.5rem",
-                        background="transparent",
-                        box_shadow="none",
+    return rx.accordion.item(
+        rx.accordion.header(
+            rx.accordion.trigger(
+                rx.hstack(
+                    rx.text(
+                        item["question"],
+                        size="4",
+                        weight="bold",
                         color=TEXT_PRIMARY,
-                        cursor="pointer",
-                        width="100%",
-                        _hover={"backgroundColor": "transparent"},
-                    )
-                ),
-                rx.accordion.content(
-                    rx.box(
-                        rx.vstack(
-                            *answer_blocks,
-                            spacing="3",
-                            align_items="start",
-                        ),
-                        padding_left="1.5rem",
-                        padding_right="1.5rem",
-                        padding_bottom="1.5rem",
                     ),
-                    color=TEXT_MUTED,
+                    rx.accordion.icon(color=TEXT_MUTED),
+                    justify="between",
+                    align_items="center",
+                    width="100%",
                 ),
-                value=f"faq-{item['id']}",
+                padding="1.5rem",
+                background="transparent",
+                box_shadow="none",
+                color=TEXT_PRIMARY,
+                cursor="pointer",
                 width="100%",
-            ),
-            type="single",
-            collapsible=True,
-            variant="ghost",
-            width="100%",
+                _hover={"backgroundColor": "transparent"},
+            )
         ),
+        rx.accordion.content(
+            rx.box(
+                rx.vstack(
+                    *answer_blocks,
+                    spacing="3",
+                    align_items="start",
+                ),
+                padding_left="1.5rem",
+                padding_right="1.5rem",
+                padding_bottom="1.5rem",
+            ),
+            color=TEXT_MUTED,
+        ),
+        value=f"faq-{item['id']}",
         background=SURFACE,
         border_radius="14px",
         border=f"1px solid {BORDER_COLOR}",
         transition="all 0.2s ease",
+        overflow="hidden",
         _hover={
             "borderColor": ACCENT,
-            "boxShadow": hover_shadow,
+            "boxShadow": rx.color_mode_cond(
+                light="0 12px 28px rgba(80, 177, 101, 0.16)",
+                dark="0 12px 28px rgba(0, 255, 136, 0.18)",
+            ),
+        },
+        style={
+            "&:first-child": {
+                "border_top_left_radius": "14px",
+                "border_top_right_radius": "14px",
+            },
+            "&:last-child": {
+                "border_bottom_left_radius": "14px",
+                "border_bottom_right_radius": "14px",
+            },
         },
         width="100%",
     )
@@ -214,11 +215,26 @@ def faq_page() -> rx.Component:
                     line_height="1.7",
                     max_width="900px",
                 ),
-                rx.vstack(
+                rx.accordion.root(
                     *[_faq_item(item) for item in FAQ_ITEMS],
-                    spacing="4",
-                    align_items="stretch",
+                    type="single",
+                    collapsible=True,
+                    variant="outline",
                     width="100%",
+                    show_dividers=False,
+                    style={
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "1rem",
+                        "border": "none",
+                        "boxShadow": "none",
+                        "backgroundColor": "transparent",
+                        "&[data-variant='outline']": {
+                            "border": "none",
+                            "boxShadow": "none",
+                            "backgroundColor": "transparent",
+                        },
+                    },
                 ),
                 spacing="6",
                 align_items="start",
