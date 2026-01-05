@@ -717,6 +717,12 @@ def command_palette() -> rx.Component:
             rx.icon(tag="arrow_up_right", size=18, color=TEXT_MUTED),
             rx.icon(tag="corner_down_left", size=18, color=TEXT_MUTED),
         )
+        arrow_slot = rx.center(
+            arrow,
+            width="22px",
+            height="22px",
+            flex_shrink="0",
+        )
         is_active = action["id"] == State.command_palette_active_id
 
         return rx.link(
@@ -736,7 +742,7 @@ def command_palette() -> rx.Component:
                     align_items="start",
                 ),
                 rx.spacer(),
-                arrow,
+                arrow_slot,
                 align_items="center",
                 width="100%",
             ),
