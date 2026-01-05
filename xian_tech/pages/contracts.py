@@ -63,6 +63,35 @@ def read_result():
     return result.get()
 """
 
+SOLIDITY_CONTRACT = """// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Calculator {
+    uint256 public result;
+
+    function add(uint256 a, uint256 b) external {
+        result = a + b;
+    }
+
+    function readResult() external view returns (uint256) {
+        return result;
+    }
+}
+"""
+
+VYPER_CONTRACT = """# @version ^0.3.10
+result: public(uint256)
+
+@external
+def add(a: uint256, b: uint256):
+    self.result = a + b
+
+@external
+@view
+def read_result() -> uint256:
+    return self.result
+"""
+
 HIGHLIGHTS = [
     {
         "title": "Python-first by design",
@@ -125,47 +154,107 @@ def contracts_page() -> rx.Component:
         ),
         section(
             rx.text(
-                "Let’s compare a simple add-and-read contract on Algorand versus Xian:",
+                "Let’s compare a simple add-and-read contract across stacks:",
                 size="3",
                 color=TEXT_MUTED,
                 line_height="1.7",
-            padding_bottom="0.5rem",
-        ),
-            rx.grid(
-                rx.vstack(
-                    rx.heading("Algorand Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    rx.code_block(
-                        ALG_CONTRACT,
-                        language="python",
-                        show_line_numbers=True,
-                    ),
-                    rx.text(
-                        "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.6",
-                    ),
-                    spacing="3",
-                    align_items="start",
+                padding_bottom="0.5rem",
+            ),
+            rx.tabs.root(
+                rx.tabs.list(
+                    rx.tabs.trigger("Xian", value="xian", color_scheme="green"),
+                    rx.tabs.trigger("Algorand", value="algorand", color_scheme="green"),
+                    rx.tabs.trigger("Solidity", value="solidity", color_scheme="green"),
+                    rx.tabs.trigger("Vyper", value="vyper", color_scheme="green"),
+                    gap="0.75rem",
+                    wrap="wrap",
                 ),
-                rx.vstack(
-                    rx.heading("Xian Contract", size="5", color=TEXT_PRIMARY, weight="bold"),
-                    rx.code_block(
-                        XIAN_CONTRACT,
-                        language="python",
-                        show_line_numbers=True,
+                rx.tabs.content(
+                    rx.vstack(
+                        rx.code_block(
+                            XIAN_CONTRACT,
+                            language="python",
+                            show_line_numbers=True,
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
                     ),
-                    rx.text(
-                        "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.6",
-                    ),
-                    spacing="3",
-                    align_items="start",
+                    value="xian",
+                    width="100%",
                 ),
-                template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
-                gap="1.5rem",
+                rx.tabs.content(
+                    rx.vstack(
+                        rx.code_block(
+                            ALG_CONTRACT,
+                            language="python",
+                            show_line_numbers=True,
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    value="algorand",
+                    width="100%",
+                ),
+                rx.tabs.content(
+                    rx.vstack(
+                        rx.code_block(
+                            SOLIDITY_CONTRACT,
+                            language="solidity",
+                            show_line_numbers=True,
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Deploy flow: compile to EVM bytecode, deploy the contract, and call the public read function to return the stored result.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    value="solidity",
+                    width="100%",
+                ),
+                rx.tabs.content(
+                    rx.vstack(
+                        rx.code_block(
+                            VYPER_CONTRACT,
+                            language="python",
+                            show_line_numbers=True,
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Deploy flow: compile with the Vyper compiler, deploy to an EVM chain, and call the public getter to read the result.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    value="vyper",
+                    width="100%",
+                ),
+                default_value="xian",
+                width="100%",
             ),
             padding_top="0",
         ),
