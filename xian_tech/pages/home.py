@@ -306,7 +306,7 @@ def why_another_blockchain() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Why Another Blockchain?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                rx.heading("Another Blockchain?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
                     "Blockchains are shifting away from bespoke, blockchain-only stacks toward ones built on familiar technology—avoiding niche languages and tools you never see outside crypto. The goal is a universal stack that plugs into existing infrastructure and is straightforward to deploy and operate. Our aim is to to deliver a simple yet powerful software stack that companies and communities can run themselves when they want their own decentralized ledger.",
                     size="4",
@@ -355,7 +355,7 @@ def why_another_blockchain() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
                     "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
                     size="4",
@@ -494,7 +494,7 @@ def why_python() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Why use Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
                     "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
                     size="4",
@@ -667,7 +667,7 @@ def noteworthy_quotes() -> rx.Component:
 
     return section(
         rx.vstack(
-            rx.heading("Noteworthy quotes about Python", size="6", color=TEXT_PRIMARY, weight="bold"),
+            rx.heading("Quotes on Python", size="6", color=TEXT_PRIMARY, weight="bold"),
             rx.el.style(QUOTE_MARQUEE_STYLE),
             rx.box(
                 rx.flex(
