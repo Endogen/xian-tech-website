@@ -952,7 +952,7 @@ def footer() -> rx.Component:
                                 _hover={"color": ACCENT},
                             ),
                             rx.link(
-                                rx.icon(tag="message_circle", size=20),
+                                rx.icon(tag="message_square_text", size=20),
                                 href="/contact",
                                 color=TEXT_PRIMARY,
                                 _hover={"color": ACCENT},
