@@ -93,12 +93,17 @@ FAQ_ITEMS = [
         "question": "How and why was the Xian Foundation created?",
         "answer": [
             (
-                "The foundation was created by David Strohmayer to focus on the technology itself. The Xian Network's day-to-day "
-                "needs prioritized adoption and ecosystem growth, leaving less room to refine the core stack."
+                "The foundation was created by David Strohmayer, a core developer of the Xian Network, to focus on the technology "
+                "itself. The Xian Network's day-to-day needs prioritized adoption and ecosystem growth, leaving less room to refine "
+                "the core stack."
             ),
             (
                 "The foundation exists to close that gap by driving the software platform forward and improving the out-of-the-box "
                 "developer experience."
+            ),
+            (
+                "It does not operate a standalone website. Instead, it is integrated into the Xian Technology site, which was built "
+                "as a first step to create a single entry point for everything related to Xian and the technology stack."
             ),
         ],
     },
@@ -125,6 +130,30 @@ FAQ_ITEMS = [
             )
         ],
     },
+    {
+        "id": "get-involved",
+        "question": "I'm a Python developer and I'd like to get involved. How?",
+        "answer": [
+            (
+                "Great to hear. The best way to start is by opening a pull request on one of the Xian repositories or by reaching "
+                "out via our social channels."
+            ),
+            rx.text(
+                "You can browse the Xian Foundation repositories at ",
+                rx.link(
+                    "https://github.com/orgs/xian-technology/repositories",
+                    href="https://github.com/orgs/xian-technology/repositories",
+                    is_external=True,
+                    color=ACCENT,
+                    _hover={"color": ACCENT},
+                ),
+                ". Contributors who make meaningful contributions to the ecosystem can be invited to the foundation.",
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+            ),
+        ],
+    },
 ]
 
 
@@ -137,6 +166,8 @@ def _faq_item(item: dict[str, Any]) -> rx.Component:
             color=TEXT_MUTED,
             line_height="1.7",
         )
+        if isinstance(paragraph, str)
+        else paragraph
         for paragraph in item["answer"]
     ]
 
