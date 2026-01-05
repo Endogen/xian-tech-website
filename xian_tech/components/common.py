@@ -944,11 +944,21 @@ def footer() -> rx.Component:
                     ),
                     rx.vstack(
                         rx.text("Contact", size="3", weight="bold", color=TEXT_PRIMARY),
-                        rx.link(
-                            rx.icon(tag="mail", size=20),
-                            href="mailto:foundation@xian.technology",
-                            color=TEXT_PRIMARY,
-                            _hover={"color": ACCENT},
+                        rx.hstack(
+                            rx.link(
+                                rx.icon(tag="mail", size=20),
+                                href="mailto:foundation@xian.technology",
+                                color=TEXT_PRIMARY,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.icon(tag="message_circle", size=20),
+                                href="/contact",
+                                color=TEXT_PRIMARY,
+                                _hover={"color": ACCENT},
+                            ),
+                            spacing="3",
+                            align_items="center",
                         ),
                         rx.text("Follow", size="3", weight="bold", color=TEXT_PRIMARY),
                         rx.hstack(
