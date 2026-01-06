@@ -5,7 +5,6 @@ from .pages.community import community_page
 from .pages.consensus import consensus_page
 from .pages.contracting import contracting_page
 from .pages.home import home_page
-from .pages.bds import bds_page
 from .pages.developers import developers_page
 from .pages.about import about_page
 from .pages.contact import contact_page
@@ -28,7 +27,6 @@ app.add_page(home_page, route="/", title="Xian Technology Foundation")
 app.add_page(consensus_page, route="/consensus", title="CometBFT Consensus")
 app.add_page(contracting_page, route="/contracting", title="Contracting")
 app.add_page(abci_page, route="/abci", title="ABCI for CometBFT")
-app.add_page(bds_page, route="/bds", title="Blockchain Data Service")
 app.add_page(tooling_page, route="/tooling", title="Tooling & Integrations")
 app.add_page(developers_page, route="/developers", title="Developer Hub")
 app.add_page(about_page, route="/about", title="About the Foundation")
