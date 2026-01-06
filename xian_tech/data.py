@@ -12,11 +12,10 @@ NAV_LINKS = [
     {"label": "Home", "href": "/"},
     {
         "label": "Technology",
-        "href": "/technology",
+        "href": "/consensus",
         "children": [
-            {"label": "Overview", "href": "/technology", "description": "Architecture, stack, and design goals."},
-            {"label": "Contracting", "href": "/contracting", "description": "Python-native smart contracts and patterns."},
             {"label": "Consensus", "href": "/consensus", "description": "CometBFT backbone securing the network."},
+            {"label": "Contracting", "href": "/contracting", "description": "Python-native smart contracts and patterns."},
             {"label": "ABCI", "href": "/abci", "description": "Python ABCI app bridging consensus and execution."},
             {"label": "BDS", "href": "/bds", "description": "Data Service with PostgreSQL + GraphQL."},
             {"label": "Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
@@ -53,16 +52,16 @@ CORE_COMPONENTS = [
         "icon": "satellite",
     },
     {
-        "title": "Python Smart Contract Engine",
-        "description": "Pure Python contracts with deterministic execution—no transpilers or alternate languages.",
-        "href": "/contracting",
-        "icon": "code",
-    },
-    {
         "title": "Python ABCI for CometBFT",
         "description": "ABCI application in Python bridging consensus with the contracting runtime and state patches.",
         "href": "/abci",
         "icon": "link",
+    },
+    {
+        "title": "Python Smart Contract Engine",
+        "description": "Pure Python contracts with deterministic execution—no transpilers or alternate languages.",
+        "href": "/contracting",
+        "icon": "code",
     },
     {
         "title": "Tooling & Interfaces",
@@ -243,11 +242,11 @@ def _build_search_entries() -> list[dict[str, str]]:
 
     nav_descriptions = {
         "/": "Landing page for the foundation, stats, and hero messaging.",
-        "/technology": "Detailed breakdown of contracting, node, and roadmap work.",
         "/community": "Calls to join missions, open grants, and validator collectives.",
         "/developers": "Hub for playground, curated contracts, docs, SDKs, and APIs.",
         "/about": "Foundation mission, team, and contact.",
         "/faq": "Answers to common questions about the foundation and the stack.",
+        "/consensus": "CometBFT consensus engine and how the network finalizes blocks.",
     }
 
     for link in NAV_LINKS:
@@ -329,7 +328,7 @@ def _build_search_entries() -> list[dict[str, str]]:
             }
         )
 
-    # Technology tracks
+    # Technology tracks (keep as search hints even without a dedicated page)
     for track in TECHNOLOGY_TRACKS:
         entries.append(
             {
@@ -338,7 +337,7 @@ def _build_search_entries() -> list[dict[str, str]]:
                 "subtitle": track["description"],
                 "category": "Technology",
                 "badge": "Track",
-                "href": "/technology",
+                "href": "/contracting",
                 "external": False,
                 "keywords": track["points"],
             }
@@ -351,7 +350,7 @@ def _build_search_entries() -> list[dict[str, str]]:
             "subtitle": "pip install xian-py → xian init → xian deploy",
             "category": "Technology",
             "badge": "Guide",
-            "href": "/technology",
+            "href": "/contracting",
             "external": False,
             "keywords": ["Get started", "Terminal prompt", "Documentation"],
         }

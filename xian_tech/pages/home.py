@@ -74,7 +74,7 @@ def hero_section() -> rx.Component:
                 rx.link(
                     rx.button(
                         rx.flex(
-                            rx.text("Explore Technology", size="3", weight="medium"),
+                            rx.text("View on GitHub", size="3", weight="medium"),
                             rx.text("→", weight="bold", size="4"),
                             gap="0.75rem",
                             align_items="center",
@@ -83,30 +83,11 @@ def hero_section() -> rx.Component:
                         background_color=ACCENT,
                         color=PRIMARY_BG,
                         border_radius="10px",
-                        cursor="pointer",
                         padding="1.25rem 2rem",
+                        cursor="pointer",
                         _hover={
                             "backgroundColor": ACCENT_HOVER,
-                            "transform": "translateY(-2px)",
-                        },
-                        transition="all 0.2s ease",
-                    ),
-                    href="/technology",
-                ),
-                rx.link(
-                    rx.button(
-                        "View on GitHub",
-                        variant="outline",
-                        size="4",
-                        border_color=BORDER_COLOR,
-                        color=TEXT_PRIMARY,
-                        background_color="transparent",
-                        border_radius="10px",
-                        padding="1.25rem 2rem",
-                        cursor="pointer",
-                        _hover={
-                            "backgroundColor": SURFACE,
-                            "borderColor": TEXT_MUTED,
+                            "boxShadow": f"0 12px 30px {ACCENT_SOFT}",
                         },
                         transition="all 0.2s ease",
                     ),
