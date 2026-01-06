@@ -175,7 +175,7 @@ def tooling_page() -> rx.Component:
         section(
             rx.vstack(
                 rx.flex(
-                    rx.heading("Xian SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
                     rx.hstack(
                         rx.link(
                             rx.hstack(
@@ -329,7 +329,42 @@ def tooling_page() -> rx.Component:
         ),
         section(
             rx.vstack(
-                rx.heading("Blockchain Data Service (BDS)", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.flex(
+                    rx.heading("Blockchain Data Service (BDS)", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-py",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://docs.xian.technology",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
                 rx.text(
                     "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction into PostgreSQL and exposes that data via a GraphQL API powered by ",
                     rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
