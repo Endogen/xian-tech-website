@@ -1,17 +1,124 @@
 import reflex as rx
 
-from ..components.common import page_layout, section, terminal_prompt
+from ..components.common import page_layout, section
 from ..data import BDS_COMPONENTS
+from ..state import State
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
     BORDER_COLOR,
+    CODE_BG,
     SURFACE,
     SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
+
+SDK_INSTALL_COMMAND = "pip install xian-py"
+SDK_WALLET_EXAMPLE = """from xian_py import Wallet
+
+wallet = Wallet()
+
+print(f"Address: {wallet.public_key}")
+print(f"Private key: {wallet.private_key}")"""
+SDK_BALANCE_EXAMPLE = """from xian_py import Xian, Wallet
+
+wallet = Wallet()
+xian = Xian("http://node-ip:26657", wallet=wallet)
+
+balance = xian.get_balance(wallet.public_key)
+print(f"Balance: {balance}")"""
+SDK_SEND_EXAMPLE = """from xian_py import Xian, Wallet
+
+wallet = Wallet()
+xian = Xian("http://node-ip:26657", wallet=wallet)
+
+result = xian.send(amount=10, to_address="recipient_address")
+print(f"Transaction successful: {result['success']}")"""
+SDK_CONTRACT_EXAMPLE = """from xian_py import Xian, Wallet
+
+wallet = Wallet()
+xian = Xian("http://node-ip:26657", wallet=wallet)
+
+result = xian.send_tx(
+    contract="currency",
+    function="transfer",
+    kwargs={"to": "recipient_address", "amount": 100},
+)
+print(f"Success: {result['success']}")"""
+
+
+def _sdk_install_card() -> rx.Component:
+    return rx.box(
+        rx.vstack(
+            rx.text("Install", size="3", weight="bold", color=TEXT_PRIMARY),
+            rx.flex(
+                rx.text("$", color=ACCENT, weight="bold", size="3"),
+                rx.text(
+                    SDK_INSTALL_COMMAND,
+                    color=TEXT_PRIMARY,
+                    size="3",
+                    font_family="'SF Mono', 'Monaco', monospace",
+                ),
+                rx.spacer(),
+                rx.button(
+                    rx.box(
+                        rx.icon(
+                            tag="clipboard_copy",
+                            size=18,
+                            color="currentColor",
+                            opacity=rx.cond(State.sdk_install_copied, "0", "1"),
+                            transform=rx.cond(State.sdk_install_copied, "scale(0.85)", "scale(1)"),
+                            transition="opacity 0.2s ease, transform 0.2s ease",
+                            position="absolute",
+                            top="0",
+                            left="0",
+                        ),
+                        rx.icon(
+                            tag="check",
+                            size=18,
+                            color="currentColor",
+                            opacity=rx.cond(State.sdk_install_copied, "1", "0"),
+                            transform=rx.cond(State.sdk_install_copied, "scale(1)", "scale(0.85)"),
+                            transition="opacity 0.2s ease, transform 0.2s ease",
+                            position="absolute",
+                            top="0",
+                            left="0",
+                        ),
+                        width="18px",
+                        height="18px",
+                        position="relative",
+                        display="inline-block",
+                    ),
+                    on_click=State.copy_sdk_install_command,
+                    variant="ghost",
+                    cursor="pointer",
+                    padding="0.35rem",
+                    background_color="transparent",
+                    color=rx.cond(State.sdk_install_copied, ACCENT, TEXT_MUTED),
+                    border="none",
+                    _hover={"color": ACCENT, "background_color": "transparent"},
+                    aria_label="Copy install command",
+                ),
+                gap="0.75rem",
+                padding="1rem 1.5rem",
+                background=CODE_BG,
+                border=f"1px solid {BORDER_COLOR}",
+                border_radius="8px",
+                align_items="center",
+                width="100%",
+            ),
+            spacing="3",
+            align_items="start",
+            width="100%",
+        ),
+        padding="1.75rem",
+        background=SURFACE,
+        border=f"1px solid {BORDER_COLOR}",
+        border_radius="14px",
+        width="100%",
+    )
 
 
 def tooling_page() -> rx.Component:
@@ -39,72 +146,143 @@ def tooling_page() -> rx.Component:
             )
         ),
         section(
-            rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("xian-py SDK", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Python-native SDK for initializing, deploying, and interacting with contracts. Works with the same language as the runtime.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        rx.vstack(
-                            terminal_prompt("pip install xian-py"),
-                            terminal_prompt("xian init my-contract"),
-                            terminal_prompt("xian deploy"),
+            rx.vstack(
+                rx.flex(
+                    rx.heading("Xian SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.link(
+                        rx.hstack(
+                            rx.icon(tag="github", size=18),
+                            rx.text("xian-py repository", size="3"),
                             spacing="2",
+                            align_items="center",
+                        ),
+                        href="https://github.com/xian-technology/xian-py",
+                        is_external=True,
+                        color=TEXT_MUTED,
+                        _hover={"color": ACCENT},
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "xian-py is the Python SDK for interacting with Xian nodes, managing accounts, and deploying or "
+                    "calling contracts from scripts and services.",
+                    size="4",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    max_width="900px",
+                ),
+                rx.grid(
+                    _sdk_install_card(),
+                    rx.box(
+                        rx.vstack(
+                            rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.vstack(
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+                rx.vstack(
+                    rx.heading("Examples", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    rx.tabs.root(
+                        rx.tabs.list(
+                            rx.tabs.trigger("Create wallet", value="wallet", color_scheme="green"),
+                            rx.tabs.trigger("Get balance", value="balance", color_scheme="green"),
+                            rx.tabs.trigger("Send tokens", value="send", color_scheme="green"),
+                            rx.tabs.trigger("Call contract", value="contract", color_scheme="green"),
+                            gap="0.75rem",
+                            wrap="wrap",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_WALLET_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                width="100%",
+                            ),
+                            value="wallet",
                             width="100%",
                         ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Blockchain Data Service (BDS)", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "GraphQL interface to on-chain data for explorers, dashboards, and ops tooling. Optimized for predictable queries over block and contract state.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_BALANCE_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                width="100%",
+                            ),
+                            value="balance",
+                            width="100%",
                         ),
-                        spacing="3",
-                        align_items="start",
-                    ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Operational hooks", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        rx.text(
-                            "Command palette and search index link directly to docs, GitHub, and community channels for faster collaboration.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_SEND_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                width="100%",
+                            ),
+                            value="send",
+                            width="100%",
                         ),
-                        spacing="3",
-                        align_items="start",
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_CONTRACT_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                width="100%",
+                            ),
+                            value="contract",
+                            width="100%",
+                        ),
+                        default_value="wallet",
+                        width="100%",
                     ),
-                    padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
                 ),
-                template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
-                gap="1.5rem",
-            ),
-            padding_top="0",
+                spacing="4",
+                align_items="start",
+            )
         ),
         section(
             rx.vstack(
@@ -193,7 +371,8 @@ def tooling_page() -> rx.Component:
                 ),
                 spacing="3",
                 align_items="start",
-            )
+            ),
+            padding_top="0",
         ),
     )
 

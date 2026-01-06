@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any, TypedDict
 from urllib.parse import quote
 
@@ -52,6 +53,7 @@ class State(rx.State):
     image_lightbox_open: bool = False
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
+    sdk_install_copied: bool = False
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -129,6 +131,12 @@ class State(rx.State):
         self.image_lightbox_src = ""
         self.image_lightbox_alt = ""
 
+    async def copy_sdk_install_command(self):
+        """Copy the SDK install command and flash copy feedback."""
+        self.sdk_install_copied = True
+        yield rx.set_clipboard("pip install xian-py")
+        await asyncio.sleep(1.4)
+        self.sdk_install_copied = False
 
     def submit_contact_form(self, form_data: dict[str, Any]):
         """Open a pre-filled email draft with the contact form details."""
