@@ -176,17 +176,33 @@ def tooling_page() -> rx.Component:
             rx.vstack(
                 rx.flex(
                     rx.heading("Xian SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.link(
-                        rx.hstack(
-                            rx.icon(tag="github", size=18),
-                            rx.text("xian-py repository", size="3"),
-                            spacing="2",
-                            align_items="center",
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-py",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
                         ),
-                        href="https://github.com/xian-technology/xian-py",
-                        is_external=True,
-                        color=TEXT_MUTED,
-                        _hover={"color": ACCENT},
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://docs.xian.technology",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
                     ),
                     direction={"base": "column", "md": "row"},
                     align_items={"base": "start", "md": "center"},
