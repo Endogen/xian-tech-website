@@ -47,6 +47,33 @@ result = xian.send_tx(
     kwargs={"to": "recipient_address", "amount": 100},
 )
 print(f"Success: {result['success']}")"""
+SDK_BDS_STATE_QUERY = """query QueryState {
+  allStates(condition: {key: "currency.balances:some_address"}) {
+    edges {
+      node {
+        key
+        value
+      }
+    }
+  }
+}"""
+SDK_BDS_EVENTS_QUERY = """query TransferEventQuery {
+  allEvents(
+    filter: {dataIndexed: {contains: {to: "1565ff3ef4e54a73e5782f5c1c30c7106142370f90495ef3bb6dd6c2e17dc158"}}}
+    condition: {event: "Transfer"}
+  ) {
+    edges {
+      node {
+        id
+        dataIndexed
+        data
+        contract
+        event
+        txHash
+      }
+    }
+  }
+}"""
 
 
 def _sdk_install_card() -> rx.Component:
@@ -367,6 +394,53 @@ def tooling_page() -> rx.Component:
                         object_fit="cover",
                         box_shadow=f"0 0 18px {ACCENT_SOFT}",
                     ),
+                    width="100%",
+                ),
+                rx.vstack(
+                    rx.heading("Examples", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    rx.tabs.root(
+                        rx.tabs.list(
+                            rx.tabs.trigger("Querying state", value="state", color_scheme="green"),
+                            rx.tabs.trigger("Querying events", value="events", color_scheme="green"),
+                            gap="0.75rem",
+                            wrap="wrap",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_BDS_STATE_QUERY,
+                                language="graphql",
+                                show_line_numbers=True,
+                                width="100%",
+                            ),
+                            value="state",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            rx.vstack(
+                                rx.code_block(
+                                    SDK_BDS_EVENTS_QUERY,
+                                    language="graphql",
+                                    show_line_numbers=True,
+                                    width="100%",
+                                ),
+                                rx.text(
+                                    "The filter is optional if you want all Transfer events.",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                    line_height="1.6",
+                                ),
+                                spacing="3",
+                                align_items="start",
+                                width="100%",
+                            ),
+                            value="events",
+                            width="100%",
+                        ),
+                        default_value="state",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
                 spacing="3",
