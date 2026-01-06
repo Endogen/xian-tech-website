@@ -59,7 +59,7 @@ SDK_BDS_STATE_QUERY = """query QueryState {
 }"""
 SDK_BDS_EVENTS_QUERY = """query TransferEventQuery {
   allEvents(
-    filter: {dataIndexed: {contains: {to: "1565ff3ef4e54a73e5782f5c1c30c7106142370f90495ef3bb6dd6c2e17dc158"}}}
+    filter: {dataIndexed: {contains: {to: "some_address"}}}
     condition: {event: "Transfer"}
   ) {
     edges {
