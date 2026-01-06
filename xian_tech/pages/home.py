@@ -360,22 +360,13 @@ def why_another_blockchain() -> rx.Component:
             rx.vstack(
                 rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
+                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations. Python is slower than specialized smart-contract languages, but Xian still delivers strong performance, and the trade-off buys us the clarity, safety, and adoption of Python.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
                 ),
                 rx.text(
-                    rx.fragment(
-                        "Explore current programming language trends over at ",
-                        rx.link(
-                            "Languish",
-                            href="https://tjpalmer.github.io/languish",
-                            is_external=True,
-                            color=ACCENT,
-                        ),
-                        " for a broader snapshot of the ecosystem.",
-                    ),
+                    "Take a look at current programming language trends and see how Python dominates.",
                     size="3",
                     color=TEXT_MUTED,
                     line_height="1.7",
@@ -499,22 +490,13 @@ def why_python() -> rx.Component:
             rx.vstack(
                 rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations.",
+                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations. Python is slower than specialized smart-contract languages, but Xian still delivers strong performance, and the trade-off buys us the clarity, safety, and adoption of Python.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
                 ),
                 rx.text(
-                    rx.fragment(
-                        "Explore current programming language trends over at ",
-                        rx.link(
-                            "Languish",
-                            href="https://tjpalmer.github.io/languish",
-                            is_external=True,
-                            color=ACCENT,
-                        ),
-                        " for a broader snapshot of the ecosystem.",
-                    ),
+                    "Take a look at current programming language trends and see how Python dominates.",
                     size="3",
                     color=TEXT_MUTED,
                     line_height="1.7",
