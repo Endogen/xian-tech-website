@@ -18,10 +18,13 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+QUOTE_GAP = "1.5rem"
+QUOTE_GAP_HALF = "0.75rem"
+
 QUOTE_MARQUEE_STYLE = """
 @keyframes quote-marquee {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(calc(-50% - var(--quote-gap-half))); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -612,7 +615,7 @@ def why_python() -> rx.Component:
 def noteworthy_quotes() -> rx.Component:
     """Showcase notable quotes about Python and technology."""
     quotes = NOTEWORTHY_QUOTES
-    items = quotes if len(quotes) == 1 else quotes + quotes
+    items = quotes if len(quotes) == 1 else quotes * 4
     card_width = rx.breakpoints(initial="260px", sm="300px", md="340px")
     animation_style = "quote-marquee 55s linear infinite" if len(quotes) > 1 else "none"
     fade_left = rx.color_mode_cond(
@@ -674,12 +677,14 @@ def noteworthy_quotes() -> rx.Component:
                     *[quote_card(item) for item in items],
                     class_name="quote-track",
                     direction="row",
-                    gap="1.5rem",
+                    gap=QUOTE_GAP,
                     align_items="stretch",
                     style={
                         "width": "max-content",
                         "animation": animation_style,
                         "animationPlayState": "running",
+                        "--quote-gap": QUOTE_GAP,
+                        "--quote-gap-half": QUOTE_GAP_HALF,
                     },
                     _hover={
                         "animationPlayState": "paused",

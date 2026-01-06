@@ -85,8 +85,8 @@ NOTEWORTHY_QUOTES = [
     {
         "quote": (
             "Python is now the most used language on GitHub as global open source activity continues to extend beyond traditional "
-            "software development. We saw Python emerge for the first time as the most used language on GitHub (more on that later). "
-            "Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation fields among others."
+            "software development. We saw Python emerge for the first time as the most used language on GitHub. "
+            "Python is used heavily across machine learning, data science, scientific computing, hobbyist, and home automation."
         ),
         "author": "GitHub Staff — Octoverse 2024",
         "source": "https://github.blog/news-insights/octoverse/octoverse-2024/",
