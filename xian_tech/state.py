@@ -52,7 +52,6 @@ class State(rx.State):
     image_lightbox_open: bool = False
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
-    team_hover_id: str = ""
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -130,13 +129,6 @@ class State(rx.State):
         self.image_lightbox_src = ""
         self.image_lightbox_alt = ""
 
-    def set_team_hover(self, member_id: str):
-        """Track the hovered team member card."""
-        self.team_hover_id = member_id
-
-    def clear_team_hover(self):
-        """Clear the hovered team member card."""
-        self.team_hover_id = ""
 
     def submit_contact_form(self, form_data: dict[str, Any]):
         """Open a pre-filled email draft with the contact form details."""
