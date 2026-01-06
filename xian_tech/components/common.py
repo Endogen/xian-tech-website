@@ -867,6 +867,8 @@ def command_palette() -> rx.Component:
                                         ),
                                         spacing="2",
                                         width="100%",
+                                        padding_right="0.5rem",
+                                        padding_bottom="0.5rem",
                                     ),
                                 ),
                                 width="100%",
