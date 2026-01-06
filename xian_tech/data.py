@@ -16,9 +16,10 @@ NAV_LINKS = [
         "children": [
             {"label": "Consensus", "href": "/consensus", "description": "CometBFT backbone securing the network."},
             {"label": "Contracting", "href": "/contracting", "description": "Python-native smart contracts and patterns."},
+            {"label": "Node & Network", "href": "/node-network", "description": "Running nodes and bootstrapping networks."},
             {"label": "ABCI", "href": "/abci", "description": "Python ABCI app bridging consensus and execution."},
-            {"label": "BDS", "href": "/bds", "description": "Data Service with PostgreSQL + GraphQL."},
-            {"label": "Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
+            {"label": "Data Service & Tooling", "href": "/tooling", "description": "SDKs, integrations, and developer utilities."},
+            {"label": "Roadmap", "href": "/roadmap", "description": "Milestones and upcoming work across the stack."},
         ],
     },
     {
@@ -247,6 +248,8 @@ def _build_search_entries() -> list[dict[str, str]]:
         "/about": "Foundation mission, team, and contact.",
         "/faq": "Answers to common questions about the foundation and the stack.",
         "/consensus": "CometBFT consensus engine and how the network finalizes blocks.",
+        "/node-network": "Node installation, configuration, and network bootstrapping guides.",
+        "/roadmap": "Upcoming milestones across the Xian Technology stack.",
     }
 
     for link in NAV_LINKS:

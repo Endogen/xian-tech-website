@@ -10,6 +10,8 @@ from .pages.developers import developers_page
 from .pages.about import about_page
 from .pages.contact import contact_page
 from .pages.faq import faq_page
+from .pages.node_network import node_network_page
+from .pages.roadmap import roadmap_page
 from .pages.tooling import tooling_page
 from .pages.not_found import not_found_page
 
@@ -33,4 +35,6 @@ app.add_page(about_page, route="/about", title="About the Foundation")
 app.add_page(faq_page, route="/faq", title="FAQ")
 app.add_page(community_page, route="/community")
 app.add_page(contact_page, route="/contact", title="Contact")
+app.add_page(node_network_page, route="/node-network", title="Node & Network")
+app.add_page(roadmap_page, route="/roadmap", title="Roadmap")
 app.add_page(not_found_page, route="404", title="404 - Not Found")
