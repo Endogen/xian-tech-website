@@ -46,6 +46,22 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     return rx.box(*children, id=identifier, **kwargs)
 
 
+def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
+    """Section block with consistent spacing and a title."""
+    spacing = kwargs.pop("spacing", "3")
+    margin_top = kwargs.pop("margin_top", "1.5rem")
+    heading_size = kwargs.pop("heading_size", "5")
+    return rx.vstack(
+        rx.heading(title, size=heading_size, color=TEXT_PRIMARY, weight="bold"),
+        *children,
+        spacing=spacing,
+        align_items="start",
+        width="100%",
+        margin_top=margin_top,
+        **kwargs,
+    )
+
+
 def theme_toggle() -> rx.Component:
     """Theme toggle button with minimalist icons."""
     return rx.button(
@@ -1078,6 +1094,7 @@ __all__ = [
     "nav_link",
     "page_layout",
     "section",
+    "subsection",
     "terminal_prompt",
     "theme_toggle",
 ]

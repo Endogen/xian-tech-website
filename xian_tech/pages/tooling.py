@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import page_layout, section, subsection
 from ..data import BDS_COMPONENTS
 from ..state import State
 from ..theme import (
@@ -292,8 +292,8 @@ def tooling_page() -> rx.Component:
                     width="100%",
                     align="stretch",
                 ),
-                rx.vstack(
-                    rx.heading("Examples", size="5", color=TEXT_PRIMARY, weight="bold"),
+                subsection(
+                    "Examples",
                     rx.tabs.root(
                         rx.tabs.list(
                             rx.tabs.trigger("Create wallet", value="wallet", color_scheme="green"),
@@ -346,9 +346,6 @@ def tooling_page() -> rx.Component:
                         default_value="wallet",
                         width="100%",
                     ),
-                    spacing="3",
-                    align_items="start",
-                    width="100%",
                 ),
                 spacing="4",
                 align_items="start",
@@ -474,8 +471,8 @@ def tooling_page() -> rx.Component:
                     ),
                     width="100%",
                 ),
-                rx.vstack(
-                    rx.heading("Examples", size="5", color=TEXT_PRIMARY, weight="bold"),
+                subsection(
+                    "Examples",
                     rx.tabs.root(
                         rx.tabs.list(
                             rx.tabs.trigger("Querying state", value="state", color_scheme="green"),
@@ -517,9 +514,6 @@ def tooling_page() -> rx.Component:
                         default_value="state",
                         width="100%",
                     ),
-                    spacing="3",
-                    align_items="start",
-                    width="100%",
                 ),
                 spacing="3",
                 align_items="start",
