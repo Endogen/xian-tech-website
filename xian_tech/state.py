@@ -4,7 +4,6 @@ from urllib.parse import quote
 
 import reflex as rx
 
-from .data import SEARCH_ENTRIES
 
 
 class CommandAction(TypedDict):
@@ -180,9 +179,11 @@ class State(rx.State):
             self.close_command_palette()
         return rx.redirect(active["href"])
 
-    @rx.var
+    @rx.var(cache=True, auto_deps=False, deps=["command_query"])
     def command_palette_actions(self) -> list[CommandAction]:
         """Return filtered actions for the command palette."""
+        from .search import SEARCH_ENTRIES
+
         query = self.command_query.strip().lower()
         if not query:
             return SEARCH_ENTRIES

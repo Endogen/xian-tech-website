@@ -75,6 +75,33 @@ SDK_BDS_EVENTS_QUERY = """query TransferEventQuery {
   }
 }"""
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Tooling to Build and Query",
+        "subtitle": "SDKs and data services for contract lifecycles and chain data access.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/tooling",
+        "keywords": ["Tooling", "SDK", "GraphQL", "BDS"],
+    },
+    {
+        "title": "Python SDK",
+        "subtitle": "xian-py for wallets, transactions, and contract workflows.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": ["xian-py", "SDK", "Wallets", "Transactions"],
+    },
+    {
+        "title": "Blockchain Data Service (BDS)",
+        "subtitle": "PostgreSQL + GraphQL access to transaction and state history.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": ["BDS", "GraphQL", "PostgreSQL", "PostGraphile"],
+    },
+]
+
 
 def _sdk_install_card() -> rx.Component:
     return rx.box(

@@ -123,6 +123,33 @@ HISTORY_EVENTS = [
     },
 ]
 
+SEARCH_SECTIONS = [
+    {
+        "title": "About Xian",
+        "subtitle": "Foundation context, team members, and the Xian stack history.",
+        "category": "About",
+        "badge": "Page",
+        "href": "/about",
+        "keywords": ["Foundation", "Team", "History"],
+    },
+    {
+        "title": "Team",
+        "subtitle": "Core contributors stewarding Xian Technology.",
+        "category": "About",
+        "badge": "Section",
+        "href": "/about",
+        "keywords": ["Team", "Contributors", "Foundation"],
+    },
+    {
+        "title": "History",
+        "subtitle": "Timeline from Lamden to the Xian Technology Foundation.",
+        "category": "About",
+        "badge": "Section",
+        "href": "/about",
+        "keywords": ["Lamden", "Xian", "Timeline"],
+    },
+]
+
 
 def _history_item(event: dict[str, Any]) -> rx.Component:
     """Single timeline entry with expandable detail."""

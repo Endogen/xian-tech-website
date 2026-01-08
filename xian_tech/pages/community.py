@@ -17,6 +17,44 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Join the Xian Network Community",
+        "subtitle": "Coordinate upgrades, stress tests, and community missions.",
+        "category": "Community",
+        "badge": "Page",
+        "href": "/community",
+        "keywords": ["Community", "Contribute", "Missions"],
+    },
+    {
+        "title": "How to Contribute",
+        "subtitle": "Programs for builders, operators, and educators.",
+        "category": "Community",
+        "badge": "Section",
+        "href": "/community",
+        "keywords": ["Contribute", "Programs"],
+    },
+    *[
+        {
+            "title": stream["title"],
+            "subtitle": stream["description"],
+            "category": "Community",
+            "badge": "Program",
+            "href": "/community",
+            "keywords": [stream["title"]],
+        }
+        for stream in COMMUNITY_STREAMS
+    ],
+    {
+        "title": "Developer Resources",
+        "subtitle": "Documentation, tutorials, and tools to build on Xian.",
+        "category": "Community",
+        "badge": "Resource",
+        "href": "/community",
+        "keywords": ["Documentation", "Tutorials", "Tools"],
+    },
+]
+
 
 def community_card_detailed(item: dict) -> rx.Component:
     """Community program card."""

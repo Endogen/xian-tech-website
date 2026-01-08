@@ -43,6 +43,28 @@ DEV_LINKS = [
     },
 ]
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Build with Xian",
+        "subtitle": "Playground, curated contracts, docs, SDKs, and roadmap in one hub.",
+        "category": "Developers",
+        "badge": "Page",
+        "href": "/developers",
+        "keywords": ["Playground", "Contracts", "Docs", "SDKs"],
+    },
+    *[
+        {
+            "title": link["title"],
+            "subtitle": link["description"],
+            "category": "Developers",
+            "badge": "Resource",
+            "href": link["href"],
+            "keywords": [link["title"]],
+        }
+        for link in DEV_LINKS
+    ],
+]
+
 
 def _dev_card(link: dict) -> rx.Component:
     accent_border = f"1px solid {ACCENT_GLOW}" if link.get("highlight") else f"1px solid {BORDER_COLOR}"

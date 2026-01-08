@@ -113,6 +113,36 @@ HIGHLIGHTS = [
     },
 ]
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Pure Python Smart Contracts",
+        "subtitle": "Deterministic, stamp-metered execution with native Python contracts.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/contracting",
+        "keywords": ["Python", "Contracts", "Deterministic", "Smart contracts"],
+    },
+    *[
+        {
+            "title": item["title"],
+            "subtitle": item["body"],
+            "category": "Technology",
+            "badge": "Highlight",
+            "href": "/contracting",
+            "keywords": [item["title"]],
+        }
+        for item in HIGHLIGHTS
+    ],
+    {
+        "title": "Compare Contracting Platforms",
+        "subtitle": "Side-by-side examples across Xian, Algorand, Solidity, and Vyper.",
+        "category": "Technology",
+        "badge": "Comparison",
+        "href": "/contracting",
+        "keywords": ["Comparison", "Xian", "Algorand", "Solidity", "Vyper"],
+    },
+]
+
 
 def contracting_page() -> rx.Component:
     """Python smart contract engine overview."""
