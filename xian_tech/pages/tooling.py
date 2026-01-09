@@ -74,6 +74,17 @@ SDK_BDS_EVENTS_QUERY = """query TransferEventQuery {
     }
   }
 }"""
+MCP_QUICKSTART = """git clone https://github.com/xian-technology/xian-mcp-server.git
+cd xian-mcp-server
+docker build -t xian-mcp-server ."""
+MCP_CONFIG_SNIPPET = """{
+  "mcpServers": {
+    "xian": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "xian-mcp-server"]
+    }
+  }
+}"""
 
 SEARCH_SECTIONS = [
     {
@@ -99,6 +110,22 @@ SEARCH_SECTIONS = [
         "badge": "Section",
         "href": "/tooling",
         "keywords": ["BDS", "GraphQL", "PostgreSQL", "PostGraphile"],
+    },
+    {
+        "title": "MCP Server",
+        "subtitle": "Local MCP server for AI assistants to interact with Xian wallets, contracts, and the DEX.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": ["MCP", "AI assistants", "Wallets", "DEX"],
+    },
+    {
+        "title": "AI Guides",
+        "subtitle": "AI-ready guides for building and reviewing Xian contracts.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": ["AI guides", "Contracting guide", "Smart contracts"],
     },
 ]
 
@@ -172,6 +199,15 @@ def _sdk_install_card() -> rx.Component:
         border=f"1px solid {BORDER_COLOR}",
         border_radius="14px",
         width="100%",
+    )
+
+
+def _feature_item(text: str) -> rx.Component:
+    return rx.hstack(
+        rx.icon(tag="check", size=16, color=ACCENT),
+        rx.text(text, size="3", color=TEXT_MUTED),
+        spacing="2",
+        align_items="center",
     )
 
 
@@ -519,6 +555,230 @@ def tooling_page() -> rx.Component:
                 align_items="start",
             ),
             padding_top="0",
+        ),
+        section(
+            rx.vstack(
+                rx.flex(
+                    rx.heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-mcp-server",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://modelcontextprotocol.io",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "A local Model Context Protocol (MCP) server that lets AI assistants create wallets, send transactions, "
+                    "query smart contracts, and trade on the Xian DEX through standard MCP tools.",
+                    size="4",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+                rx.box(
+                    rx.text(
+                        "Security note: the MCP server handles private keys and should only be run locally for development.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
+                ),
+                rx.grid(
+                    rx.box(
+                        rx.vstack(
+                            rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.vstack(
+                                _feature_item("Create or import standard and HD wallets."),
+                                _feature_item("Check balances, send tokens, and simulate transactions."),
+                                _feature_item("Query contract state, source, and token metadata."),
+                                _feature_item("DEX helpers for buy/sell plus real-time pricing."),
+                                _feature_item("Crypto utilities for signing and encryption."),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    rx.box(
+                        rx.vstack(
+                            rx.text("Install & use", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.text(
+                                "Clone the repo and build the Docker image locally:",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.6",
+                            ),
+                            rx.code_block(
+                                MCP_QUICKSTART,
+                                language="bash",
+                                show_line_numbers=False,
+                                width="100%",
+                            ),
+                            rx.text(
+                                "Then register the server in your MCP config (Claude Desktop or LM Studio):",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.6",
+                            ),
+                            rx.code_block(
+                                MCP_CONFIG_SNIPPET,
+                                language="json",
+                                show_line_numbers=False,
+                                width="100%",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+                spacing="4",
+                align_items="start",
+            )
+        ),
+        section(
+            rx.vstack(
+                rx.flex(
+                    rx.heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-ai-guides",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "A collection of AI-ready guides that define the rules for writing and reviewing Xian smart contracts. "
+                    "The contracting guide is the authoritative spec for Python contract structure, allowed features, and safety limits.",
+                    size="4",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+                rx.grid(
+                    rx.box(
+                        rx.vstack(
+                            rx.text("Guide highlights", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.vstack(
+                                _feature_item("Python 3.11 only with strict builtins and no standard imports."),
+                                _feature_item("Only @construct and @export; no return type annotations."),
+                                _feature_item("Use Variable/Hash for state; no tuple unpacking or Hash membership checks."),
+                                _feature_item("importlib for cross-contract calls; no nested imports."),
+                                _feature_item("Events, limits, and stamp costs spelled out for safe design."),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    rx.box(
+                        rx.vstack(
+                            rx.text("How to use", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.vstack(
+                                _feature_item("Start from the contract template and keep state at top level."),
+                                _feature_item("Annotate every @export parameter; avoid underscore names."),
+                                _feature_item("Use ctx.caller/ctx.signer and injected globals (now, block_num)."),
+                                _feature_item("Validate against the guide checklist before deployment."),
+                                _feature_item("Use the contracting guide as a prompt or review checklist for AI workflows."),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+                spacing="4",
+                align_items="start",
+            )
         ),
     )
 
