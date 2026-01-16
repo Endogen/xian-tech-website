@@ -76,7 +76,6 @@ def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx
             header,
             padding=header_padding,
             background=header_background,
-            border_bottom=f"1px solid {BORDER_COLOR}",
             width="100%",
         ),
         rx.box(
