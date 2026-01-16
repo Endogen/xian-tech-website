@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section, subsection
+from ..components.common import page_layout, section, section_panel, subsection
 from ..data import BDS_COMPONENTS
 from ..state import State
 from ..theme import (
@@ -236,50 +236,54 @@ def tooling_page() -> rx.Component:
             )
         ),
         section(
-            rx.vstack(
-                rx.flex(
-                    rx.heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3"),
-                                spacing="2",
-                                align_items="center",
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        rx.heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-py",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-py",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3"),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://docs.xian.technology",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://docs.xian.technology",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            spacing="4",
+                            align_items="center",
                         ),
-                        spacing="4",
-                        align_items="center",
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
+                    rx.text(
+                        "xian-py is the Python SDK for interacting with Xian nodes, managing accounts, and deploying or "
+                        "calling contracts from scripts and services.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
-                ),
-                rx.text(
-                    "xian-py is the Python SDK for interacting with Xian nodes, managing accounts, and deploying or "
-                    "calling contracts from scripts and services.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    max_width="900px",
                 ),
                 rx.grid(
                     _sdk_install_card(),
@@ -383,223 +387,223 @@ def tooling_page() -> rx.Component:
                         width="100%",
                     ),
                 ),
-                spacing="4",
-                align_items="start",
             )
         ),
         section(
-            rx.vstack(
-                rx.flex(
-                    rx.heading("Blockchain Data Service (BDS)", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3"),
-                                spacing="2",
-                                align_items="center",
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        rx.heading("Blockchain Data Service (BDS)", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-py",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-py",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3"),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://docs.xian.technology",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://docs.xian.technology",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            spacing="4",
+                            align_items="center",
                         ),
-                        spacing="4",
-                        align_items="center",
-                    ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction into PostgreSQL and exposes that data via a GraphQL API powered by ",
-                    rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
-                    ".",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
-                spacing="4",
-                align_items="start",
-            )
-        ),
-        section(
-            rx.grid(
-                *[
-                    rx.box(
-                        rx.vstack(
-                            rx.flex(
-                                rx.icon(tag=item["icon"], size=28, color=ACCENT),
-                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
-                                direction={"base": "row", "lg": "column"},
-                                align={"base": "center", "lg": "start"},
-                                spacing="3",
-                            ),
-                            rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
-                            spacing="3",
-                            align_items="start",
-                        ),
-                        padding="2rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-                        height="100%",
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
                         width="100%",
-                        display="flex",
-                        flex_direction="column",
-                        background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                        background_size="200% 200%",
-                        background_position="left center",
-                        _hover={
-                            "borderColor": ACCENT,
-                            "backgroundColor": SURFACE_HOVER,
-                            "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                            "backgroundPosition": "right center",
-                        },
-                    )
-                    for item in BDS_COMPONENTS
-                ],
-                columns={
-                    "base": "repeat(1, minmax(0, 1fr))",
-                    "md": "repeat(2, minmax(0, 1fr))",
-                    "lg": "repeat(3, minmax(0, 1fr))",
-                },
-                spacing="4",
-                width="100%",
-                align="stretch",
-            ),
-            padding_top="0",
-        ),
-        section(
-            rx.vstack(
-                rx.text(
-                    "When GraphQL is enabled on a node, the GraphiQL UI is available at the node address under `/graphiql`. "
-                    "For API access, use `/graphql`.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
-                rx.box(
-                    rx.image(
-                        src="/postgraphile.png",
-                        alt="GraphiQL interface for BDS",
-                        width="100%",
-                        border_radius="12px",
-                        object_fit="cover",
-                        box_shadow=f"0 0 18px {ACCENT_SOFT}",
                     ),
+                    rx.text(
+                        "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction into PostgreSQL and exposes that data via a GraphQL API powered by ",
+                        rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
+                        ".",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
-                subsection(
-                    "Examples",
-                    rx.tabs.root(
-                        rx.tabs.list(
-                            rx.tabs.trigger("Querying state", value="state", color_scheme="green"),
-                            rx.tabs.trigger("Querying events", value="events", color_scheme="green"),
-                            gap="0.75rem",
-                            wrap="wrap",
-                        ),
-                        rx.tabs.content(
-                            rx.code_block(
-                                SDK_BDS_STATE_QUERY,
-                                language="graphql",
-                                show_line_numbers=True,
-                                width="100%",
-                            ),
-                            value="state",
-                            width="100%",
-                        ),
-                        rx.tabs.content(
+                rx.grid(
+                    *[
+                        rx.box(
                             rx.vstack(
+                                rx.flex(
+                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
+                                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                    direction={"base": "row", "lg": "column"},
+                                    align={"base": "center", "lg": "start"},
+                                    spacing="3",
+                                ),
+                                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                                spacing="3",
+                                align_items="start",
+                            ),
+                            padding="2rem",
+                            background=SURFACE,
+                            border=f"1px solid {BORDER_COLOR}",
+                            border_radius="14px",
+                            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
+                            height="100%",
+                            width="100%",
+                            display="flex",
+                            flex_direction="column",
+                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+                            background_size="200% 200%",
+                            background_position="left center",
+                            _hover={
+                                "borderColor": ACCENT,
+                                "backgroundColor": SURFACE_HOVER,
+                                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+                                "backgroundPosition": "right center",
+                            },
+                        )
+                        for item in BDS_COMPONENTS
+                    ],
+                    columns={
+                        "base": "repeat(1, minmax(0, 1fr))",
+                        "md": "repeat(2, minmax(0, 1fr))",
+                        "lg": "repeat(3, minmax(0, 1fr))",
+                    },
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+                rx.vstack(
+                    rx.text(
+                        "When GraphQL is enabled on a node, the GraphiQL UI is available at the node address under `/graphiql`. "
+                        "For API access, use `/graphql`.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    rx.box(
+                        rx.image(
+                            src="/postgraphile.png",
+                            alt="GraphiQL interface for BDS",
+                            width="100%",
+                            border_radius="12px",
+                            object_fit="cover",
+                            box_shadow=f"0 0 18px {ACCENT_SOFT}",
+                        ),
+                        width="100%",
+                    ),
+                    subsection(
+                        "Examples",
+                        rx.tabs.root(
+                            rx.tabs.list(
+                                rx.tabs.trigger("Querying state", value="state", color_scheme="green"),
+                                rx.tabs.trigger("Querying events", value="events", color_scheme="green"),
+                                gap="0.75rem",
+                                wrap="wrap",
+                            ),
+                            rx.tabs.content(
                                 rx.code_block(
-                                    SDK_BDS_EVENTS_QUERY,
+                                    SDK_BDS_STATE_QUERY,
                                     language="graphql",
                                     show_line_numbers=True,
                                     width="100%",
                                 ),
-                                rx.text(
-                                    "The filter is optional if you want all Transfer events.",
-                                    size="3",
-                                    color=TEXT_MUTED,
-                                    line_height="1.6",
-                                ),
-                                spacing="3",
-                                align_items="start",
+                                value="state",
                                 width="100%",
                             ),
-                            value="events",
+                            rx.tabs.content(
+                                rx.vstack(
+                                    rx.code_block(
+                                        SDK_BDS_EVENTS_QUERY,
+                                        language="graphql",
+                                        show_line_numbers=True,
+                                        width="100%",
+                                    ),
+                                    rx.text(
+                                        "The filter is optional if you want all Transfer events.",
+                                        size="3",
+                                        color=TEXT_MUTED,
+                                        line_height="1.6",
+                                    ),
+                                    spacing="3",
+                                    align_items="start",
+                                    width="100%",
+                                ),
+                                value="events",
+                                width="100%",
+                            ),
+                            default_value="state",
                             width="100%",
                         ),
-                        default_value="state",
-                        width="100%",
                     ),
+                    spacing="3",
+                    align_items="start",
                 ),
-                spacing="3",
-                align_items="start",
-            ),
-            padding_top="0",
+            )
         ),
         section(
-            rx.vstack(
-                rx.flex(
-                    rx.heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3"),
-                                spacing="2",
-                                align_items="center",
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        rx.heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-mcp-server",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-mcp-server",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3"),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://modelcontextprotocol.io",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://modelcontextprotocol.io",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            spacing="4",
+                            align_items="center",
                         ),
-                        spacing="4",
-                        align_items="center",
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "A local Model Context Protocol (MCP) server that lets AI assistants create wallets, send transactions, "
-                    "query smart contracts, and trade on the Xian DEX through standard MCP tools.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
+                    rx.text(
+                        "A local Model Context Protocol (MCP) server that lets AI assistants create wallets, send transactions, "
+                        "query smart contracts, and trade on the Xian DEX through standard MCP tools.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
                 rx.box(
@@ -678,54 +682,57 @@ def tooling_page() -> rx.Component:
                     width="100%",
                     align="stretch",
                 ),
-                spacing="4",
-                align_items="start",
             )
         ),
         section(
-            rx.vstack(
-                rx.flex(
-                    rx.heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3"),
-                                spacing="2",
-                                align_items="center",
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        rx.heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-ai-guides",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-ai-guides",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3"),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            spacing="4",
+                            align_items="center",
                         ),
-                        spacing="4",
-                        align_items="center",
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "A collection of AI-ready guides that define the rules for writing and reviewing Xian smart contracts. "
-                    "The contracting guide is the authoritative spec for Python contract structure, allowed features, and safety limits.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
+                    rx.text(
+                        "A collection of AI-ready guides that define the rules for writing and reviewing Xian smart contracts. "
+                        "The contracting guide is the authoritative spec for Python contract structure, allowed features, and safety limits.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
                 rx.grid(
@@ -776,8 +783,6 @@ def tooling_page() -> rx.Component:
                     width="100%",
                     align="stretch",
                 ),
-                spacing="4",
-                align_items="start",
             )
         ),
     )
