@@ -234,6 +234,8 @@ def contracting_page() -> rx.Component:
                             XIAN_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -255,6 +257,8 @@ def contracting_page() -> rx.Component:
                             ALG_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -276,6 +280,8 @@ def contracting_page() -> rx.Component:
                             SOLIDITY_CONTRACT,
                             language="solidity",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -297,6 +303,8 @@ def contracting_page() -> rx.Component:
                             VYPER_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
