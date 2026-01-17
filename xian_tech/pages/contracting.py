@@ -322,6 +322,7 @@ def contracting_page() -> rx.Component:
                 ),
                 default_value="xian",
                 width="100%",
+                min_width="0",
             ),
             padding_top="0",
         ),

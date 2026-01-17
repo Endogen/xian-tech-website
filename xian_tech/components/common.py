@@ -57,6 +57,7 @@ def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
         spacing=spacing,
         align_items="start",
         width="100%",
+        min_width="0",
         margin_top=margin_top,
         **kwargs,
     )
@@ -77,11 +78,13 @@ def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx
             padding=header_padding,
             background=header_background,
             width="100%",
+            box_sizing="border-box",
         ),
         rx.box(
             rx.vstack(*children, spacing=body_spacing, align_items="start", width="100%"),
             padding=body_padding,
             width="100%",
+            box_sizing="border-box",
         ),
         background=SURFACE,
         border=f"1px solid {BORDER_COLOR}",

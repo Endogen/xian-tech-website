@@ -393,6 +393,7 @@ def tooling_page() -> rx.Component:
                         ),
                         default_value="wallet",
                         width="100%",
+                        min_width="0",
                     ),
                 ),
             )
@@ -560,10 +561,13 @@ def tooling_page() -> rx.Component:
                             ),
                             default_value="state",
                             width="100%",
+                            min_width="0",
                         ),
                     ),
                     spacing="3",
                     align_items="start",
+                    width="100%",
+                    min_width="0",
                 ),
             )
         ),
