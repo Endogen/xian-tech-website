@@ -13,6 +13,41 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+SEARCH_SECTIONS = [
+    {
+        "title": "CometBFT Deterministic Consensus",
+        "subtitle": "Xian uses CometBFT for Byzantine fault-tolerant finality and ordered transactions.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/consensus",
+        "keywords": ["CometBFT", "Consensus", "Finality", "BFT"],
+    },
+    {
+        "title": "Deterministic finality",
+        "subtitle": "Fast BFT finality without probabilistic forks or reorgs.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/consensus",
+        "keywords": ["Finality", "BFT", "Consensus"],
+    },
+    {
+        "title": "ABCI-driven state",
+        "subtitle": "CometBFT invokes the Python ABCI app for CheckTx, FinalizeBlock, and Commit.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/consensus",
+        "keywords": ["ABCI", "CheckTx", "FinalizeBlock", "Commit"],
+    },
+    {
+        "title": "Validator economics",
+        "subtitle": "Stamp-based rewards flow to validators and developers each block.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/consensus",
+        "keywords": ["Validators", "Rewards", "Stamps"],
+    },
+]
+
 
 def consensus_page() -> rx.Component:
     """CometBFT consensus overview."""

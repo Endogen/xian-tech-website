@@ -113,6 +113,36 @@ HIGHLIGHTS = [
     },
 ]
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Pure Python Smart Contracts",
+        "subtitle": "Deterministic, stamp-metered execution with native Python contracts.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/contracting",
+        "keywords": ["Python", "Contracts", "Deterministic", "Smart contracts"],
+    },
+    *[
+        {
+            "title": item["title"],
+            "subtitle": item["body"],
+            "category": "Technology",
+            "badge": "Highlight",
+            "href": "/contracting",
+            "keywords": [item["title"]],
+        }
+        for item in HIGHLIGHTS
+    ],
+    {
+        "title": "Compare Contracting Platforms",
+        "subtitle": "Side-by-side examples across Xian, Algorand, Solidity, and Vyper.",
+        "category": "Technology",
+        "badge": "Comparison",
+        "href": "/contracting",
+        "keywords": ["Comparison", "Xian", "Algorand", "Solidity", "Vyper"],
+    },
+]
+
 
 def contracting_page() -> rx.Component:
     """Python smart contract engine overview."""
@@ -204,6 +234,8 @@ def contracting_page() -> rx.Component:
                             XIAN_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -225,6 +257,8 @@ def contracting_page() -> rx.Component:
                             ALG_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -246,6 +280,8 @@ def contracting_page() -> rx.Component:
                             SOLIDITY_CONTRACT,
                             language="solidity",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -267,6 +303,8 @@ def contracting_page() -> rx.Component:
                             VYPER_CONTRACT,
                             language="python",
                             show_line_numbers=True,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
                             width="100%",
                         ),
                         rx.text(
@@ -284,6 +322,7 @@ def contracting_page() -> rx.Component:
                 ),
                 default_value="xian",
                 width="100%",
+                min_width="0",
             ),
             padding_top="0",
         ),

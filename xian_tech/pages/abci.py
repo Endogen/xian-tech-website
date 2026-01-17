@@ -12,6 +12,41 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Python ABCI for CometBFT",
+        "subtitle": "Xian’s ABCI app translates CometBFT calls into the Python contracting runtime.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/abci",
+        "keywords": ["ABCI", "CometBFT", "Python", "FinalizeBlock", "Commit"],
+    },
+    {
+        "title": "Validation at the edge",
+        "subtitle": "CheckTx rejects malformed transactions before they reach consensus.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/abci",
+        "keywords": ["CheckTx", "Validation", "Signatures"],
+    },
+    {
+        "title": "Deterministic execution pipeline",
+        "subtitle": "FinalizeBlock runs ordered transactions through the processor and stages writes for Commit.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/abci",
+        "keywords": ["FinalizeBlock", "Execution", "Deterministic"],
+    },
+    {
+        "title": "State patching & upkeep",
+        "subtitle": "Targeted state patches help networks stay coherent across migrations.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/abci",
+        "keywords": ["Migrations", "State patches", "Upgrades"],
+    },
+]
+
 
 def abci_page() -> rx.Component:
     """Python ABCI overview."""

@@ -15,6 +15,17 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Contact the Foundation",
+        "subtitle": "Send partnership, support, or general inquiries to the Xian team.",
+        "category": "About",
+        "badge": "Page",
+        "href": "/contact",
+        "keywords": ["Contact", "Foundation", "Support", "Partnerships"],
+    }
+]
+
 
 def contact_page() -> rx.Component:
     """Contact page with message form."""

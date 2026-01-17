@@ -3,6 +3,17 @@ import reflex as rx
 from ..components.common import page_layout, section
 from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, TEXT_MUTED, TEXT_PRIMARY
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Roadmap",
+        "subtitle": "Upcoming milestones for the Xian Technology stack and ecosystem.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/roadmap",
+        "keywords": ["Roadmap", "Milestones", "Stack"],
+    }
+]
+
 
 def roadmap_page() -> rx.Component:
     """Roadmap page."""

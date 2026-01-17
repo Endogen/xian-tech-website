@@ -34,6 +34,41 @@ QUOTE_MARQUEE_STYLE = """
 }
 """
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Python-Native Contracting on a CometBFT Backbone.",
+        "subtitle": "CometBFT-backed consensus with a pure Python contracting engine.",
+        "category": "Home",
+        "badge": "Hero",
+        "href": "/",
+        "keywords": ["Python", "CometBFT", "Contracting", "Smart contracts"],
+    },
+    {
+        "title": "Another Blockchain?",
+        "subtitle": "A universal stack built on familiar infrastructure instead of niche tooling.",
+        "category": "Home",
+        "badge": "Section",
+        "href": "/",
+        "keywords": ["Infrastructure", "Universal ledger", "Adoption"],
+    },
+    {
+        "title": "Why Python?",
+        "subtitle": "Python-first contracts that trade speed for clarity, safety, and adoption.",
+        "category": "Home",
+        "badge": "Section",
+        "href": "/",
+        "keywords": ["Python", "Contracts", "Performance"],
+    },
+    {
+        "title": "Quotes on Python",
+        "subtitle": "Rotating highlights from teams and leaders using Python.",
+        "category": "Home",
+        "badge": "Section",
+        "href": "/",
+        "keywords": ["Quotes", "Python", "Community"],
+    },
+]
+
 
 def hero_section() -> rx.Component:
     """Hero section for the landing page."""

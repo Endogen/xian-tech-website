@@ -46,6 +46,55 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     return rx.box(*children, id=identifier, **kwargs)
 
 
+def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
+    """Section block with consistent spacing and a title."""
+    spacing = kwargs.pop("spacing", "3")
+    margin_top = kwargs.pop("margin_top", "1.5rem")
+    heading_size = kwargs.pop("heading_size", "5")
+    return rx.vstack(
+        rx.heading(title, size=heading_size, color=TEXT_PRIMARY, weight="bold"),
+        *children,
+        spacing=spacing,
+        align_items="start",
+        width="100%",
+        min_width="0",
+        margin_top=margin_top,
+        **kwargs,
+    )
+
+
+def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx.Component:
+    """Highlight a page section with a header band and consistent spacing."""
+    header_padding = kwargs.pop("header_padding", "2.5rem 2.5rem 1.75rem 2.5rem")
+    body_padding = kwargs.pop("body_padding", "2rem 2.5rem 2.5rem 2.5rem")
+    body_spacing = kwargs.pop("body_spacing", "4")
+    header_background = rx.color_mode_cond(
+        light="linear-gradient(180deg, rgba(80, 177, 101, 0.18) 0%, rgba(248, 249, 250, 0) 100%)",
+        dark="linear-gradient(180deg, rgba(80, 177, 101, 0.22) 0%, rgba(15, 20, 28, 0) 100%)",
+    )
+    return rx.box(
+        rx.box(
+            header,
+            padding=header_padding,
+            background=header_background,
+            width="100%",
+            box_sizing="border-box",
+        ),
+        rx.box(
+            rx.vstack(*children, spacing=body_spacing, align_items="start", width="100%"),
+            padding=body_padding,
+            width="100%",
+            box_sizing="border-box",
+        ),
+        background=SURFACE,
+        border=f"1px solid {BORDER_COLOR}",
+        border_radius="0 0 16px 16px",
+        overflow="hidden",
+        width="100%",
+        **kwargs,
+    )
+
+
 def theme_toggle() -> rx.Component:
     """Theme toggle button with minimalist icons."""
     return rx.button(
@@ -1078,6 +1127,8 @@ __all__ = [
     "nav_link",
     "page_layout",
     "section",
+    "section_panel",
+    "subsection",
     "terminal_prompt",
     "theme_toggle",
 ]

@@ -3,6 +3,17 @@ import reflex as rx
 from ..components.common import page_layout, section
 from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, TEXT_MUTED, TEXT_PRIMARY
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Node & Network",
+        "subtitle": "Node installation, configuration, and network bootstrapping guides.",
+        "category": "Technology",
+        "badge": "Page",
+        "href": "/node-network",
+        "keywords": ["Nodes", "Network", "Installation", "Configuration"],
+    }
+]
+
 
 def node_network_page() -> rx.Component:
     """Node & network page."""

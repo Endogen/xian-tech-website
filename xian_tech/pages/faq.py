@@ -13,6 +13,17 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
+SEARCH_SECTIONS = [
+    {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Answers about the foundation, stack, and how to get involved.",
+        "category": "About",
+        "badge": "Page",
+        "href": "/faq",
+        "keywords": ["FAQ", "Questions", "Foundation", "Stack"],
+    }
+]
+
 FAQ_ITEMS = [
     {
         "id": "xian-network",
