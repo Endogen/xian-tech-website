@@ -27,9 +27,9 @@ NAV_LINKS = [
         "href": "/developers",
         "children": [
             {"label": "Contracting Playground", "href": "https://playground.xian.technology", "description": "Interactive browser IDE for contracts.", "highlighted": True},
-            {"label": "Documentation", "href": "/docs", "description": "Specs, contracts, and BDS queries."},
+            {"label": "Documentation", "href": "https://docs.xian.technology", "description": "Specs, contracts, and BDS queries."},
             {"label": "Tutorials & First Steps", "href": "/docs/tutorials", "description": "Guides to go from zero to deployed."},
-            {"label": "Contracting Hub", "href": "/contracting", "description": "Curated, deploy-ready contracts with metadata.", "highlighted": True},
+            {"label": "Contracting Hub", "href": "https://hub.xian.technology", "description": "Curated, deploy-ready contracts with metadata.", "highlighted": True},
             {"label": "Samples/SDKs", "href": "/tooling", "description": "Client SDKs (JS, etc.) and integration guides."},
             {"label": "API References", "href": "/docs/api", "description": "Endpoints for BDS, transactions, and contracts."},
         ],
