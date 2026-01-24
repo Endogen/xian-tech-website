@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import page_layout, section
+from ..data import _slugify
 from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, BORDER_COLOR, BORDER_BRIGHT, SURFACE, TEXT_MUTED, TEXT_PRIMARY
 
 
@@ -8,28 +9,28 @@ DEV_LINKS = [
     {
         "title": "Contracting Playground",
         "description": "Interactive IDE in the browser to build, test, and deploy contracts.",
-        "href": "/playground",
+        "href": "https://playground.xian.technology",
         "highlight": True,
     },
     {
         "title": "Contracting Hub",
         "description": "Curated, deploy-ready contracts with metadata and one-click launch into the playground.",
-        "href": "/contracting",
+        "href": "https://hub.xian.technology",
     },
     {
         "title": "Documentation",
         "description": "Deep dives on contracting, node setup, BDS queries, and APIs.",
-        "href": "/docs",
+        "href": "https://docs.xian.technology",
     },
     {
         "title": "Tutorials & First Steps",
         "description": "Guides to get from zero to a running network and deployed contract.",
-        "href": "/docs/tutorials",
+        "href": "/tutorials",
     },
     {
-        "title": "SDKs & Integrations",
-        "description": "JS/TS and other client tooling for web apps, services, and integrations.",
-        "href": "/tooling",
+        "title": "Samples & SDKs",
+        "description": "Code samples and SDK usage for Xian tooling.",
+        "href": "/samples",
     },
     {
         "title": "Roadmap",
@@ -59,6 +60,7 @@ SEARCH_SECTIONS = [
             "category": "Developers",
             "badge": "Resource",
             "href": link["href"],
+            "id": f"developers-resource-{_slugify(link['title'])}",
             "keywords": [link["title"]],
         }
         for link in DEV_LINKS
