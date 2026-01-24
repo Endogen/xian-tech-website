@@ -977,28 +977,41 @@ def terminal_prompt(command: str) -> rx.Component:
 
 def footer() -> rx.Component:
     """Professional footer with proper spacing."""
+    nav_sections = [link for link in NAV_LINKS if link.get("children")]
+
+    def footer_link(child: dict[str, str]) -> rx.Component:
+        href = child["href"]
+        return rx.link(
+            child["label"],
+            href=href,
+            is_external=href.startswith("http"),
+            color=TEXT_MUTED,
+            size="3",
+        )
+
+    def footer_nav_section(section: dict[str, str]) -> rx.Component:
+        return rx.vstack(
+            rx.text(section["label"], size="3", weight="bold", color=TEXT_PRIMARY),
+            rx.vstack(
+                *[footer_link(child) for child in section["children"]],
+                spacing="3",
+                align_items="start",
+            ),
+            spacing="3",
+            align_items="start",
+        )
+
     return rx.box(
         rx.box(
             rx.vstack(
-                rx.flex(
+                rx.grid(
                     rx.vstack(
                         rx.text("Xian Technology", size="4", weight="bold", color=TEXT_PRIMARY),
                         rx.text("Python-native contracting", size="3", color=TEXT_MUTED, line_height="1.6"),
                         spacing="2",
                         align_items="start",
                     ),
-                    rx.vstack(
-                        rx.text("Resources", size="3", weight="bold", color=TEXT_PRIMARY),
-                        rx.vstack(
-                            rx.link("Documentation", href="https://xian.org", is_external=True, color=TEXT_MUTED, size="3"),
-                            rx.link("GitHub", href="https://github.com/xian-network", is_external=True, color=TEXT_MUTED, size="3"),
-                            rx.link("Community", href="/community", color=TEXT_MUTED, size="3"),
-                            spacing="3",
-                            align_items="start",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                    *[footer_nav_section(section) for section in nav_sections],
                     rx.vstack(
                         rx.text("Contact", size="3", weight="bold", color=TEXT_PRIMARY),
                         rx.hstack(
@@ -1053,11 +1066,14 @@ def footer() -> rx.Component:
                         spacing="3",
                         align_items="start",
                     ),
-                    justify="between",
+                    columns={
+                        "initial": "1fr",
+                        "md": "repeat(2, minmax(0, 1fr))",
+                        "lg": "repeat(5, minmax(0, 1fr))",
+                    },
+                    gap="3rem",
                     width="100%",
-                    direction={"initial": "column", "md": "row"},
-                    gap="4rem",
-                    align_items={"initial": "start", "md": "start"},
+                    align_items="start",
                 ),
                 rx.box(
                     rx.flex(
