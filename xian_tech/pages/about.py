@@ -547,7 +547,7 @@ def _network_card(title: str, body: str) -> rx.Component:
         rx.box(
             rx.vstack(
                 drawer_link("Homepage", "https://xian.org", "globe"),
-                drawer_link("Telegram", "https://t.me/xian_network", "send"),
+                drawer_link("Community", "https://t.me/xian_network", "send"),
                 spacing="2",
                 align_items="start",
                 width="100%",
