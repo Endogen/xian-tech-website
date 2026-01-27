@@ -618,7 +618,7 @@ def nav_bar() -> rx.Component:
                 width="100%",
                 overflow="hidden",
                 opacity=rx.cond(dropdown_active, "1", "0"),
-                transform=rx.cond(dropdown_active, "scale(1)", "scale(0.98)"),
+                transform=rx.cond(dropdown_active, "translateY(0)", "translateY(6px)"),
                 visibility=rx.cond(dropdown_active, "visible", "hidden"),
                 transition="opacity 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0s",
                 pointer_events=rx.cond(dropdown_active, "auto", "none"),
