@@ -507,6 +507,95 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
     )
 
 
+def _network_card(title: str, body: str) -> rx.Component:
+    """Card with a hover drawer for network links."""
+    card_bg = rx.color_mode_cond(
+        light=LIGHT_CARD_BG,
+        dark=DARK_CARD_BG,
+    )
+    def drawer_link(label: str, href: str, icon: str) -> rx.Component:
+        return rx.link(
+            rx.hstack(
+                rx.icon(tag=icon, size=16),
+                rx.text(label, size="3"),
+                spacing="2",
+                align_items="center",
+            ),
+            href=href,
+            is_external=True,
+            color=TEXT_MUTED,
+            _hover={"color": ACCENT},
+        )
+
+    return rx.box(
+        rx.box(
+            rx.vstack(
+                rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
+                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+                spacing="3",
+                align_items="start",
+            ),
+            class_name="network-card",
+            padding="1.75rem",
+            background=card_bg,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="16px",
+            box_shadow="0 6px 18px rgba(0,0,0,0.12)",
+            transition="all 0.25s ease",
+            height="100%",
+        ),
+        rx.box(
+            rx.vstack(
+                drawer_link("Homepage", "https://xian.org", "globe"),
+                drawer_link("Community", "https://t.me/xian_network", "send"),
+                spacing="2",
+                align_items="start",
+                width="100%",
+            ),
+            class_name="network-drawer",
+            position="absolute",
+            top="calc(100% - 1px)",
+            left="0",
+            right="0",
+            width="100%",
+            max_height="0px",
+            opacity="0",
+            transform="translateY(-6px)",
+            overflow="hidden",
+            padding="0",
+            transition="max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.3s ease",
+            background=card_bg,
+            border=f"1px solid {BORDER_COLOR}",
+            border_top="none",
+            border_radius="0 0 16px 16px",
+            box_shadow="none",
+            pointer_events="none",
+            z_index="2",
+        ),
+        position="relative",
+        width="100%",
+        overflow="visible",
+        style={
+            "&:hover .network-card": {
+                "borderColor": ACCENT,
+                "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
+                "borderRadius": "16px 16px 0 0",
+                "borderBottom": "none",
+            },
+            "&:hover .network-drawer": {
+                "maxHeight": "140px",
+                "opacity": "1",
+                "transform": "translateY(0)",
+                "padding": "0.85rem 1.75rem 1.25rem",
+                "borderColor": ACCENT,
+                "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
+                "pointerEvents": "auto",
+            },
+        },
+        height="100%",
+    )
+
+
 def about_page() -> rx.Component:
     """Explain key Xian terms and their relationship."""
     foundation = _term_card(
@@ -518,7 +607,7 @@ def about_page() -> rx.Component:
         "Xian Technology",
         "The software stack combining CometBFT consensus, a custom Python ABCI, the Python contracting engine, and tooling.",
     )
-    network = _term_card(
+    network = _network_card(
         "Xian Network",
         "A decentralized blockchain, governed by a DAO, that demonstrates the Xian Technology stack in real-world use.",
     )

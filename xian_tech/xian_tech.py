@@ -6,11 +6,14 @@ from .pages.consensus import consensus_page
 from .pages.contracting import contracting_page
 from .pages.home import home_page
 from .pages.developers import developers_page
+from .pages.api import api_page
 from .pages.about import about_page
 from .pages.contact import contact_page
 from .pages.faq import faq_page
 from .pages.node_network import node_network_page
 from .pages.roadmap import roadmap_page
+from .pages.samples import samples_page
+from .pages.tutorials import tutorials_page
 from .pages.tooling import tooling_page
 from .pages.not_found import not_found_page
 
@@ -35,4 +38,7 @@ app.add_page(community_page, route="/community")
 app.add_page(contact_page, route="/contact", title="Contact")
 app.add_page(node_network_page, route="/node-network", title="Node & Network")
 app.add_page(roadmap_page, route="/roadmap", title="Roadmap")
+app.add_page(samples_page, route="/samples", title="Samples & SDKs")
+app.add_page(tutorials_page, route="/tutorials", title="Tutorials & First Steps")
+app.add_page(api_page, route="/api", title="API References")
 app.add_page(not_found_page, route="404", title="404 - Not Found")
