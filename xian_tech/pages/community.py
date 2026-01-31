@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import linked_heading, page_layout, section
 from ..data import COMMUNITY_STREAMS
 from ..theme import (
     ACCENT,
@@ -116,7 +116,7 @@ def community_page() -> rx.Component:
         ),
         section(
             rx.vstack(
-                rx.heading("How to Contribute", size="7", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading("How to Contribute", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.grid(
                     *[community_card_detailed(item) for item in COMMUNITY_STREAMS],
                     template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
@@ -132,7 +132,7 @@ def community_page() -> rx.Component:
             rx.grid(
                 rx.box(
                     rx.vstack(
-                        rx.heading("Developer Resources", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("Developer Resources", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.text(
                             "Access documentation, tutorials, and tools to build on Xian Network.",
                             size="3",
@@ -189,7 +189,7 @@ def community_page() -> rx.Component:
                 ),
                 rx.box(
                     rx.vstack(
-                        rx.heading("Get in Touch", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("Get in Touch", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.text(
                             "Have questions or want to collaborate? Reach out to our team.",
                             size="3",

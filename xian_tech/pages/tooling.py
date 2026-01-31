@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section, section_panel, subsection
+from ..components.common import linked_heading, page_layout, section, section_panel, subsection
 from ..data import BDS_COMPONENTS
 from ..state import State
 from ..theme import (
@@ -223,7 +223,13 @@ def tooling_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("Tooling to Build and Query", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading(
+                    "Tooling to Build and Query",
+                    size="8",
+                    color=TEXT_PRIMARY,
+                    line_height="1.15",
+                    weight="bold",
+                ),
                 rx.text(
                     "SDKs and data services keep builders productive: xian-py for contract lifecycles and BDS for GraphQL access to chain data.",
                     size="4",
@@ -239,7 +245,7 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        rx.heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.hstack(
                             rx.link(
                                 rx.hstack(
@@ -395,6 +401,7 @@ def tooling_page() -> rx.Component:
                         width="100%",
                         min_width="0",
                     ),
+                    id="sdk-examples",
                 ),
             )
         ),
@@ -402,7 +409,12 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        rx.heading("Blockchain Data Service (BDS)", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading(
+                            "Blockchain Data Service (BDS)",
+                            size="6",
+                            color=TEXT_PRIMARY,
+                            weight="bold",
+                        ),
                         rx.hstack(
                             rx.link(
                                 rx.hstack(
@@ -525,27 +537,27 @@ def tooling_page() -> rx.Component:
                                 wrap="wrap",
                             ),
                             rx.tabs.content(
-                            rx.code_block(
-                                SDK_BDS_STATE_QUERY,
-                                language="graphql",
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            value="state",
-                            width="100%",
-                        ),
-                            rx.tabs.content(
-                                rx.vstack(
                                 rx.code_block(
-                                    SDK_BDS_EVENTS_QUERY,
+                                    SDK_BDS_STATE_QUERY,
                                     language="graphql",
                                     show_line_numbers=True,
                                     wrap_long_lines=False,
                                     custom_style={"overflowX": "auto"},
                                     width="100%",
                                 ),
+                                value="state",
+                                width="100%",
+                            ),
+                            rx.tabs.content(
+                                rx.vstack(
+                                    rx.code_block(
+                                        SDK_BDS_EVENTS_QUERY,
+                                        language="graphql",
+                                        show_line_numbers=True,
+                                        wrap_long_lines=False,
+                                        custom_style={"overflowX": "auto"},
+                                        width="100%",
+                                    ),
                                     rx.text(
                                         "The filter is optional if you want all Transfer events.",
                                         size="3",
@@ -563,6 +575,7 @@ def tooling_page() -> rx.Component:
                             width="100%",
                             min_width="0",
                         ),
+                        id="bds-examples",
                     ),
                     spacing="3",
                     align_items="start",
@@ -575,7 +588,7 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        rx.heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.hstack(
                             rx.link(
                                 rx.hstack(
@@ -708,7 +721,7 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        rx.heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.hstack(
                             rx.link(
                                 rx.hstack(

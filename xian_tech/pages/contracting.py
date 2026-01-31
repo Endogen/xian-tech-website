@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import linked_heading, page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -156,7 +156,13 @@ def contracting_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("Pure Python Smart Contracts", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading(
+                    "Pure Python Smart Contracts",
+                    size="8",
+                    color=TEXT_PRIMARY,
+                    line_height="1.15",
+                    weight="bold",
+                ),
                 rx.text(
                     "The heart of Xian is a native Python contracting engine—no transpilers, no second-class runtimes. Deterministic, stamp-metered execution keeps performance predictable while making audits and upgrades straightforward.",
                     size="4",
@@ -208,7 +214,7 @@ def contracting_page() -> rx.Component:
         ),
         section(
             rx.vstack(
-                rx.heading("Compare Contracting Platforms", size="6", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading("Compare Contracting Platforms", size="6", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
                     "Let’s compare a simple add-and-read contract across stacks:",
                     size="3",

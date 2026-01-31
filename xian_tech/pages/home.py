@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import feature_card, page_layout, section, terminal_prompt
+from ..components.common import feature_card, linked_heading, page_layout, section, terminal_prompt
 from ..data import CORE_COMPONENTS, NOTEWORTHY_QUOTES
 from ..state import State
 from ..theme import (
@@ -229,7 +229,7 @@ def mission_section() -> rx.Component:
 
     return section(
         rx.vstack(
-            rx.heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
+            linked_heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
                 "The Xian Technology Foundation advances the technology stack behind Xian to keep it simple, powerful, and production-ready.",
                 size="4",
@@ -325,7 +325,7 @@ def why_another_blockchain() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Another Blockchain?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading("Another Blockchain?", size="7", color=TEXT_PRIMARY, weight="bold"),
                 rx.text(
                     "Blockchains are shifting away from bespoke, blockchain-only stacks toward ones built on familiar technology—avoiding niche languages and tools you never see outside crypto. The goal is a universal stack that plugs into existing infrastructure and is straightforward to deploy and operate. Our aim is to to deliver a simple yet powerful software stack that companies and communities can run themselves when they want their own decentralized ledger.",
                     size="4",
@@ -374,7 +374,13 @@ def why_another_blockchain() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading(
+                    "Why Python?",
+                    size="7",
+                    color=TEXT_PRIMARY,
+                    weight="bold",
+                    anchor_id="why-python-overview",
+                ),
                 rx.text(
                     "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations. Python is slower than specialized smart-contract languages, but Xian still delivers strong performance, and the trade-off buys us the clarity, safety, and adoption of Python.",
                     size="4",
@@ -504,7 +510,13 @@ def why_python() -> rx.Component:
     return section(
         rx.grid(
             rx.vstack(
-                rx.heading("Why Python?", size="7", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading(
+                    "Why Python?",
+                    size="7",
+                    color=TEXT_PRIMARY,
+                    weight="bold",
+                    anchor_id="why-python-trends",
+                ),
                 rx.text(
                     "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations. Python is slower than specialized smart-contract languages, but Xian still delivers strong performance, and the trade-off buys us the clarity, safety, and adoption of Python.",
                     size="4",
@@ -668,7 +680,7 @@ def noteworthy_quotes() -> rx.Component:
 
     return section(
         rx.vstack(
-            rx.heading("Quotes on Python", size="6", color=TEXT_PRIMARY, weight="bold"),
+            linked_heading("Quotes on Python", size="6", color=TEXT_PRIMARY, weight="bold"),
             rx.el.style(QUOTE_MARQUEE_STYLE),
             rx.box(
                 rx.flex(

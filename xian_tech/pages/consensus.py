@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section, section_panel, subsection
+from ..components.common import linked_heading, page_layout, section, section_panel, subsection
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -118,7 +118,13 @@ def consensus_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("CometBFT Consensus", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading(
+                    "CometBFT Consensus",
+                    size="8",
+                    color=TEXT_PRIMARY,
+                    line_height="1.15",
+                    weight="bold",
+                ),
                 rx.text(
                     "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
                     "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
@@ -136,7 +142,12 @@ def consensus_page() -> rx.Component:
         section(
             section_panel(
                 rx.flex(
-                    rx.heading("Consensus details", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    linked_heading(
+                        "Consensus details",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
+                    ),
                     rx.hstack(
                         rx.link(
                             rx.hstack(

@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import linked_heading, page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -84,7 +84,13 @@ def abci_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("ABCI - Application Blockchain Interface", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading(
+                    "ABCI - Application Blockchain Interface",
+                    size="8",
+                    color=TEXT_PRIMARY,
+                    line_height="1.15",
+                    weight="bold",
+                ),
                 rx.text(
                     "ABCI is the interface between CometBFT (the state-machine replication engine) and the application state "
                     "machine. CometBFT initiates ABCI methods and the application responds, allowing the app to be written in "
@@ -100,7 +106,12 @@ def abci_page() -> rx.Component:
         ),
         section(
             rx.vstack(
-                rx.heading("Why it matters for Xian", size="6", color=TEXT_PRIMARY, weight="bold"),
+                linked_heading(
+                    "Why it matters for Xian",
+                    size="6",
+                    color=TEXT_PRIMARY,
+                    weight="bold",
+                ),
                 rx.vstack(
                     bullet("ABCI keeps the application language-agnostic, so the Python contracting engine stays intact."),
                     bullet("CometBFT handles consensus and P2P; the Xian application focuses on validation and state."),
@@ -154,7 +165,12 @@ def abci_page() -> rx.Component:
         section(
             rx.box(
                 rx.vstack(
-                    rx.heading("Xian Core implementation", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    linked_heading(
+                        "Xian Core implementation",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
+                    ),
                     rx.text(
                         "The Xian node is implemented as a dedicated ABCI application for CometBFT. "
                         "Explore the Xian Core repository for the Python implementation and protocol glue.",
