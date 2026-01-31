@@ -64,7 +64,7 @@ def linked_heading(
     anchor_id: Optional[str] = None,
     size: str = "6",
     icon_size: int = 18,
-    scroll_margin_top: str = "1.5rem",
+    scroll_margin_top: str = "2rem",
     **heading_kwargs: Any,
 ) -> rx.Component:
     """Heading with a hover-revealed anchor link icon."""
@@ -118,7 +118,7 @@ def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
             weight="bold",
             href=heading_href,
             anchor_id=heading_id,
-            scroll_margin_top="0.75rem",
+            scroll_margin_top="0.5rem",
         ),
         *children,
         spacing=spacing,
