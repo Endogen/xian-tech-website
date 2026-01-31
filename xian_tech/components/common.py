@@ -1052,6 +1052,7 @@ def footer() -> rx.Component:
             is_external=href.startswith("http"),
             color=TEXT_MUTED,
             size="3",
+            _hover={"color": ACCENT},
         )
 
     def footer_nav_section(section: dict[str, str]) -> rx.Component:
