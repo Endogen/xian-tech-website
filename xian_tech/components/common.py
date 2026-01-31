@@ -80,8 +80,8 @@ def linked_heading(
         gap="0.5rem",
         text_decoration="none",
         color="inherit",
-        scroll_margin_top="6rem",
         style={
+            "scrollMarginTop": "6rem",
             "& .anchor-icon": {
                 "opacity": "0",
                 "transform": "translateY(1px)",

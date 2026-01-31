@@ -131,9 +131,10 @@ def abci_page() -> rx.Component:
                     weight="bold",
                 ),
                 rx.text(
-                    "ABCI is the interface between CometBFT consensus and the application state machine. "
-                    "It keeps the consensus layer language-agnostic while Xian’s Python execution layer focuses "
-                    "on validation, contract execution, and state transitions.",
+                    "ABCI is the precise interface between the CometBFT consensus engine and the application logic "
+                    "of an app-specific blockchain. It keeps consensus language-agnostic, so teams can build a full "
+                    "custom chain in the programming language that fits their project—Xian uses Python for its execution "
+                    "layer, validation, and contract logic.",
                     size="4",
                     color=TEXT_MUTED,
                     width="100%",
@@ -183,7 +184,8 @@ def abci_page() -> rx.Component:
                 ),
                 rx.text(
                     "CometBFT calls into the ABCI app to validate transactions, execute blocks, and persist state. "
-                    "The Xian ABCI implementation bridges those consensus hooks to Python contract execution.",
+                    "That ABCI app is the chain’s logic program, and in Xian it bridges consensus hooks to Python "
+                    "contract execution and state transitions.",
                     size="3",
                     color=TEXT_MUTED,
                     line_height="1.7",
