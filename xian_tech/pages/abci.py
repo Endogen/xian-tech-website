@@ -84,14 +84,14 @@ def abci_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("ABCI: the Application Blockchain Interface", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading("ABCI - Application Blockchain Interface", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
                 rx.text(
                     "ABCI is the interface between CometBFT (the state-machine replication engine) and the application state "
                     "machine. CometBFT initiates ABCI methods and the application responds, allowing the app to be written in "
                     "any language while CometBFT provides consensus and networking.",
                     size="4",
                     color=TEXT_MUTED,
-                    max_width="850px",
+                    width="100%",
                     line_height="1.7",
                 ),
                 spacing="5",
