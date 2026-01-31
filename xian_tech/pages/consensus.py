@@ -269,8 +269,10 @@ def consensus_page() -> rx.Component:
                 subsection(
                     "How it works",
                     rx.text(
-                        "Validators take turns proposing blocks and voting, weighted by their stake. A block is committed "
-                        "once more than two-thirds of voting power precommits in the same round, which delivers deterministic finality.",
+                        "Validators take turns proposing blocks and voting, weighted by their stake. Each round moves "
+                        "through propose, prevote (for a block or nil), and precommit (for a block or nil). A block is "
+                        "committed once more than two-thirds of voting power precommits the same block; otherwise the "
+                        "process advances to a new round until consensus is reached, delivering deterministic finality.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
