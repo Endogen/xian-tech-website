@@ -119,17 +119,16 @@ def consensus_page() -> rx.Component:
                     border_radius="8px",
                 ),
                 rx.heading(
-                    "CometBFT Consensus",
+                    "Network Consensus",
                     size="8",
                     color=TEXT_PRIMARY,
                     line_height="1.15",
                     weight="bold",
                 ),
                 rx.text(
-                    "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
-                    "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
-                    "so Xian can use its Python contracting engine while relying on a proven consensus core. "
-                    "CometBFT itself is implemented in Go for performance, while Xian keeps the user-facing stack in Python.",
+                    "Network consensus keeps all validators aligned on one ordered history so blocks are finalized "
+                    "predictably and every node sees the same state. CometBFT provides this foundation for Xian, giving "
+                    "us a reliable, fast consensus core to build Python-first applications on top of.",
                     size="4",
                     color=TEXT_MUTED,
                     width="100%",
@@ -142,12 +141,7 @@ def consensus_page() -> rx.Component:
         section(
             section_panel(
                 rx.flex(
-                    linked_heading(
-                        "Consensus details",
-                        size="6",
-                        color=TEXT_PRIMARY,
-                        weight="bold",
-                    ),
+                    linked_heading("CometBFT", size="6", color=TEXT_PRIMARY, weight="bold"),
                     rx.hstack(
                         rx.link(
                             rx.hstack(
@@ -182,48 +176,55 @@ def consensus_page() -> rx.Component:
                     gap="0.75rem",
                     width="100%",
                 ),
-                subsection(
-                    "Why CometBFT?",
-                    rx.grid(
-                        choice_card(
-                            "Security",
-                            "Byzantine fault tolerance keeps the network secure as long as less than one-third of voting power is byzantine.",
-                            "shield",
-                        ),
-                        choice_card(
-                            "Scalability",
-                            "CometBFT is designed for high throughput and is reported to reach thousands of TPS; real results depend on the application and configuration.",
-                            "layers",
-                        ),
-                        choice_card(
-                            "Interoperability",
-                            "ABCI enables application-specific chains, and the Cosmos ecosystem uses CometBFT to connect independent networks.",
-                            "link",
-                        ),
-                        choice_card(
-                            "Fast finality",
-                            "Blocks finalize in seconds once more than two-thirds precommit, delivering deterministic settlement without reorgs.",
-                            "bolt",
-                        ),
-                        choice_card(
-                            "Developer freedom",
-                            "ABCI lets developers write chain logic in their language of choice while CometBFT handles consensus and networking.",
-                            "code",
-                        ),
-                        choice_card(
-                            "Modernized Tendermint",
-                            "CometBFT is the fork and successor to Tendermint Core, continuing the design with efficiency improvements for today’s networks.",
-                            "satellite",
-                        ),
-                        columns={
-                            "base": "repeat(1, minmax(0, 1fr))",
-                            "md": "repeat(2, minmax(0, 1fr))",
-                            "lg": "repeat(3, minmax(0, 1fr))",
-                        },
-                        spacing="4",
-                        width="100%",
-                        align="stretch",
+                rx.text(
+                    "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
+                    "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
+                    "so Xian can use its Python contracting engine while relying on a proven consensus core. "
+                    "CometBFT itself is implemented in Go for performance, while Xian keeps the user-facing stack in Python.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+                rx.grid(
+                    choice_card(
+                        "Security",
+                        "Byzantine fault tolerance keeps the network secure as long as less than one-third of voting power is byzantine.",
+                        "shield",
                     ),
+                    choice_card(
+                        "Scalability",
+                        "CometBFT is designed for high throughput and is reported to reach thousands of TPS; real results depend on the application and configuration.",
+                        "layers",
+                    ),
+                    choice_card(
+                        "Interoperability",
+                        "ABCI enables application-specific chains, and the Cosmos ecosystem uses CometBFT to connect independent networks.",
+                        "link",
+                    ),
+                    choice_card(
+                        "Fast finality",
+                        "Blocks finalize in seconds once more than two-thirds precommit, delivering deterministic settlement without reorgs.",
+                        "bolt",
+                    ),
+                    choice_card(
+                        "Developer freedom",
+                        "ABCI lets developers write chain logic in their language of choice while CometBFT handles consensus and networking.",
+                        "code",
+                    ),
+                    choice_card(
+                        "Modernized Tendermint",
+                        "CometBFT is the fork and successor to Tendermint Core, continuing the design with efficiency improvements for today’s networks.",
+                        "satellite",
+                    ),
+                    columns={
+                        "base": "repeat(1, minmax(0, 1fr))",
+                        "md": "repeat(2, minmax(0, 1fr))",
+                        "lg": "repeat(3, minmax(0, 1fr))",
+                    },
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
                 subsection(
                     "Properties",
