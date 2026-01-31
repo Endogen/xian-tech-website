@@ -94,21 +94,24 @@ def abci_page() -> rx.Component:
                     max_width="850px",
                     line_height="1.7",
                 ),
-                rx.vstack(
-                    rx.heading("Why it matters for Xian", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.vstack(
-                        bullet("ABCI keeps the application language-agnostic, so the Python contracting engine stays intact."),
-                        bullet("CometBFT handles consensus and P2P; the Xian application focuses on validation and state."),
-                        bullet("Xian Core is implemented as an ABCI application for CometBFT 0.38.x."),
-                        spacing="2",
-                        align_items="start",
-                    ),
-                    spacing="3",
-                    align_items="start",
-                ),
                 spacing="5",
                 align_items="start",
             )
+        ),
+        section(
+            rx.vstack(
+                rx.heading("Why it matters for Xian", size="6", color=TEXT_PRIMARY, weight="bold"),
+                rx.vstack(
+                    bullet("ABCI keeps the application language-agnostic, so the Python contracting engine stays intact."),
+                    bullet("CometBFT handles consensus and P2P; the Xian application focuses on validation and state."),
+                    bullet("Xian Core is implemented as an ABCI application for CometBFT 0.38.x."),
+                    spacing="2",
+                    align_items="start",
+                ),
+                spacing="3",
+                align_items="start",
+            ),
+            padding_top="0",
         ),
         section(
             rx.grid(

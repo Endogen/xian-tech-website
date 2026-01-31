@@ -113,7 +113,6 @@ def community_page() -> rx.Component:
                 spacing="6",
                 align_items="start",
             ),
-            padding_bottom="3rem",
         ),
         section(
             rx.vstack(

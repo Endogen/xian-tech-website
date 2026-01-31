@@ -648,7 +648,6 @@ def about_page() -> rx.Component:
                     line_height="1.2",
                 ),
             ),
-            padding_bottom="3rem",
         ),
         section(
             rx.vstack(
