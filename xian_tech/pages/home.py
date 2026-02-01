@@ -36,7 +36,7 @@ QUOTE_MARQUEE_STYLE = """
 
 SEARCH_SECTIONS = [
     {
-        "title": "Python-Native Contracting on a CometBFT Backbone.",
+        "title": "Python-Native Contracting on a CometBFT Backbone",
         "subtitle": "CometBFT-backed consensus with a pure Python contracting engine.",
         "category": "Home",
         "badge": "Hero",
@@ -88,7 +88,7 @@ def hero_section() -> rx.Component:
                 border_radius="8px",
             ),
             rx.heading(
-                "Python-Native Contracting on a CometBFT Backbone.",
+                "Python-Native Contracting on a CometBFT Backbone",
                 size="9",
                 line_height="1.1",
                 color=TEXT_PRIMARY,
