@@ -233,13 +233,23 @@ def abci_page() -> rx.Component:
                 ),
                 subsection(
                     "How it works",
-                    rx.vstack(
-                        bullet("CometBFT calls CheckTx to validate transactions before they enter consensus."),
-                        bullet("FinalizeBlock executes the block and returns transaction results in one pass."),
-                        bullet("Commit writes state and returns the app hash that anchors the next block."),
-                        bullet("ABCI++ adds proposal shaping and vote extension hooks for richer app logic."),
-                        spacing="2",
-                        align_items="start",
+                    rx.text(
+                        "CometBFT proposes and finalizes blocks, then calls into the ABCI app so the application can "
+                        "validate transactions, execute state transitions, and return results. ABCI keeps consensus and "
+                        "application logic cleanly separated, while allowing the application to be written in any language—"
+                        "including Xian’s Python execution layer.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    rx.image(
+                        src="/abci.png",
+                        alt="ABCI flow diagram",
+                        width="100%",
+                        max_width="960px",
+                        border_radius="12px",
+                        align_self="center",
                     ),
                 ),
             )
