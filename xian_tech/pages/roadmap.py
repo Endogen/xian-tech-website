@@ -71,7 +71,7 @@ def roadmap_page() -> rx.Component:
                 rx.vstack(
                     rx.foreach(column["cards"], roadmap_card),
                     spacing="3",
-                    align_items="start",
+                    align_items="stretch",
                     width="100%",
                 ),
                 spacing="3",
