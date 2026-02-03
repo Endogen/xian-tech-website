@@ -208,16 +208,39 @@ class State(rx.State):
             finally:
                 client._http.close()
 
+            board_id_value = str(board_id)
+
+            def is_same_board(card: Any) -> bool:
+                if getattr(card, "board_id", None) is not None:
+                    return str(card.board_id) == board_id_value
+                if getattr(card, "board", None) is not None and getattr(card.board, "id", None) is not None:
+                    return str(card.board.id) == board_id_value
+                return False
+
+            cards = [card for card in cards if is_same_board(card)]
+            closed_cards = [card for card in closed_cards if is_same_board(card)]
+
+            def normalize_id(value: Any) -> str:
+                return str(value).strip()
+
             columns_sorted = sorted(columns, key=lambda col: (col.position is None, col.position or 0))
             done_column_ids = {
-                col.id for col in columns_sorted if col.name.strip().lower() in {"done", "complete", "completed"}
+                normalize_id(col.id)
+                for col in columns_sorted
+                if col.name.strip().lower() in {"done", "complete", "completed"}
             }
             cards_by_column: dict[str, list[dict[str, Any]]] = {
-                col.id: [] for col in columns_sorted if col.id not in done_column_ids
+                normalize_id(col.id): [] for col in columns_sorted if normalize_id(col.id) not in done_column_ids
             }
             untriaged: list[dict[str, Any]] = []
 
             for card in cards:
+                column_id = None
+                if getattr(card, "column_id", None) is not None:
+                    column_id = normalize_id(card.column_id)
+                elif getattr(card, "column", None) is not None and getattr(card.column, "id", None) is not None:
+                    column_id = normalize_id(card.column.id)
+
                 card_payload = {
                     "id": card.id,
                     "number": card.number,
@@ -228,10 +251,10 @@ class State(rx.State):
                     "tags_text": ", ".join(tag.name for tag in card.tags),
                     "golden": bool(card.golden),
                 }
-                if card.column_id in done_column_ids:
+                if column_id in done_column_ids:
                     continue
-                if card.column_id and card.column_id in cards_by_column:
-                    cards_by_column[card.column_id].append(card_payload)
+                if column_id and column_id in cards_by_column:
+                    cards_by_column[column_id].append(card_payload)
                 else:
                     untriaged.append(card_payload)
 
@@ -263,9 +286,9 @@ class State(rx.State):
                     {
                         "id": col.id,
                         "name": column_name_overrides.get(normalized, col.name),
-                        "cards": cards_by_column.get(col.id, []),
-                        "count": len(cards_by_column.get(col.id, [])),
-                    }
+                    "cards": cards_by_column.get(normalize_id(col.id), []),
+                    "count": len(cards_by_column.get(normalize_id(col.id), [])),
+                }
                 )
 
             if untriaged:
