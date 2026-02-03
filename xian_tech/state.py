@@ -1,9 +1,12 @@
 import asyncio
+import os
 from typing import Any, TypedDict
 from urllib.parse import quote
 
 import reflex as rx
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 class CommandAction(TypedDict):
@@ -41,6 +44,24 @@ class ActiveCommandInfo(TypedDict):
     placeholder: bool
 
 
+class RoadmapCard(TypedDict):
+    id: str
+    number: int
+    title: str
+    status: str
+    url: str
+    tags: list[str]
+    tags_text: str
+    golden: bool
+
+
+class RoadmapColumn(TypedDict):
+    id: str
+    name: str
+    count: int
+    cards: list[RoadmapCard]
+
+
 class State(rx.State):
     """Global application state."""
 
@@ -53,6 +74,9 @@ class State(rx.State):
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
     sdk_install_copied: bool = False
+    roadmap_loading: bool = False
+    roadmap_error: str = ""
+    roadmap_columns: list[RoadmapColumn] = []
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -136,6 +160,92 @@ class State(rx.State):
         yield rx.set_clipboard("pip install xian-py")
         await asyncio.sleep(1.4)
         self.sdk_install_copied = False
+
+    async def load_roadmap(self):
+        """Load the Fizzy roadmap board into state."""
+        if self.roadmap_columns or self.roadmap_loading:
+            return
+
+        self.roadmap_loading = True
+        self.roadmap_error = ""
+
+        def fetch_board() -> list[dict[str, Any]]:
+            from fizzy import FizzyClient
+
+            token = os.getenv("FIZZY_TOKEN", "").strip()
+            account_slug = os.getenv("FIZZY_ACCOUNT_SLUG", "1").strip().lstrip("/")
+            board_id = os.getenv("FIZZY_BOARD_ID", "03fiomkit5oknquymk0ooi26m").strip()
+            base_url = os.getenv("FIZZY_BASE_URL", "https://tasks.xian.technology").strip()
+
+            if not token:
+                raise ValueError("Missing FIZZY_TOKEN for Fizzy API access.")
+            if not account_slug or not board_id:
+                raise ValueError("Missing FIZZY_ACCOUNT_SLUG or FIZZY_BOARD_ID.")
+
+            client = FizzyClient(
+                token=token,
+                account_slug=account_slug,
+                base_url=base_url,
+            )
+            try:
+                columns = client.columns.list(board_id)
+                cards = client.cards.list(board_id=board_id)
+            finally:
+                client._http.close()
+
+            columns_sorted = sorted(columns, key=lambda col: (col.position is None, col.position or 0))
+            cards_by_column: dict[str, list[dict[str, Any]]] = {col.id: [] for col in columns_sorted}
+            untriaged: list[dict[str, Any]] = []
+
+            for card in cards:
+                card_payload = {
+                    "id": card.id,
+                    "number": card.number,
+                    "title": card.title,
+                    "status": card.status,
+                    "url": card.url or "",
+                    "tags": [tag.name for tag in card.tags],
+                    "tags_text": ", ".join(tag.name for tag in card.tags),
+                    "golden": bool(card.golden),
+                }
+                if card.column_id and card.column_id in cards_by_column:
+                    cards_by_column[card.column_id].append(card_payload)
+                else:
+                    untriaged.append(card_payload)
+
+            for column_id, items in cards_by_column.items():
+                items.sort(key=lambda item: item["number"])
+
+            columns_payload = [
+                {
+                    "id": col.id,
+                    "name": col.name,
+                    "cards": cards_by_column.get(col.id, []),
+                    "count": len(cards_by_column.get(col.id, [])),
+                }
+                for col in columns_sorted
+            ]
+
+            if untriaged:
+                untriaged_sorted = sorted(untriaged, key=lambda item: item["number"])
+                columns_payload.insert(
+                    0,
+                    {
+                        "id": "untriaged",
+                        "name": "Untriaged",
+                        "cards": untriaged_sorted,
+                        "count": len(untriaged_sorted),
+                    },
+                )
+
+            return columns_payload
+
+        try:
+            self.roadmap_columns = await asyncio.to_thread(fetch_board)
+        except Exception as exc:  # pragma: no cover - surface user-friendly errors
+            self.roadmap_error = str(exc)
+        finally:
+            self.roadmap_loading = False
 
     def submit_contact_form(self, form_data: dict[str, Any]):
         """Open a pre-filled email draft with the contact form details."""
