@@ -77,19 +77,34 @@ def roadmap_page() -> rx.Component:
             background=SURFACE,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="10px",
-            min_width="260px",
-            max_width="320px",
             width="100%",
-            height="100%",
         )
 
-    board_view = rx.hstack(
+    board_view = rx.grid(
         rx.foreach(State.roadmap_columns, roadmap_column),
-        spacing="3",
-        align_items="stretch",
+        columns={"base": "1", "md": "2", "lg": "4"},
+        spacing="4",
+        align="start",
         width="100%",
-        min_width="0",
-        padding_bottom="1rem",
+    )
+
+    done_section = rx.vstack(
+        rx.hstack(
+            rx.text("Done", size="4", weight="bold", color=TEXT_PRIMARY),
+            rx.text(State.roadmap_done_count, size="2", color=TEXT_MUTED),
+            spacing="2",
+            align_items="center",
+        ),
+        rx.grid(
+            rx.foreach(State.roadmap_done_cards, roadmap_card),
+            columns={"base": "1", "sm": "2", "md": "3", "lg": "4"},
+            spacing="4",
+            width="100%",
+        ),
+        spacing="3",
+        align_items="start",
+        width="100%",
+        padding_top="1.5rem",
     )
 
     return page_layout(
@@ -145,9 +160,11 @@ def roadmap_page() -> rx.Component:
                             border=f"1px solid {BORDER_COLOR}",
                             border_radius="12px",
                         ),
-                        rx.box(
+                        rx.vstack(
                             board_view,
-                            overflow_x="auto",
+                            rx.cond(State.roadmap_done_count > 0, done_section, rx.box()),
+                            spacing="4",
+                            align_items="start",
                             width="100%",
                         ),
                     ),

@@ -77,6 +77,8 @@ class State(rx.State):
     roadmap_loading: bool = False
     roadmap_error: str = ""
     roadmap_columns: list[RoadmapColumn] = []
+    roadmap_done_cards: list[RoadmapCard] = []
+    roadmap_done_count: int = 0
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -169,7 +171,7 @@ class State(rx.State):
         self.roadmap_loading = True
         self.roadmap_error = ""
 
-        def fetch_board() -> list[dict[str, Any]]:
+        def fetch_board() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             from fizzy import FizzyClient
 
             token = os.getenv("FIZZY_TOKEN", "").strip()
@@ -190,11 +192,17 @@ class State(rx.State):
             try:
                 columns = client.columns.list(board_id)
                 cards = client.cards.list(board_id=board_id)
+                closed_cards = client.cards.list(board_id=board_id, status="closed")
             finally:
                 client._http.close()
 
             columns_sorted = sorted(columns, key=lambda col: (col.position is None, col.position or 0))
-            cards_by_column: dict[str, list[dict[str, Any]]] = {col.id: [] for col in columns_sorted}
+            done_column_ids = {
+                col.id for col in columns_sorted if col.name.strip().lower() in {"done", "complete", "completed"}
+            }
+            cards_by_column: dict[str, list[dict[str, Any]]] = {
+                col.id: [] for col in columns_sorted if col.id not in done_column_ids
+            }
             untriaged: list[dict[str, Any]] = []
 
             for card in cards:
@@ -208,6 +216,8 @@ class State(rx.State):
                     "tags_text": ", ".join(tag.name for tag in card.tags),
                     "golden": bool(card.golden),
                 }
+                if card.column_id in done_column_ids:
+                    continue
                 if card.column_id and card.column_id in cards_by_column:
                     cards_by_column[card.column_id].append(card_payload)
                 else:
@@ -215,6 +225,22 @@ class State(rx.State):
 
             for column_id, items in cards_by_column.items():
                 items.sort(key=lambda item: item["number"])
+
+            done_payload: list[dict[str, Any]] = []
+            for card in closed_cards:
+                done_payload.append(
+                    {
+                        "id": card.id,
+                        "number": card.number,
+                        "title": card.title,
+                        "status": card.status,
+                        "url": card.url or "",
+                        "tags": [tag.name for tag in card.tags],
+                        "tags_text": ", ".join(tag.name for tag in card.tags),
+                        "golden": bool(card.golden),
+                    }
+                )
+            done_payload.sort(key=lambda item: item["number"])
 
             columns_payload = [
                 {
@@ -224,6 +250,7 @@ class State(rx.State):
                     "count": len(cards_by_column.get(col.id, [])),
                 }
                 for col in columns_sorted
+                if col.id not in done_column_ids
             ]
 
             if untriaged:
@@ -238,10 +265,13 @@ class State(rx.State):
                     },
                 )
 
-            return columns_payload
+            return columns_payload, done_payload
 
         try:
-            self.roadmap_columns = await asyncio.to_thread(fetch_board)
+            columns_payload, done_payload = await asyncio.to_thread(fetch_board)
+            self.roadmap_columns = columns_payload
+            self.roadmap_done_cards = done_payload
+            self.roadmap_done_count = len(done_payload)
         except Exception as exc:  # pragma: no cover - surface user-friendly errors
             self.roadmap_error = str(exc)
         finally:
