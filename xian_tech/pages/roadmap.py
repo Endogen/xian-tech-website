@@ -32,6 +32,55 @@ def roadmap_page() -> rx.Component:
         dark="linear-gradient(180deg, rgba(80, 177, 101, 0.22) 0%, rgba(15, 20, 28, 0) 100%)",
     )
 
+    def roadmap_card_skeleton() -> rx.Component:
+        return rx.box(
+            rx.vstack(
+                rx.skeleton(height="12px", width="80%", loading=True),
+                rx.skeleton(height="10px", width="45%", loading=True),
+                spacing="2",
+                align_items="start",
+                width="100%",
+            ),
+            padding="0.65rem 0.75rem",
+            background=ACCENT_SOFT,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="6px",
+            width="100%",
+        )
+
+    def roadmap_column_skeleton() -> rx.Component:
+        return rx.box(
+            rx.box(
+                rx.vstack(
+                    rx.skeleton(height="18px", width="60%", loading=True),
+                    rx.skeleton(height="12px", width="30%", loading=True),
+                    spacing="2",
+                    align_items="start",
+                    width="100%",
+                ),
+                padding="1.25rem 1.5rem 1rem 1.5rem",
+                background=column_header_background,
+                width="100%",
+                box_sizing="border-box",
+            ),
+            rx.box(
+                rx.vstack(
+                    *[roadmap_card_skeleton() for _ in range(3)],
+                    spacing="2",
+                    align_items="stretch",
+                    width="100%",
+                ),
+                padding="1rem 0.75rem 0.75rem 0.75rem",
+                width="100%",
+                box_sizing="border-box",
+            ),
+            background=SURFACE,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="6px 6px 16px 16px",
+            overflow="hidden",
+            width="100%",
+        )
+
     def roadmap_card(card: RoadmapCard) -> rx.Component:
         card_body = rx.box(
             rx.vstack(
@@ -104,6 +153,14 @@ def roadmap_page() -> rx.Component:
         width="100%",
     )
 
+    loading_view = rx.grid(
+        *[roadmap_column_skeleton() for _ in range(4)],
+        columns={"base": "1", "md": "2", "lg": "4"},
+        spacing="4",
+        align="start",
+        width="100%",
+    )
+
     done_section = rx.vstack(
         rx.hstack(
             rx.text("Done", size="4", weight="bold", color=TEXT_PRIMARY),
@@ -163,12 +220,7 @@ def roadmap_page() -> rx.Component:
             rx.box(
                 rx.cond(
                     State.roadmap_loading,
-                    rx.hstack(
-                        rx.spinner(color=ACCENT),
-                        rx.text("Loading roadmap…", size="3", color=TEXT_MUTED),
-                        spacing="2",
-                        align_items="center",
-                    ),
+                    loading_view,
                     rx.cond(
                         State.roadmap_error != "",
                         rx.box(

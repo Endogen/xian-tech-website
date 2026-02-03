@@ -170,6 +170,7 @@ class State(rx.State):
 
         self.roadmap_loading = True
         self.roadmap_error = ""
+        yield
 
         def fetch_board() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             from fizzy import FizzyClient
