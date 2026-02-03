@@ -85,7 +85,7 @@ def roadmap_page() -> rx.Component:
                     align_items="stretch",
                     width="100%",
                 ),
-                padding="1rem 1.5rem 1.5rem 1.5rem",
+                padding="1rem 0.75rem 0.75rem 0.75rem",
                 width="100%",
                 box_sizing="border-box",
             ),
