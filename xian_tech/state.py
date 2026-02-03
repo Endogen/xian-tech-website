@@ -184,74 +184,144 @@ class State(rx.State):
         yield
 
         def fetch_board() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-            from fizzy import FizzyClient
+            from .fizzy_api import get_board_cards, get_board_columns
 
             token = os.getenv("FIZZY_TOKEN", "").strip()
-            account_slug = os.getenv("FIZZY_ACCOUNT_SLUG", "1").strip().lstrip("/")
-            board_id = os.getenv("FIZZY_BOARD_ID", "03fiomkit5oknquymk0ooi26m").strip()
-            base_url = os.getenv("FIZZY_BASE_URL", "https://tasks.xian.technology").strip()
+            account_slug = (
+                os.getenv("FIZZY_ACCOUNT_SLUG", "")
+                or os.getenv("FIZZY_ACCOUNT", "")
+                or "1"
+            ).strip().lstrip("/")
+            board_id = (
+                os.getenv("FIZZY_BOARD_ID", "")
+                or os.getenv("FIZZY_BOARD", "")
+                or "03fiomkit5oknquymk0ooi26m"
+            ).strip()
+            base_url = (
+                os.getenv("FIZZY_BASE_URL", "")
+                or os.getenv("FIZZY_API_URL", "")
+                or "https://tasks.xian.technology"
+            ).strip()
 
             if not token:
                 raise ValueError("Missing FIZZY_TOKEN for Fizzy API access.")
             if not account_slug or not board_id:
                 raise ValueError("Missing FIZZY_ACCOUNT_SLUG or FIZZY_BOARD_ID.")
 
-            client = FizzyClient(
-                token=token,
-                account_slug=account_slug,
-                base_url=base_url,
-            )
-            try:
-                columns = client.columns.list(board_id)
-                cards = client.cards.list(board_id=board_id)
-                closed_cards = client.cards.list(board_id=board_id, status="closed")
-            finally:
-                client._http.close()
-
-            board_id_value = str(board_id)
-
-            def is_same_board(card: Any) -> bool:
-                if getattr(card, "board_id", None) is not None:
-                    return str(card.board_id) == board_id_value
-                if getattr(card, "board", None) is not None and getattr(card.board, "id", None) is not None:
-                    return str(card.board.id) == board_id_value
-                return False
-
-            cards = [card for card in cards if is_same_board(card)]
-            closed_cards = [card for card in closed_cards if is_same_board(card)]
-
             def normalize_id(value: Any) -> str:
                 return str(value).strip()
 
-            columns_sorted = sorted(columns, key=lambda col: (col.position is None, col.position or 0))
+            def is_done_column(name: str) -> bool:
+                normalized = name.strip().lower()
+                done_keywords = (
+                    "done",
+                    "complete",
+                    "completed",
+                    "finished",
+                    "shipped",
+                    "released",
+                )
+                return any(keyword in normalized for keyword in done_keywords)
+
+            columns = get_board_columns(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+            )
+            open_cards = get_board_cards(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+            )
+            closed_cards = get_board_cards(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+                indexed_by="closed",
+            )
+
+            columns = [col for col in columns if isinstance(col, dict)]
+            open_cards = [card for card in open_cards if isinstance(card, dict)]
+            closed_cards = [card for card in closed_cards if isinstance(card, dict)]
+            board_id_value = str(board_id)
+
+            def is_same_board(card: dict[str, Any]) -> bool:
+                board = card.get("board") or {}
+                if board.get("id") is not None:
+                    return str(board.get("id")) == board_id_value
+                if card.get("board_id") is not None:
+                    return str(card.get("board_id")) == board_id_value
+                return True
+
+            open_cards = [card for card in open_cards if is_same_board(card)]
+            closed_cards = [card for card in closed_cards if is_same_board(card)]
+
+            columns_sorted = sorted(
+                columns,
+                key=lambda col: (col.get("position") is None, col.get("position") or 0),
+            )
             done_column_ids = {
-                normalize_id(col.id)
+                normalize_id(col.get("id", ""))
                 for col in columns_sorted
-                if col.name.strip().lower() in {"done", "complete", "completed"}
+                if is_done_column(col.get("name", ""))
             }
             cards_by_column: dict[str, list[dict[str, Any]]] = {
-                normalize_id(col.id): [] for col in columns_sorted if normalize_id(col.id) not in done_column_ids
+                normalize_id(col.get("id", "")): []
+                for col in columns_sorted
+                if normalize_id(col.get("id", "")) not in done_column_ids
             }
             untriaged: list[dict[str, Any]] = []
+            done_cards: list[dict[str, Any]] = []
+            done_card_ids: set[str] = set()
 
-            for card in cards:
-                column_id = None
-                if getattr(card, "column_id", None) is not None:
-                    column_id = normalize_id(card.column_id)
-                elif getattr(card, "column", None) is not None and getattr(card.column, "id", None) is not None:
-                    column_id = normalize_id(card.column.id)
+            def extract_tags(raw_tags: Any) -> list[str]:
+                if not raw_tags:
+                    return []
+                if isinstance(raw_tags, list):
+                    if raw_tags and isinstance(raw_tags[0], dict):
+                        return [
+                            str(tag.get("name", "")).strip()
+                            for tag in raw_tags
+                            if tag.get("name")
+                        ]
+                    return [str(tag).strip() for tag in raw_tags if str(tag).strip()]
+                return [str(raw_tags).strip()]
 
-                card_payload = {
-                    "id": card.id,
-                    "number": card.number,
-                    "title": card.title,
-                    "status": card.status,
-                    "url": card.url or "",
-                    "tags": [tag.name for tag in card.tags],
-                    "tags_text": ", ".join(tag.name for tag in card.tags),
-                    "golden": bool(card.golden),
+            def build_raw_card_payload(data: dict[str, Any]) -> dict[str, Any]:
+                tags = extract_tags(data.get("tags"))
+                return {
+                    "id": data.get("id", ""),
+                    "number": data.get("number", 0),
+                    "title": data.get("title", ""),
+                    "status": data.get("status", ""),
+                    "url": data.get("url", ""),
+                    "tags": tags,
+                    "tags_text": ", ".join(tags),
+                    "golden": bool(data.get("golden", False)),
+                    "closed": bool(data.get("closed", False)),
                 }
-                if column_id in done_column_ids:
+
+            def add_done_payload(payload: dict[str, Any]) -> None:
+                card_id = str(payload.get("id", ""))
+                if not card_id or card_id in done_card_ids:
+                    return
+                done_cards.append(payload)
+                done_card_ids.add(card_id)
+
+            for card in open_cards:
+                column_id = None
+                column = card.get("column") or {}
+                if card.get("column_id") is not None:
+                    column_id = normalize_id(card.get("column_id"))
+                elif column.get("id") is not None:
+                    column_id = normalize_id(column.get("id"))
+
+                card_payload = build_raw_card_payload(card)
+                if column_id in done_column_ids or card_payload.get("closed"):
+                    add_done_payload(card_payload)
                     continue
                 if column_id and column_id in cards_by_column:
                     cards_by_column[column_id].append(card_payload)
@@ -261,34 +331,24 @@ class State(rx.State):
             for column_id, items in cards_by_column.items():
                 items.sort(key=lambda item: item["number"])
 
-            done_payload: list[dict[str, Any]] = []
             for card in closed_cards:
-                done_payload.append(
-                    {
-                        "id": card.id,
-                        "number": card.number,
-                        "title": card.title,
-                        "status": card.status,
-                        "url": card.url or "",
-                        "tags": [tag.name for tag in card.tags],
-                        "tags_text": ", ".join(tag.name for tag in card.tags),
-                        "golden": bool(card.golden),
-                    }
-                )
-            done_payload.sort(key=lambda item: item["number"])
+                add_done_payload(build_raw_card_payload(card))
+
+            done_payload = sorted(done_cards, key=lambda item: item["number"])
 
             columns_payload = []
             for col in columns_sorted:
-                if col.id in done_column_ids:
+                col_id = normalize_id(col.get("id", ""))
+                if col_id in done_column_ids:
                     continue
-                normalized = col.name.strip().lower()
+                normalized = str(col.get("name", "")).strip().lower()
                 columns_payload.append(
                     {
-                        "id": col.id,
-                        "name": column_name_overrides.get(normalized, col.name),
-                    "cards": cards_by_column.get(normalize_id(col.id), []),
-                    "count": len(cards_by_column.get(normalize_id(col.id), [])),
-                }
+                        "id": col.get("id", ""),
+                        "name": column_name_overrides.get(normalized, col.get("name", "")),
+                        "cards": cards_by_column.get(col_id, []),
+                        "count": len(cards_by_column.get(col_id, [])),
+                    }
                 )
 
             if untriaged:

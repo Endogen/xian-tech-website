@@ -87,7 +87,21 @@ def roadmap_page() -> rx.Component:
                 rx.text(card["title"], size="2", weight="bold", color=TEXT_PRIMARY),
                 rx.cond(
                     card["tags_text"] != "",
-                    rx.text(card["tags_text"], size="1", color=TEXT_MUTED),
+                    rx.flex(
+                        rx.foreach(
+                            card["tags"],
+                            lambda tag: rx.badge(
+                                tag,
+                                variant="soft",
+                                color_scheme="green",
+                                radius="small",
+                                size="1",
+                            ),
+                        ),
+                        wrap="wrap",
+                        gap="0.4rem",
+                        width="100%",
+                    ),
                     rx.box(),
                 ),
                 spacing="1",
