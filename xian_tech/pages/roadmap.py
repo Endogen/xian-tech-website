@@ -91,7 +91,7 @@ def roadmap_page() -> rx.Component:
             ),
             background=SURFACE,
             border=f"1px solid {BORDER_COLOR}",
-            border_radius="0 0 16px 16px",
+            border_radius="6px 6px 16px 16px",
             overflow="hidden",
             width="100%",
         )
