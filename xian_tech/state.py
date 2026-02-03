@@ -173,6 +173,12 @@ class State(rx.State):
         if self.roadmap_columns or self.roadmap_loading:
             return
 
+        column_name_overrides = {
+            "specification": "Design",
+            "working on": "Execute",
+            "testing": "Validate",
+        }
+
         self.roadmap_loading = True
         self.roadmap_error = ""
         yield
@@ -248,16 +254,19 @@ class State(rx.State):
                 )
             done_payload.sort(key=lambda item: item["number"])
 
-            columns_payload = [
-                {
-                    "id": col.id,
-                    "name": col.name,
-                    "cards": cards_by_column.get(col.id, []),
-                    "count": len(cards_by_column.get(col.id, [])),
-                }
-                for col in columns_sorted
-                if col.id not in done_column_ids
-            ]
+            columns_payload = []
+            for col in columns_sorted:
+                if col.id in done_column_ids:
+                    continue
+                normalized = col.name.strip().lower()
+                columns_payload.append(
+                    {
+                        "id": col.id,
+                        "name": column_name_overrides.get(normalized, col.name),
+                        "cards": cards_by_column.get(col.id, []),
+                        "count": len(cards_by_column.get(col.id, [])),
+                    }
+                )
 
             if untriaged:
                 untriaged_sorted = sorted(untriaged, key=lambda item: item["number"])
@@ -265,7 +274,7 @@ class State(rx.State):
                     0,
                     {
                         "id": "untriaged",
-                        "name": "Untriaged",
+                        "name": "Investigate",
                         "cards": untriaged_sorted,
                         "count": len(untriaged_sorted),
                     },
