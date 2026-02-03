@@ -125,7 +125,15 @@ def roadmap_page() -> rx.Component:
                         line_height="1.2",
                     ),
                     rx.text(
-                        "Live roadmap board powered by Fizzy—showing what’s in progress, what’s next, and what’s ready to ship.",
+                        "Live roadmap board powered by ",
+                        rx.link(
+                            "Fizzy",
+                            href="https://github.com/basecamp/fizzy",
+                            is_external=True,
+                            color=ACCENT,
+                            _hover={"text_decoration": "underline"},
+                        ),
+                        "—showing what’s in progress, what’s next, and what’s ready to ship.",
                         size="4",
                         color=TEXT_MUTED,
                         line_height="1.7",
