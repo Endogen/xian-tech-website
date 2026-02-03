@@ -27,6 +27,11 @@ SEARCH_SECTIONS = [
 
 def roadmap_page() -> rx.Component:
     """Roadmap page."""
+    column_header_background = rx.color_mode_cond(
+        light="linear-gradient(180deg, rgba(80, 177, 101, 0.18) 0%, rgba(248, 249, 250, 0) 100%)",
+        dark="linear-gradient(180deg, rgba(80, 177, 101, 0.22) 0%, rgba(15, 20, 28, 0) 100%)",
+    )
+
     def roadmap_card(card: RoadmapCard) -> rx.Component:
         card_body = rx.box(
             rx.vstack(
@@ -55,28 +60,39 @@ def roadmap_page() -> rx.Component:
 
     def roadmap_column(column: RoadmapColumn) -> rx.Component:
         return rx.box(
-            rx.vstack(
-                rx.text(column["name"], size="4", weight="bold", color=TEXT_PRIMARY),
-                rx.hstack(
-                    rx.text(column.get("count", 0), size="2", color=TEXT_MUTED),
-                    rx.text("cards", size="2", color=TEXT_MUTED),
+            rx.box(
+                rx.vstack(
+                    rx.text(column["name"], size="4", weight="bold", color=TEXT_PRIMARY),
+                    rx.hstack(
+                        rx.text(column.get("count", 0), size="2", color=TEXT_MUTED),
+                        rx.text("cards", size="2", color=TEXT_MUTED),
+                        spacing="1",
+                        align_items="center",
+                    ),
                     spacing="1",
-                    align_items="center",
+                    align_items="start",
+                    width="100%",
                 ),
+                padding="1.25rem 1.5rem 1rem 1.5rem",
+                background=column_header_background,
+                width="100%",
+                box_sizing="border-box",
+            ),
+            rx.box(
                 rx.vstack(
                     rx.foreach(column["cards"], roadmap_card),
                     spacing="2",
                     align_items="stretch",
                     width="100%",
                 ),
-                spacing="2",
-                align_items="start",
+                padding="1rem 1.5rem 1.5rem 1.5rem",
                 width="100%",
+                box_sizing="border-box",
             ),
-            padding="1.5rem",
             background=SURFACE,
             border=f"1px solid {BORDER_COLOR}",
-            border_radius="10px",
+            border_radius="0 0 16px 16px",
+            overflow="hidden",
             width="100%",
         )
 
