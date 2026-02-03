@@ -219,23 +219,22 @@ def roadmap_page() -> rx.Component:
         section(
             rx.box(
                 rx.cond(
-                    State.roadmap_loading,
-                    loading_view,
-                    rx.cond(
-                        State.roadmap_error != "",
-                        rx.box(
-                            rx.text(
-                                "Roadmap data is not available right now. "
-                                "Set FIZZY_TOKEN, FIZZY_ACCOUNT_SLUG, and FIZZY_BOARD_ID to enable it.",
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.7",
-                            ),
-                            padding="1.5rem",
-                            background=SURFACE,
-                            border=f"1px solid {BORDER_COLOR}",
-                            border_radius="12px",
+                    State.roadmap_error != "",
+                    rx.callout.root(
+                        rx.callout.icon(rx.icon(tag="triangle_alert")),
+                        rx.callout.text(
+                            "Roadmap data is not available right now. Error: ",
+                            State.roadmap_error,
+                            ". Set FIZZY_TOKEN, FIZZY_ACCOUNT_SLUG, and FIZZY_BOARD_ID to enable it.",
                         ),
+                        color_scheme="red",
+                        role="alert",
+                        size="2",
+                        width="100%",
+                    ),
+                    rx.cond(
+                        State.roadmap_show_loading,
+                        loading_view,
                         rx.vstack(
                             board_view,
                             rx.cond(State.roadmap_done_count > 0, done_section, rx.box()),

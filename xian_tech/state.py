@@ -80,6 +80,11 @@ class State(rx.State):
     roadmap_done_cards: list[RoadmapCard] = []
     roadmap_done_count: int = 0
 
+    @rx.var
+    def roadmap_show_loading(self) -> bool:
+        """Show skeletons while the roadmap data is still empty."""
+        return self.roadmap_loading or (not self.roadmap_columns and not self.roadmap_error)
+
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
         self.mobile_nav_open = not self.mobile_nav_open
