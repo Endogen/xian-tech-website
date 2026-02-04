@@ -1,3 +1,4 @@
+import re
 from typing import Any, Optional
 
 import reflex as rx
@@ -46,13 +47,79 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     return rx.box(*children, id=identifier, **kwargs)
 
 
+def _anchor_id(value: str) -> str:
+    """Create a URL-safe anchor id from a heading."""
+    slug = value.lower().replace("&", "and")
+    slug = re.sub(r"[^\w\s-]", "", slug)
+    slug = slug.replace("_", "-")
+    slug = re.sub(r"\s+", "-", slug).strip("-")
+    slug = re.sub(r"-{2,}", "-", slug)
+    return slug
+
+
+def linked_heading(
+    title: str,
+    *,
+    href: Optional[str] = None,
+    anchor_id: Optional[str] = None,
+    size: str = "6",
+    icon_size: int = 18,
+    scroll_margin_top: str = "2rem",
+    **heading_kwargs: Any,
+) -> rx.Component:
+    """Heading with a hover-revealed anchor link icon."""
+    anchor = anchor_id or _anchor_id(title)
+    link_href = href or f"#{anchor}"
+    return rx.link(
+        rx.heading(title, size=size, **heading_kwargs),
+        rx.icon(tag="link", size=icon_size, class_name="anchor-icon"),
+        href=link_href,
+        id=anchor,
+        aria_label=f"Link to {title}",
+        display="inline-flex",
+        align_items="center",
+        gap="0.5rem",
+        text_decoration="none",
+        color="inherit",
+        style={
+            "scrollMarginTop": scroll_margin_top,
+            "& .anchor-icon": {
+                "opacity": "0",
+                "transform": "translateY(1px)",
+                "transition": "opacity 0.2s ease, transform 0.2s ease, color 0.2s ease",
+                "color": TEXT_MUTED,
+            },
+            "&:hover .anchor-icon": {
+                "opacity": "1",
+                "transform": "translateY(0)",
+                "color": ACCENT,
+            },
+            "&:focus-visible .anchor-icon": {
+                "opacity": "1",
+                "transform": "translateY(0)",
+                "color": ACCENT,
+            },
+        },
+    )
+
+
 def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
     """Section block with consistent spacing and a title."""
     spacing = kwargs.pop("spacing", "3")
     margin_top = kwargs.pop("margin_top", "1.5rem")
     heading_size = kwargs.pop("heading_size", "5")
+    heading_id = kwargs.pop("id", None)
+    heading_href = kwargs.pop("href", None)
     return rx.vstack(
-        rx.heading(title, size=heading_size, color=TEXT_PRIMARY, weight="bold"),
+        linked_heading(
+            title,
+            size=heading_size,
+            color=TEXT_PRIMARY,
+            weight="bold",
+            href=heading_href,
+            anchor_id=heading_id,
+            scroll_margin_top="0.5rem",
+        ),
         *children,
         spacing=spacing,
         align_items="start",
@@ -987,6 +1054,7 @@ def footer() -> rx.Component:
             is_external=href.startswith("http"),
             color=TEXT_MUTED,
             size="3",
+            _hover={"color": ACCENT},
         )
 
     def footer_nav_section(section: dict[str, str]) -> rx.Component:

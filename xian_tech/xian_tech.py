@@ -1,7 +1,6 @@
 import reflex as rx
 
 from .pages.abci import abci_page
-from .pages.community import community_page
 from .pages.consensus import consensus_page
 from .pages.contracting import contracting_page
 from .pages.home import home_page
@@ -21,6 +20,7 @@ from .pages.not_found import not_found_page
 app = rx.App(
     theme=rx.theme(appearance="inherit"),
     head_components=[
+        rx.el.style("html { scroll-padding-top: 6.5rem; }"),
         rx.el.link(rel="icon", type="image/png", href="/favicon.png"),
         rx.el.link(rel="shortcut icon", type="image/png", href="/favicon.png"),
     ],
@@ -34,7 +34,6 @@ app.add_page(tooling_page, route="/tooling", title="Tooling & Integrations")
 app.add_page(developers_page, route="/developers", title="Developer Hub")
 app.add_page(about_page, route="/about", title="About the Foundation")
 app.add_page(faq_page, route="/faq", title="FAQ")
-app.add_page(community_page, route="/community")
 app.add_page(contact_page, route="/contact", title="Contact")
 app.add_page(node_network_page, route="/node-network", title="Node & Network")
 app.add_page(roadmap_page, route="/roadmap", title="Roadmap")

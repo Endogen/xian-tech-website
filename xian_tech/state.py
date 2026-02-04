@@ -1,9 +1,12 @@
 import asyncio
+import os
 from typing import Any, TypedDict
 from urllib.parse import quote
 
 import reflex as rx
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 class CommandAction(TypedDict):
@@ -41,6 +44,24 @@ class ActiveCommandInfo(TypedDict):
     placeholder: bool
 
 
+class RoadmapCard(TypedDict):
+    id: str
+    number: int
+    title: str
+    status: str
+    url: str
+    tags: list[str]
+    tags_text: str
+    golden: bool
+
+
+class RoadmapColumn(TypedDict):
+    id: str
+    name: str
+    count: int
+    cards: list[RoadmapCard]
+
+
 class State(rx.State):
     """Global application state."""
 
@@ -53,6 +74,16 @@ class State(rx.State):
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
     sdk_install_copied: bool = False
+    roadmap_loading: bool = False
+    roadmap_error: str = ""
+    roadmap_columns: list[RoadmapColumn] = []
+    roadmap_done_cards: list[RoadmapCard] = []
+    roadmap_done_count: int = 0
+
+    @rx.var
+    def roadmap_show_loading(self) -> bool:
+        """Show skeletons while the roadmap data is still empty."""
+        return self.roadmap_loading or (not self.roadmap_columns and not self.roadmap_error)
 
     def toggle_mobile_nav(self):
         """Toggle the mobile navigation drawer."""
@@ -136,6 +167,229 @@ class State(rx.State):
         yield rx.set_clipboard("pip install xian-py")
         await asyncio.sleep(1.4)
         self.sdk_install_copied = False
+
+    async def load_roadmap(self):
+        """Load the Fizzy roadmap board into state."""
+        if self.roadmap_columns or self.roadmap_loading:
+            return
+
+        column_name_overrides = {
+            "specification": "Design",
+            "working on": "Execute",
+            "testing": "Validate",
+        }
+
+        self.roadmap_loading = True
+        self.roadmap_error = ""
+        yield
+
+        def fetch_board() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+            from .fizzy_api import get_board_cards, get_board_columns
+
+            token = os.getenv("FIZZY_TOKEN", "").strip()
+            account_slug = (
+                os.getenv("FIZZY_ACCOUNT_SLUG", "")
+                or os.getenv("FIZZY_ACCOUNT", "")
+                or "1"
+            ).strip().lstrip("/")
+            board_id = (
+                os.getenv("FIZZY_BOARD_ID", "")
+                or os.getenv("FIZZY_BOARD", "")
+                or "03fiomkit5oknquymk0ooi26m"
+            ).strip()
+            base_url = (
+                os.getenv("FIZZY_BASE_URL", "")
+                or os.getenv("FIZZY_API_URL", "")
+                or "https://tasks.xian.technology"
+            ).strip()
+
+            if not token:
+                raise ValueError("Missing FIZZY_TOKEN for Fizzy API access.")
+            if not account_slug or not board_id:
+                raise ValueError("Missing FIZZY_ACCOUNT_SLUG or FIZZY_BOARD_ID.")
+
+            def normalize_id(value: Any) -> str:
+                return str(value).strip()
+
+            def is_done_column(name: str) -> bool:
+                normalized = name.strip().lower()
+                done_keywords = (
+                    "done",
+                    "complete",
+                    "completed",
+                    "finished",
+                    "shipped",
+                    "released",
+                )
+                return any(keyword in normalized for keyword in done_keywords)
+
+            columns = get_board_columns(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+            )
+            open_cards = get_board_cards(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+            )
+            closed_cards = get_board_cards(
+                base_url=base_url,
+                account_slug=account_slug,
+                token=token,
+                board_id=board_id,
+                indexed_by="closed",
+            )
+
+            columns = [col for col in columns if isinstance(col, dict)]
+            open_cards = [card for card in open_cards if isinstance(card, dict)]
+            closed_cards = [card for card in closed_cards if isinstance(card, dict)]
+            board_id_value = str(board_id)
+
+            def is_same_board(card: dict[str, Any]) -> bool:
+                board = card.get("board") or {}
+                if board.get("id") is not None:
+                    return str(board.get("id")) == board_id_value
+                if card.get("board_id") is not None:
+                    return str(card.get("board_id")) == board_id_value
+                return True
+
+            open_cards = [card for card in open_cards if is_same_board(card)]
+            closed_cards = [card for card in closed_cards if is_same_board(card)]
+
+            columns_sorted = sorted(
+                columns,
+                key=lambda col: (col.get("position") is None, col.get("position") or 0),
+            )
+            done_column_ids = {
+                normalize_id(col.get("id", ""))
+                for col in columns_sorted
+                if is_done_column(col.get("name", ""))
+            }
+            cards_by_column: dict[str, list[dict[str, Any]]] = {
+                normalize_id(col.get("id", "")): []
+                for col in columns_sorted
+                if normalize_id(col.get("id", "")) not in done_column_ids
+            }
+            untriaged: list[dict[str, Any]] = []
+            done_cards: list[dict[str, Any]] = []
+            done_card_ids: set[str] = set()
+
+            def extract_tags(raw_tags: Any) -> list[str]:
+                if not raw_tags:
+                    return []
+                if isinstance(raw_tags, list):
+                    if raw_tags and isinstance(raw_tags[0], dict):
+                        return [
+                            str(tag.get("name", "")).strip()
+                            for tag in raw_tags
+                            if tag.get("name")
+                        ]
+                    return [str(tag).strip() for tag in raw_tags if str(tag).strip()]
+                return [str(raw_tags).strip()]
+
+            excluded_tags_raw = os.getenv("FIZZY_EXCLUDE_TAGS", "").strip()
+            excluded_tags = {
+                tag.strip().lower()
+                for tag in excluded_tags_raw.split(",")
+                if tag.strip()
+            }
+
+            def is_excluded(card: dict[str, Any]) -> bool:
+                if not excluded_tags:
+                    return False
+                tags = [tag.lower() for tag in extract_tags(card.get("tags"))]
+                return any(tag in excluded_tags for tag in tags)
+
+            if excluded_tags:
+                open_cards = [card for card in open_cards if not is_excluded(card)]
+                closed_cards = [card for card in closed_cards if not is_excluded(card)]
+
+            def build_raw_card_payload(data: dict[str, Any]) -> dict[str, Any]:
+                tags = extract_tags(data.get("tags"))
+                return {
+                    "id": data.get("id", ""),
+                    "number": data.get("number", 0),
+                    "title": data.get("title", ""),
+                    "status": data.get("status", ""),
+                    "url": data.get("url", ""),
+                    "tags": tags,
+                    "tags_text": ", ".join(tags),
+                    "golden": bool(data.get("golden", False)),
+                    "closed": bool(data.get("closed", False)),
+                }
+
+            def add_done_payload(payload: dict[str, Any]) -> None:
+                card_id = str(payload.get("id", ""))
+                if not card_id or card_id in done_card_ids:
+                    return
+                done_cards.append(payload)
+                done_card_ids.add(card_id)
+
+            for card in open_cards:
+                column_id = None
+                column = card.get("column") or {}
+                if card.get("column_id") is not None:
+                    column_id = normalize_id(card.get("column_id"))
+                elif column.get("id") is not None:
+                    column_id = normalize_id(column.get("id"))
+
+                card_payload = build_raw_card_payload(card)
+                if column_id in done_column_ids or card_payload.get("closed"):
+                    add_done_payload(card_payload)
+                    continue
+                if column_id and column_id in cards_by_column:
+                    cards_by_column[column_id].append(card_payload)
+                else:
+                    untriaged.append(card_payload)
+
+            for column_id, items in cards_by_column.items():
+                items.sort(key=lambda item: item["number"])
+
+            for card in closed_cards:
+                add_done_payload(build_raw_card_payload(card))
+
+            done_payload = sorted(done_cards, key=lambda item: item["number"])
+
+            columns_payload = []
+            for col in columns_sorted:
+                col_id = normalize_id(col.get("id", ""))
+                if col_id in done_column_ids:
+                    continue
+                normalized = str(col.get("name", "")).strip().lower()
+                columns_payload.append(
+                    {
+                        "id": col.get("id", ""),
+                        "name": column_name_overrides.get(normalized, col.get("name", "")),
+                        "cards": cards_by_column.get(col_id, []),
+                        "count": len(cards_by_column.get(col_id, [])),
+                    }
+                )
+
+            untriaged_sorted = sorted(untriaged, key=lambda item: item["number"])
+            columns_payload.insert(
+                0,
+                {
+                    "id": "untriaged",
+                    "name": "Investigate",
+                    "cards": untriaged_sorted,
+                    "count": len(untriaged_sorted),
+                },
+            )
+
+            return columns_payload, done_payload
+
+        try:
+            columns_payload, done_payload = await asyncio.to_thread(fetch_board)
+            self.roadmap_columns = columns_payload
+            self.roadmap_done_cards = done_payload
+            self.roadmap_done_count = len(done_payload)
+        except Exception as exc:  # pragma: no cover - surface user-friendly errors
+            self.roadmap_error = str(exc)
+        finally:
+            self.roadmap_loading = False
 
     def submit_contact_form(self, form_data: dict[str, Any]):
         """Open a pre-filled email draft with the contact form details."""

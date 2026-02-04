@@ -2,7 +2,7 @@ from typing import Any
 
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import linked_heading, page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -357,7 +357,7 @@ def team_section() -> rx.Component:
     """Team overview section."""
     return section(
         rx.vstack(
-            rx.heading("Team", size="7", color=TEXT_PRIMARY, weight="bold"),
+            linked_heading("Team", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
                 "The Xian Foundation is led by a small group of researchers and engineers stewarding the Xian stack.",
                 size="4",
@@ -384,7 +384,7 @@ def history_section() -> rx.Component:
     """Timeline of notable foundation milestones."""
     return section(
         rx.vstack(
-            rx.heading("History", size="7", color=TEXT_PRIMARY, weight="bold"),
+            linked_heading("History", size="7", color=TEXT_PRIMARY, weight="bold"),
             rx.text(
                 "Notable milestones that mark the evolution of Xian.",
                 size="4",
@@ -648,7 +648,6 @@ def about_page() -> rx.Component:
                     line_height="1.2",
                 ),
             ),
-            padding_bottom="3rem",
         ),
         section(
             rx.vstack(

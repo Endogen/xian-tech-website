@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import linked_heading, page_layout, section, section_panel, subsection
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -46,6 +46,14 @@ SEARCH_SECTIONS = [
         "href": "/consensus",
         "keywords": ["ABCI++", "Evidence", "Validators"],
     },
+    {
+        "title": "How it works",
+        "subtitle": "Propose, prevote, precommit, commit—the simplified consensus flow.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/consensus",
+        "keywords": ["Propose", "Prevote", "Precommit", "Commit"],
+    },
 ]
 
 
@@ -66,12 +74,38 @@ def consensus_page() -> rx.Component:
             _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
         )
 
-    def bullet(text: str) -> rx.Component:
-        return rx.hstack(
-            rx.icon(tag="check", size=18, color=ACCENT),
-            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.7"),
-            spacing="3",
-            align_items="start",
+    def choice_card(title: str, body: str, icon: str) -> rx.Component:
+        return rx.box(
+            rx.vstack(
+                rx.flex(
+                    rx.icon(tag=icon, size=28, color=ACCENT),
+                    rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
+                    direction={"base": "row", "lg": "column"},
+                    align={"base": "center", "lg": "start"},
+                    spacing="3",
+                ),
+                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+                spacing="3",
+                align_items="start",
+            ),
+            padding="2rem",
+            background=SURFACE,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="14px",
+            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
+            height="100%",
+            width="100%",
+            display="flex",
+            flex_direction="column",
+            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+            background_size="200% 200%",
+            background_position="left center",
+            _hover={
+                "borderColor": ACCENT,
+                "backgroundColor": SURFACE_HOVER,
+                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+                "backgroundPosition": "right center",
+            },
         )
 
     return page_layout(
@@ -84,97 +118,188 @@ def consensus_page() -> rx.Component:
                     border=f"1px solid {ACCENT_GLOW}",
                     border_radius="8px",
                 ),
-                rx.heading("CometBFT Consensus", size="8", color=TEXT_PRIMARY, line_height="1.15", weight="bold"),
+                rx.heading(
+                    "Network Consensus",
+                    size="8",
+                    color=TEXT_PRIMARY,
+                    line_height="1.15",
+                    weight="bold",
+                ),
                 rx.text(
-                    "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
-                    "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
-                    "so Xian can keep its Python contracting engine while relying on a proven consensus core.",
+                    "Network consensus keeps all validators aligned on one ordered history so blocks are finalized "
+                    "predictably and every node sees the same state. CometBFT provides this foundation for Xian, giving "
+                    "us a reliable, fast consensus core to build Python-first applications on top of.",
                     size="4",
                     color=TEXT_MUTED,
-                    max_width="900px",
+                    width="100%",
                     line_height="1.7",
-                ),
-                rx.vstack(
-                    rx.heading("Why we chose CometBFT", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.vstack(
-                        bullet("ABCI keeps the application language-agnostic, so the Python contracting layer stays intact."),
-                        bullet("The mempool validates transactions with CheckTx and only relays valid ones to peers."),
-                        bullet("ABCI’s execution flow (CheckTx → FinalizeBlock → Commit) gives clear checkpoints for validation and state commits."),
-                        bullet("ABCI++ adds PrepareProposal, ProcessProposal, ExtendVote, and VerifyVoteExtension hooks for richer consensus logic."),
-                        spacing="2",
-                        align_items="start",
-                    ),
-                    spacing="3",
-                    align_items="start",
                 ),
                 spacing="6",
                 align_items="start",
             )
         ),
         section(
-            rx.grid(
-                info_card(
-                    "BFT replication",
-                    "CometBFT keeps every non-faulty node on the same ordered transaction log and tolerates Byzantine failures below one-third of the validator set.",
+            section_panel(
+                rx.flex(
+                    linked_heading("CometBFT", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/cometbft/cometbft",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://docs.cometbft.com/v0.38",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
                 ),
-                info_card(
-                    "Consensus engine + ABCI",
-                    "The consensus engine is decoupled from the application via ABCI, so the state machine can be written in any language.",
+                rx.text(
+                    "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
+                    "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
+                    "so Xian can use its Python contracting engine while relying on a proven consensus core. "
+                    "CometBFT itself is implemented in Go for performance, while Xian keeps the user-facing stack in Python.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
                 ),
-                info_card(
-                    "Mempool validation",
-                    "CheckTx validates incoming transactions and only relays valid ones to peers before they enter consensus.",
-                ),
-                info_card(
-                    "Multi-connection ABCI",
-                    "CometBFT maintains multiple ABCI connections (mempool, consensus, snapshot, and query) to keep responsibilities separated.",
-                ),
-                template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
-                gap="1.5rem",
-            ),
-            padding_top="0",
-        ),
-        section(
-            rx.vstack(
-                rx.heading("ABCI execution flow", size="6", color=TEXT_PRIMARY, weight="bold"),
                 rx.grid(
-                    info_card(
-                        "1. CheckTx",
-                        "Transactions are validated before entering the mempool; only valid transactions are gossiped to peers.",
+                    choice_card(
+                        "Security",
+                        "Byzantine fault tolerance keeps the network secure as long as less than one-third of voting power is byzantine.",
+                        "shield",
                     ),
-                    info_card(
-                        "2. FinalizeBlock",
-                        "When consensus decides a block, FinalizeBlock executes transactions and prepares the state update.",
+                    choice_card(
+                        "Scalability",
+                        "CometBFT is designed for high throughput and is reported to reach thousands of TPS; real results depend on the application and configuration.",
+                        "layers",
                     ),
-                    info_card(
-                        "3. Commit",
-                        "Commit persists state and returns a cryptographic commitment that is embedded in the next block header.",
+                    choice_card(
+                        "Interoperability",
+                        "ABCI enables application-specific chains, and the Cosmos ecosystem uses CometBFT to connect independent networks.",
+                        "link",
                     ),
-                    template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
-                    gap="1.5rem",
+                    choice_card(
+                        "Fast finality",
+                        "Blocks finalize in seconds once more than two-thirds precommit, delivering deterministic settlement without reorgs.",
+                        "bolt",
+                    ),
+                    choice_card(
+                        "Developer freedom",
+                        "ABCI lets developers write chain logic in their language of choice while CometBFT handles consensus and networking.",
+                        "code",
+                    ),
+                    choice_card(
+                        "Modernized Tendermint",
+                        "CometBFT is the fork and successor to Tendermint Core, continuing the design with efficiency improvements for today’s networks.",
+                        "satellite",
+                    ),
+                    columns={
+                        "base": "repeat(1, minmax(0, 1fr))",
+                        "md": "repeat(2, minmax(0, 1fr))",
+                        "lg": "repeat(3, minmax(0, 1fr))",
+                    },
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
-                spacing="4",
-                align_items="start",
+                subsection(
+                    "Properties",
+                    rx.text(
+                        "Additionally, the following properties make CometBFT the perfect choice for us. "
+                        "They reinforce reliability, help the network stay consistent under load, and keep the "
+                        "consensus layer predictable so the Python application layer can stay focused on contracts.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    rx.grid(
+                        choice_card(
+                            "BFT replication",
+                            "CometBFT keeps every non-faulty node on the same ordered transaction log and tolerates Byzantine failures below one-third of the validator set.",
+                            "shield",
+                        ),
+                        choice_card(
+                            "Consensus engine + ABCI",
+                            "The consensus engine is decoupled from the application via ABCI, so the state machine can be written in any language.",
+                            "link",
+                        ),
+                        choice_card(
+                            "Mempool validation",
+                            "CheckTx validates incoming transactions and only relays valid ones to peers before they enter consensus.",
+                            "check",
+                        ),
+                        choice_card(
+                            "Multi-connection ABCI",
+                            "CometBFT maintains multiple ABCI connections (mempool, consensus, snapshot, and query) to keep responsibilities separated.",
+                            "layers",
+                        ),
+                        choice_card(
+                            "Instant finality",
+                            "Blocks finalize deterministically—no probabilistic forks or reorgs once a block is committed.",
+                            "bolt",
+                        ),
+                        choice_card(
+                            "Light client protocol",
+                            "CometBFT specifies a light client protocol for securely verifying the latest state without running a full node.",
+                            "satellite",
+                        ),
+                        columns={
+                            "base": "repeat(1, minmax(0, 1fr))",
+                            "md": "repeat(2, minmax(0, 1fr))",
+                            "lg": "repeat(3, minmax(0, 1fr))",
+                        },
+                        spacing="4",
+                        width="100%",
+                        align="stretch",
+                    ),
+                ),
+                subsection(
+                    "How it works",
+                    rx.text(
+                        "Validators take turns proposing blocks and voting, weighted by their stake. Each round moves "
+                        "through propose, prevote (for a block or nil), and precommit (for a block or nil). A block is "
+                        "committed once more than two-thirds of voting power precommits the same block; otherwise the "
+                        "process advances to a new round until consensus is reached, delivering deterministic finality.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    rx.image(
+                        src="/cometbft.png",
+                        alt="CometBFT consensus flow diagram",
+                        width="100%",
+                        max_width="960px",
+                        border_radius="12px",
+                        align_self="center",
+                    ),
+                ),
             )
-        ),
-        section(
-            rx.grid(
-                info_card(
-                    "ABCI++ hooks",
-                    "ABCI 2.0 introduces PrepareProposal, ProcessProposal, ExtendVote, and VerifyVoteExtensions for application-aware proposal and vote workflows.",
-                ),
-                info_card(
-                    "Evidence pipeline",
-                    "CometBFT gossips evidence of Byzantine behavior and commits it on-chain; applications decide how to punish faults (e.g., slashing).",
-                ),
-                info_card(
-                    "Light client support",
-                    "CometBFT specifies a light client protocol for verifying the latest state without running a full node.",
-                ),
-                template_columns={"base": "1fr", "md": "repeat(3, 1fr)"},
-                gap="1.5rem",
-            ),
-            padding_top="0",
         ),
     )
 

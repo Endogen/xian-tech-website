@@ -2,7 +2,9 @@ assets/external/
 .claude
 .states
 .web
+.tmp
 .idea
 *.db
 __pycache__/
 *.py[cod]
+.env
