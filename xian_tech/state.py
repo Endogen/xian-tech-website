@@ -95,7 +95,7 @@ class State(rx.State):
     contact_form_email: str = ""
     contact_form_message: str = ""
     contact_last_sent_at: float = 0.0
-    contact_cooldown_until: float = 0.0
+    contact_cooldown_remaining: int = 0
 
     @rx.var
     def roadmap_show_loading(self) -> bool:
@@ -422,8 +422,8 @@ class State(rx.State):
 
         cooldown_seconds = int(os.getenv("CONTACT_SUBMISSION_COOLDOWN_SECONDS", "30"))
         now = time.time()
-        if self.contact_cooldown_until and now < self.contact_cooldown_until:
-            remaining = int(self.contact_cooldown_until - now)
+        if self.contact_cooldown_remaining > 0:
+            remaining = self.contact_cooldown_remaining
             self.contact_error = (
                 f"Please wait {remaining} seconds before sending another message."
             )
@@ -446,8 +446,6 @@ class State(rx.State):
             self.contact_error = "Please fix the highlighted fields below."
             self.contact_submission_inflight = False
             return
-
-        self.contact_cooldown_until = now + cooldown_seconds
 
         subject_bits = [topic or "Foundation contact"]
         if name:
@@ -487,8 +485,17 @@ class State(rx.State):
         else:
             self.contact_status = "Message sent. The foundation will follow up soon."
             self.contact_last_sent_at = now
+            if cooldown_seconds > 0:
+                self.contact_cooldown_remaining = cooldown_seconds
         finally:
             self.contact_submission_inflight = False
+
+        if self.contact_cooldown_remaining > 0:
+            yield
+            while self.contact_cooldown_remaining > 0:
+                await asyncio.sleep(1)
+                self.contact_cooldown_remaining = max(0, self.contact_cooldown_remaining - 1)
+                yield
 
     def set_contact_email(self, value: str):
         """Live-validate the email field as the user types."""

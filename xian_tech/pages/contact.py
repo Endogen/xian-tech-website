@@ -244,7 +244,15 @@ def contact_page() -> rx.Component:
                                 on_change=State.set_contact_message,
                             ),
                             rx.button(
-                                rx.cond(State.contact_submission_inflight, "Sending...", "Send message"),
+                                rx.cond(
+                                    State.contact_submission_inflight,
+                                    "Sending...",
+                                    rx.cond(
+                                        State.contact_cooldown_remaining > 0,
+                                        "Wait " + State.contact_cooldown_remaining.to_string() + "s...",
+                                        "Send message",
+                                    ),
+                                ),
                                 type="submit",
                                 size="4",
                                 background_color=ACCENT,
@@ -253,7 +261,8 @@ def contact_page() -> rx.Component:
                                 padding="1.1rem 1.6rem",
                                 width="100%",
                                 cursor="pointer",
-                                disabled=State.contact_submission_inflight,
+                                disabled=State.contact_submission_inflight
+                                | (State.contact_cooldown_remaining > 0),
                                 _hover={"backgroundColor": ACCENT_HOVER},
                                 _disabled={"opacity": "0.65", "cursor": "not-allowed"},
                             ),
