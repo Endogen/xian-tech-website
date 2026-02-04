@@ -188,7 +188,7 @@ class State(rx.State):
 
     async def load_roadmap(self):
         """Load the Fizzy roadmap board into state."""
-        if self.roadmap_columns or self.roadmap_loading:
+        if self.roadmap_loading:
             return
 
         column_name_overrides = {
@@ -408,6 +408,17 @@ class State(rx.State):
             self.roadmap_error = str(exc)
         finally:
             self.roadmap_loading = False
+
+    async def refresh_roadmap(self):
+        """Force reload the roadmap data when the page is visited."""
+        if self.roadmap_loading:
+            return
+        self.roadmap_columns = []
+        self.roadmap_done_cards = []
+        self.roadmap_done_count = 0
+        self.roadmap_error = ""
+        yield
+        yield State.load_roadmap
 
     async def submit_contact_form(self, form_data: dict[str, Any]):
         """Send the contact form details via SMTP."""

@@ -251,7 +251,6 @@ def roadmap_page() -> rx.Component:
                         ),
                     ),
                 ),
-                on_mount=State.load_roadmap,
             ),
             padding_top="0",
         ),

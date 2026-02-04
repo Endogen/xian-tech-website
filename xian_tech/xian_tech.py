@@ -15,6 +15,7 @@ from .pages.samples import samples_page
 from .pages.tutorials import tutorials_page
 from .pages.tooling import tooling_page
 from .pages.not_found import not_found_page
+from .state import State
 
 
 app = rx.App(
@@ -36,7 +37,7 @@ app.add_page(about_page, route="/about", title="About the Foundation")
 app.add_page(faq_page, route="/faq", title="FAQ")
 app.add_page(contact_page, route="/contact", title="Contact")
 app.add_page(node_network_page, route="/node-network", title="Node & Network")
-app.add_page(roadmap_page, route="/roadmap", title="Roadmap")
+app.add_page(roadmap_page, route="/roadmap", title="Roadmap", on_load=State.refresh_roadmap)
 app.add_page(samples_page, route="/samples", title="Samples & SDKs")
 app.add_page(tutorials_page, route="/tutorials", title="Tutorials & First Steps")
 app.add_page(api_page, route="/api", title="API References")
