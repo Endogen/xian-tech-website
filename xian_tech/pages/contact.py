@@ -1,3 +1,5 @@
+from typing import Any
+
 import reflex as rx
 
 from ..components.common import page_layout, section
@@ -26,6 +28,10 @@ SEARCH_SECTIONS = [
     }
 ]
 
+EMAIL_PATTERN = r"^(?=.{3,254}$)(?=.{1,64}@)[A-Za-z0-9](?:[A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$"
+ERROR_COLOR = rx.color_mode_cond(light="#dc2626", dark="#f87171")
+ERROR_GLOW = rx.color_mode_cond(light="rgba(220, 38, 38, 0.25)", dark="rgba(248, 113, 113, 0.25)")
+
 
 def contact_page() -> rx.Component:
     """Contact page with message form."""
@@ -37,73 +43,114 @@ def contact_page() -> rx.Component:
         *,
         field_type: str = "text",
         required: bool = False,
+        pattern: str | None = None,
+        title: str | None = None,
+        error: rx.Var | str = "",
+        value: rx.Var | str | None = None,
+        on_change: Any | None = None,
     ) -> rx.Component:
+        has_error = error != ""
         placeholder_color = rx.color_mode_cond(light="#6b7280", dark="#9ca3af")
+        input_props = {
+            "name": name,
+            "id": name,
+            "placeholder": placeholder,
+            "type": field_type,
+            "required": required,
+            "pattern": pattern,
+            "title": title,
+            "width": "100%",
+            "height": "3.5rem",
+            "padding": "0.9rem 1rem",
+            "border": rx.cond(has_error, f"1px solid {ERROR_COLOR}", f"1px solid {BORDER_COLOR}"),
+            "border_radius": "10px",
+            "background": SURFACE_BRIGHT,
+            "color": TEXT_PRIMARY,
+            "font_size": "1rem",
+            "line_height": "1.6",
+            "style": {"& input::placeholder": {"color": placeholder_color, "opacity": "1"}},
+            "_focus": {
+                "borderColor": rx.cond(has_error, ERROR_COLOR, ACCENT),
+                "outline": "none",
+                "boxShadow": rx.cond(has_error, f"0 0 0 3px {ERROR_GLOW}", f"0 0 0 3px {ACCENT_GLOW}"),
+            },
+            "_focus_within": {
+                "borderColor": rx.cond(has_error, ERROR_COLOR, ACCENT),
+                "outline": "none",
+                "boxShadow": rx.cond(has_error, f"0 0 0 3px {ERROR_GLOW}", f"0 0 0 3px {ACCENT_GLOW}"),
+            },
+        }
+        if value is not None:
+            input_props["value"] = value
+        if on_change is not None:
+            input_props["on_change"] = on_change
+
         return rx.vstack(
-            rx.text(label, size="2", weight="medium", color=TEXT_MUTED),
-            rx.input(
-                name=name,
-                id=name,
-                placeholder=placeholder,
-                type=field_type,
-                required=required,
-                width="100%",
-                height="3.5rem",
-                padding="0.9rem 1rem",
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="10px",
-                background=SURFACE_BRIGHT,
-                color=TEXT_PRIMARY,
-                font_size="1rem",
-                line_height="1.6",
-                style={"& input::placeholder": {"color": placeholder_color, "opacity": "1"}},
-                _focus={
-                    "borderColor": ACCENT,
-                    "outline": "none",
-                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
-                },
-                _focus_within={
-                    "borderColor": ACCENT,
-                    "outline": "none",
-                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
-                },
+            rx.text(
+                f"{label}{' *' if required else ''}",
+                size="2",
+                weight="medium",
+                color=TEXT_MUTED,
+            ),
+            rx.input(**input_props),
+            rx.cond(
+                has_error,
+                rx.text(error, size="2", color=ERROR_COLOR),
+                rx.box(),
             ),
             spacing="2",
             align_items="start",
             width="100%",
         )
 
-    def message_field() -> rx.Component:
+    def message_field(
+        *,
+        error: rx.Var | str = "",
+        value: rx.Var | str | None = None,
+        on_change: Any | None = None,
+    ) -> rx.Component:
+        has_error = error != ""
         placeholder_color = rx.color_mode_cond(light="#6b7280", dark="#9ca3af")
+        text_area_props = {
+            "name": "message",
+            "id": "message",
+            "placeholder": "Tell us what you are working on, and how we can help.",
+            "required": True,
+            "rows": "6",
+            "resize": "vertical",
+            "width": "100%",
+            "min_height": "220px",
+            "padding": "0.9rem 1rem",
+            "border": rx.cond(has_error, f"1px solid {ERROR_COLOR}", f"1px solid {BORDER_COLOR}"),
+            "border_radius": "10px",
+            "background": SURFACE_BRIGHT,
+            "color": TEXT_PRIMARY,
+            "font_size": "1rem",
+            "line_height": "1.6",
+            "style": {"& textarea::placeholder": {"color": placeholder_color, "opacity": "1"}},
+            "_focus": {
+                "borderColor": rx.cond(has_error, ERROR_COLOR, ACCENT),
+                "outline": "none",
+                "boxShadow": rx.cond(has_error, f"0 0 0 3px {ERROR_GLOW}", f"0 0 0 3px {ACCENT_GLOW}"),
+            },
+            "_focus_within": {
+                "borderColor": rx.cond(has_error, ERROR_COLOR, ACCENT),
+                "outline": "none",
+                "boxShadow": rx.cond(has_error, f"0 0 0 3px {ERROR_GLOW}", f"0 0 0 3px {ACCENT_GLOW}"),
+            },
+        }
+        if value is not None:
+            text_area_props["value"] = value
+        if on_change is not None:
+            text_area_props["on_change"] = on_change
+
         return rx.vstack(
-            rx.text("Message", size="2", weight="medium", color=TEXT_MUTED),
-            rx.text_area(
-                name="message",
-                id="message",
-                placeholder="Tell us what you are working on, and how we can help.",
-                required=True,
-                rows="6",
-                resize="vertical",
-                width="100%",
-                min_height="220px",
-                padding="0.9rem 1rem",
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="10px",
-                background=SURFACE_BRIGHT,
-                color=TEXT_PRIMARY,
-                font_size="1rem",
-                line_height="1.6",
-                style={"& textarea::placeholder": {"color": placeholder_color, "opacity": "1"}},
-                _focus={
-                    "borderColor": ACCENT,
-                    "outline": "none",
-                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
-                },
-                _focus_within={
-                    "borderColor": ACCENT,
-                    "outline": "none",
-                    "boxShadow": f"0 0 0 3px {ACCENT_GLOW}",
-                },
+            rx.text("Message *", size="2", weight="medium", color=TEXT_MUTED),
+            rx.text_area(**text_area_props),
+            rx.cond(
+                has_error,
+                rx.text(error, size="2", color=ERROR_COLOR),
+                rx.box(),
             ),
             spacing="2",
             align_items="start",
@@ -168,6 +215,11 @@ def contact_page() -> rx.Component:
                                     "jane@company.com",
                                     field_type="email",
                                     required=True,
+                                    pattern=EMAIL_PATTERN,
+                                    title="Enter a valid email address (example: name@domain.com).",
+                                    error=State.contact_email_error,
+                                    value=State.contact_form_email,
+                                    on_change=State.set_contact_email,
                                 ),
                                 columns={
                                     "base": "repeat(1, minmax(0, 1fr))",
@@ -186,7 +238,11 @@ def contact_page() -> rx.Component:
                                 spacing="4",
                                 width="100%",
                             ),
-                            message_field(),
+                            message_field(
+                                error=State.contact_message_error,
+                                value=State.contact_form_message,
+                                on_change=State.set_contact_message,
+                            ),
                             rx.button(
                                 rx.cond(State.contact_submission_inflight, "Sending...", "Send message"),
                                 type="submit",
@@ -206,7 +262,7 @@ def contact_page() -> rx.Component:
                             width="100%",
                         ),
                         on_submit=State.submit_contact_form,
-                        reset_on_submit=True,
+                        reset_on_submit=False,
                     ),
                     padding="3rem",
                     background=SURFACE,

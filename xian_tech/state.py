@@ -1,5 +1,6 @@
 import asyncio
 import os
+import re
 import time
 from typing import Any, TypedDict
 
@@ -8,6 +9,12 @@ from dotenv import load_dotenv
 
 from .contact_email import send_contact_email
 load_dotenv()
+
+EMAIL_PATTERN = re.compile(
+    r"^(?=.{3,254}$)(?=.{1,64}@)[A-Z0-9](?:[A-Z0-9._%+-]{0,62}[A-Z0-9])?@"
+    r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,63}$",
+    re.IGNORECASE,
+)
 
 
 class CommandAction(TypedDict):
@@ -83,7 +90,12 @@ class State(rx.State):
     contact_submission_inflight: bool = False
     contact_status: str = ""
     contact_error: str = ""
+    contact_email_error: str = ""
+    contact_message_error: str = ""
+    contact_form_email: str = ""
+    contact_form_message: str = ""
     contact_last_sent_at: float = 0.0
+    contact_cooldown_until: float = 0.0
 
     @rx.var
     def roadmap_show_loading(self) -> bool:
@@ -403,13 +415,15 @@ class State(rx.State):
 
         self.contact_error = ""
         self.contact_status = ""
+        self.contact_email_error = ""
+        self.contact_message_error = ""
         self.contact_submission_inflight = True
         yield
 
         cooldown_seconds = int(os.getenv("CONTACT_SUBMISSION_COOLDOWN_SECONDS", "30"))
         now = time.time()
-        if self.contact_last_sent_at and now - self.contact_last_sent_at < cooldown_seconds:
-            remaining = int(cooldown_seconds - (now - self.contact_last_sent_at))
+        if self.contact_cooldown_until and now < self.contact_cooldown_until:
+            remaining = int(self.contact_cooldown_until - now)
             self.contact_error = (
                 f"Please wait {remaining} seconds before sending another message."
             )
@@ -417,20 +431,23 @@ class State(rx.State):
             return
 
         name = (form_data.get("name") or "").strip()
-        email = (form_data.get("email") or "").strip()
+        email = (form_data.get("email") or self.contact_form_email or "").strip()
         organization = (form_data.get("organization") or "").strip()
         topic = (form_data.get("topic") or "").strip()
-        message = (form_data.get("message") or "").strip()
+        message = (form_data.get("message") or self.contact_form_message or "").strip()
 
-        if not email:
-            self.contact_error = "Please provide a valid email address."
-            self.contact_submission_inflight = False
-            return
+        if not email or not EMAIL_PATTERN.match(email):
+            self.contact_email_error = "Enter a valid email address (example: name@domain.com)."
 
         if not message:
-            self.contact_error = "Please include a message."
+            self.contact_message_error = "Please include a message so we can help."
+
+        if self.contact_email_error or self.contact_message_error:
+            self.contact_error = "Please fix the highlighted fields below."
             self.contact_submission_inflight = False
             return
+
+        self.contact_cooldown_until = now + cooldown_seconds
 
         subject_bits = [topic or "Foundation contact"]
         if name:
@@ -472,6 +489,31 @@ class State(rx.State):
             self.contact_last_sent_at = now
         finally:
             self.contact_submission_inflight = False
+
+    def set_contact_email(self, value: str):
+        """Live-validate the email field as the user types."""
+        email = value.strip()
+        self.contact_form_email = value
+        self.contact_status = ""
+        self.contact_error = ""
+        if not email:
+            self.contact_email_error = "Email is required."
+            return
+        if not EMAIL_PATTERN.match(email):
+            self.contact_email_error = "Enter a valid email address (example: name@domain.com)."
+            return
+        self.contact_email_error = ""
+
+    def set_contact_message(self, value: str):
+        """Live-validate the message field as the user types."""
+        message = value.strip()
+        self.contact_form_message = value
+        self.contact_status = ""
+        self.contact_error = ""
+        if not message:
+            self.contact_message_error = "Please include a message so we can help."
+            return
+        self.contact_message_error = ""
 
     def command_palette_select_active(self):
         """Navigate to the currently selected item."""
