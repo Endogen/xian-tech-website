@@ -41,12 +41,14 @@ FIZZY_TOKEN=your_read_only_token
 FIZZY_ACCOUNT_SLUG=1
 FIZZY_BOARD_ID=03fiomkit5oknquymk0ooi26m
 FIZZY_BASE_URL=https://tasks.xian.technology
+FIZZY_EXCLUDE_TAGS=internal,experimental
 ```
 
 - `FIZZY_TOKEN` is required to call the Fizzy API.
 - `FIZZY_ACCOUNT_SLUG` defaults to `1`.
 - `FIZZY_BOARD_ID` defaults to `03fiomkit5oknquymk0ooi26m`.
 - `FIZZY_BASE_URL` defaults to `https://tasks.xian.technology`.
+- `FIZZY_EXCLUDE_TAGS` is a comma-separated list of tags to hide from the roadmap (case-insensitive).
 
 ## Installation
 

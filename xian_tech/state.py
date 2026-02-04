@@ -290,6 +290,23 @@ class State(rx.State):
                     return [str(tag).strip() for tag in raw_tags if str(tag).strip()]
                 return [str(raw_tags).strip()]
 
+            excluded_tags_raw = os.getenv("FIZZY_EXCLUDE_TAGS", "").strip()
+            excluded_tags = {
+                tag.strip().lower()
+                for tag in excluded_tags_raw.split(",")
+                if tag.strip()
+            }
+
+            def is_excluded(card: dict[str, Any]) -> bool:
+                if not excluded_tags:
+                    return False
+                tags = [tag.lower() for tag in extract_tags(card.get("tags"))]
+                return any(tag in excluded_tags for tag in tags)
+
+            if excluded_tags:
+                open_cards = [card for card in open_cards if not is_excluded(card)]
+                closed_cards = [card for card in closed_cards if not is_excluded(card)]
+
             def build_raw_card_payload(data: dict[str, Any]) -> dict[str, Any]:
                 tags = extract_tags(data.get("tags"))
                 return {
