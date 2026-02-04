@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import feature_card, linked_heading, page_layout, section, terminal_prompt
+from ..components.common import linked_heading, page_layout, section
 from ..data import CORE_COMPONENTS, NOTEWORTHY_QUOTES
 from ..state import State
 from ..theme import (
@@ -9,10 +9,8 @@ from ..theme import (
     ACCENT_HOVER,
     ACCENT_SOFT,
     BORDER_COLOR,
-    CODE_BG,
     PRIMARY_BG,
     SURFACE,
-    SURFACE_BRIGHT,
     SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
