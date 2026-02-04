@@ -96,6 +96,7 @@ class State(rx.State):
     contact_form_message: str = ""
     contact_last_sent_at: float = 0.0
     contact_cooldown_remaining: int = 0
+    contact_form_key: int = 0
 
     @rx.var
     def roadmap_show_loading(self) -> bool:
@@ -487,6 +488,9 @@ class State(rx.State):
             self.contact_last_sent_at = now
             if cooldown_seconds > 0:
                 self.contact_cooldown_remaining = cooldown_seconds
+            self.contact_form_email = ""
+            self.contact_form_message = ""
+            self.contact_form_key += 1
         finally:
             self.contact_submission_inflight = False
 

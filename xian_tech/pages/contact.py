@@ -272,6 +272,7 @@ def contact_page() -> rx.Component:
                         ),
                         on_submit=State.submit_contact_form,
                         reset_on_submit=False,
+                        key=State.contact_form_key,
                     ),
                     padding="3rem",
                     background=SURFACE,
