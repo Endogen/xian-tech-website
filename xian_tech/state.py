@@ -1,11 +1,12 @@
 import asyncio
 import os
+import time
 from typing import Any, TypedDict
-from urllib.parse import quote
 
 import reflex as rx
 from dotenv import load_dotenv
 
+from .contact_email import send_contact_email
 load_dotenv()
 
 
@@ -79,6 +80,10 @@ class State(rx.State):
     roadmap_columns: list[RoadmapColumn] = []
     roadmap_done_cards: list[RoadmapCard] = []
     roadmap_done_count: int = 0
+    contact_submission_inflight: bool = False
+    contact_status: str = ""
+    contact_error: str = ""
+    contact_last_sent_at: float = 0.0
 
     @rx.var
     def roadmap_show_loading(self) -> bool:
@@ -391,13 +396,41 @@ class State(rx.State):
         finally:
             self.roadmap_loading = False
 
-    def submit_contact_form(self, form_data: dict[str, Any]):
-        """Open a pre-filled email draft with the contact form details."""
+    async def submit_contact_form(self, form_data: dict[str, Any]):
+        """Send the contact form details via SMTP."""
+        if self.contact_submission_inflight:
+            return
+
+        self.contact_error = ""
+        self.contact_status = ""
+        self.contact_submission_inflight = True
+        yield
+
+        cooldown_seconds = int(os.getenv("CONTACT_SUBMISSION_COOLDOWN_SECONDS", "30"))
+        now = time.time()
+        if self.contact_last_sent_at and now - self.contact_last_sent_at < cooldown_seconds:
+            remaining = int(cooldown_seconds - (now - self.contact_last_sent_at))
+            self.contact_error = (
+                f"Please wait {remaining} seconds before sending another message."
+            )
+            self.contact_submission_inflight = False
+            return
+
         name = (form_data.get("name") or "").strip()
         email = (form_data.get("email") or "").strip()
         organization = (form_data.get("organization") or "").strip()
         topic = (form_data.get("topic") or "").strip()
         message = (form_data.get("message") or "").strip()
+
+        if not email:
+            self.contact_error = "Please provide a valid email address."
+            self.contact_submission_inflight = False
+            return
+
+        if not message:
+            self.contact_error = "Please include a message."
+            self.contact_submission_inflight = False
+            return
 
         subject_bits = [topic or "Foundation contact"]
         if name:
@@ -417,14 +450,28 @@ class State(rx.State):
             body_lines.append(f"Topic: {topic}")
         body_lines.append("")
         body_lines.append(message or "(No message provided)")
-
         body = "\n".join(body_lines)
-        mailto = (
-            "mailto:foundation@xian.technology"
-            f"?subject={quote(subject)}"
-            f"&body={quote(body)}"
-        )
-        return rx.redirect(mailto, is_external=True)
+        recipient = os.getenv("CONTACT_EMAIL_TO", "info@xian.technology").strip()
+        sender = os.getenv("CONTACT_EMAIL_FROM", "").strip()
+        if not sender:
+            sender = os.getenv("SMTP_USERNAME", "").strip() or recipient
+
+        try:
+            await asyncio.to_thread(
+                send_contact_email,
+                subject,
+                body,
+                sender=sender,
+                recipient=recipient,
+                reply_to=email or None,
+            )
+        except Exception as exc:  # pragma: no cover - surface user-friendly errors
+            self.contact_error = f"Message failed to send. Error: {exc}"
+        else:
+            self.contact_status = "Message sent. The foundation will follow up soon."
+            self.contact_last_sent_at = now
+        finally:
+            self.contact_submission_inflight = False
 
     def command_palette_select_active(self):
         """Navigate to the currently selected item."""

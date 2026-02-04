@@ -42,6 +42,15 @@ FIZZY_ACCOUNT_SLUG=1
 FIZZY_BOARD_ID=03fiomkit5oknquymk0ooi26m
 FIZZY_BASE_URL=https://tasks.xian.technology
 FIZZY_EXCLUDE_TAGS=internal,experimental
+CONTACT_EMAIL_TO=info@xian.technology
+CONTACT_EMAIL_FROM=no-reply@xian.technology
+SMTP_HOST=mail.example.com
+SMTP_PORT=587
+SMTP_USERNAME=mailer@example.com
+SMTP_PASSWORD=super-secret-password
+SMTP_USE_TLS=true
+SMTP_USE_SSL=false
+CONTACT_SUBMISSION_COOLDOWN_SECONDS=30
 ```
 
 - `FIZZY_TOKEN` is required to call the Fizzy API.
@@ -49,6 +58,14 @@ FIZZY_EXCLUDE_TAGS=internal,experimental
 - `FIZZY_BOARD_ID` defaults to `03fiomkit5oknquymk0ooi26m`.
 - `FIZZY_BASE_URL` defaults to `https://tasks.xian.technology`.
 - `FIZZY_EXCLUDE_TAGS` is a comma-separated list of tags to hide from the roadmap (case-insensitive).
+- `CONTACT_EMAIL_TO` sets the recipient for contact form submissions (defaults to `info@xian.technology`).
+- `CONTACT_EMAIL_FROM` sets the From address for outgoing contact mail (defaults to `SMTP_USERNAME` or the recipient).
+- `SMTP_HOST` is required to send contact form email.
+- `SMTP_PORT` defaults to `587`.
+- `SMTP_USERNAME`/`SMTP_PASSWORD` authenticate with your SMTP server (password required if username is set).
+- `SMTP_USE_TLS` enables STARTTLS (defaults to `true`).
+- `SMTP_USE_SSL` enables SMTPS (defaults to `false`).
+- `CONTACT_SUBMISSION_COOLDOWN_SECONDS` throttles per-session sends (defaults to `30`).
 
 ## Installation
 

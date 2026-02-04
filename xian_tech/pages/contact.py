@@ -134,6 +134,29 @@ def contact_page() -> rx.Component:
                     line_height="1.7",
                     max_width="900px",
                 ),
+                rx.cond(
+                    State.contact_error != "",
+                    rx.callout.root(
+                        rx.callout.icon(rx.icon(tag="triangle_alert")),
+                        rx.callout.text(State.contact_error),
+                        color_scheme="red",
+                        role="alert",
+                        size="2",
+                        width="100%",
+                    ),
+                    rx.cond(
+                        State.contact_status != "",
+                        rx.callout.root(
+                            rx.callout.icon(rx.icon(tag="check")),
+                            rx.callout.text(State.contact_status),
+                            color_scheme="green",
+                            role="status",
+                            size="2",
+                            width="100%",
+                        ),
+                        rx.box(),
+                    ),
+                ),
                 rx.box(
                     rx.form(
                         rx.vstack(
@@ -165,7 +188,7 @@ def contact_page() -> rx.Component:
                             ),
                             message_field(),
                             rx.button(
-                                "Send message",
+                                rx.cond(State.contact_submission_inflight, "Sending...", "Send message"),
                                 type="submit",
                                 size="4",
                                 background_color=ACCENT,
@@ -174,7 +197,9 @@ def contact_page() -> rx.Component:
                                 padding="1.1rem 1.6rem",
                                 width="100%",
                                 cursor="pointer",
+                                disabled=State.contact_submission_inflight,
                                 _hover={"backgroundColor": ACCENT_HOVER},
+                                _disabled={"opacity": "0.65", "cursor": "not-allowed"},
                             ),
                             spacing="4",
                             align_items="start",
