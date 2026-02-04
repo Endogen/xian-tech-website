@@ -1085,7 +1085,7 @@ def footer() -> rx.Component:
                         rx.hstack(
                             rx.link(
                                 rx.icon(tag="mail", size=20),
-                                href="mailto:foundation@xian.technology",
+                                href="mailto:info@xian.technology",
                                 color=TEXT_PRIMARY,
                                 _hover={"color": ACCENT},
                             ),
