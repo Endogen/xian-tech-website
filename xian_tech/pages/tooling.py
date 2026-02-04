@@ -245,170 +245,6 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        linked_heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.technology",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
-                        ),
-                        direction={"base": "column", "md": "row"},
-                        align_items={"base": "start", "md": "center"},
-                        justify="between",
-                        gap="0.75rem",
-                        width="100%",
-                    ),
-                    rx.text(
-                        "xian-py is the Python SDK for interacting with Xian nodes, managing accounts, and deploying or "
-                        "calling contracts from scripts and services.",
-                        size="4",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    spacing="3",
-                    align_items="start",
-                    width="100%",
-                ),
-                rx.grid(
-                    _sdk_install_card(),
-                    rx.box(
-                        rx.vstack(
-                            rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.vstack(
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                spacing="2",
-                                align_items="start",
-                            ),
-                            spacing="3",
-                            align_items="start",
-                        ),
-                        padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
-                    ),
-                    columns={"base": "1", "lg": "2"},
-                    spacing="4",
-                    width="100%",
-                    align="stretch",
-                ),
-                subsection(
-                    "Examples",
-                    rx.tabs.root(
-                        rx.tabs.list(
-                            rx.tabs.trigger("Create wallet", value="wallet", color_scheme="green"),
-                            rx.tabs.trigger("Get balance", value="balance", color_scheme="green"),
-                            rx.tabs.trigger("Send tokens", value="send", color_scheme="green"),
-                            rx.tabs.trigger("Call contract", value="contract", color_scheme="green"),
-                            gap="0.75rem",
-                            wrap="wrap",
-                        ),
-                        rx.tabs.content(
-                            rx.code_block(
-                                SDK_WALLET_EXAMPLE,
-                                language="python",
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            value="wallet",
-                            width="100%",
-                        ),
-                        rx.tabs.content(
-                            rx.code_block(
-                                SDK_BALANCE_EXAMPLE,
-                                language="python",
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            value="balance",
-                            width="100%",
-                        ),
-                        rx.tabs.content(
-                            rx.code_block(
-                                SDK_SEND_EXAMPLE,
-                                language="python",
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            value="send",
-                            width="100%",
-                        ),
-                        rx.tabs.content(
-                            rx.code_block(
-                                SDK_CONTRACT_EXAMPLE,
-                                language="python",
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            value="contract",
-                            width="100%",
-                        ),
-                        default_value="wallet",
-                        width="100%",
-                        min_width="0",
-                    ),
-                    id="sdk-examples",
-                ),
-            )
-        ),
-        section(
-            section_panel(
-                rx.vstack(
-                    rx.flex(
                         linked_heading(
                             "Blockchain Data Service (BDS)",
                             size="6",
@@ -581,6 +417,170 @@ def tooling_page() -> rx.Component:
                     align_items="start",
                     width="100%",
                     min_width="0",
+                ),
+            )
+        ),
+        section(
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        linked_heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-py",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://docs.xian.technology",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            spacing="4",
+                            align_items="center",
+                        ),
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
+                    ),
+                    rx.text(
+                        "xian-py is the Python SDK for interacting with Xian nodes, managing accounts, and deploying or "
+                        "calling contracts from scripts and services.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.grid(
+                    _sdk_install_card(),
+                    rx.box(
+                        rx.vstack(
+                            rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
+                            rx.vstack(
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                rx.hstack(
+                                    rx.icon(tag="check", size=16, color=ACCENT),
+                                    rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        width="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+                subsection(
+                    "Examples",
+                    rx.tabs.root(
+                        rx.tabs.list(
+                            rx.tabs.trigger("Create wallet", value="wallet", color_scheme="green"),
+                            rx.tabs.trigger("Get balance", value="balance", color_scheme="green"),
+                            rx.tabs.trigger("Send tokens", value="send", color_scheme="green"),
+                            rx.tabs.trigger("Call contract", value="contract", color_scheme="green"),
+                            gap="0.75rem",
+                            wrap="wrap",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_WALLET_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                wrap_long_lines=False,
+                                custom_style={"overflowX": "auto"},
+                                width="100%",
+                            ),
+                            value="wallet",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_BALANCE_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                wrap_long_lines=False,
+                                custom_style={"overflowX": "auto"},
+                                width="100%",
+                            ),
+                            value="balance",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_SEND_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                wrap_long_lines=False,
+                                custom_style={"overflowX": "auto"},
+                                width="100%",
+                            ),
+                            value="send",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            rx.code_block(
+                                SDK_CONTRACT_EXAMPLE,
+                                language="python",
+                                show_line_numbers=True,
+                                wrap_long_lines=False,
+                                custom_style={"overflowX": "auto"},
+                                width="100%",
+                            ),
+                            value="contract",
+                            width="100%",
+                        ),
+                        default_value="wallet",
+                        width="100%",
+                        min_width="0",
+                    ),
+                    id="sdk-examples",
                 ),
             )
         ),
