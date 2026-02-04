@@ -351,17 +351,16 @@ class State(rx.State):
                     }
                 )
 
-            if untriaged:
-                untriaged_sorted = sorted(untriaged, key=lambda item: item["number"])
-                columns_payload.insert(
-                    0,
-                    {
-                        "id": "untriaged",
-                        "name": "Investigate",
-                        "cards": untriaged_sorted,
-                        "count": len(untriaged_sorted),
-                    },
-                )
+            untriaged_sorted = sorted(untriaged, key=lambda item: item["number"])
+            columns_payload.insert(
+                0,
+                {
+                    "id": "untriaged",
+                    "name": "Investigate",
+                    "cards": untriaged_sorted,
+                    "count": len(untriaged_sorted),
+                },
+            )
 
             return columns_payload, done_payload
 
