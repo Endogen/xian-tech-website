@@ -488,18 +488,25 @@ class State(rx.State):
             self.contact_last_sent_at = now
             if cooldown_seconds > 0:
                 self.contact_cooldown_remaining = cooldown_seconds
+                yield State.run_contact_cooldown
             self.contact_form_email = ""
             self.contact_form_message = ""
             self.contact_form_key += 1
         finally:
             self.contact_submission_inflight = False
 
-        if self.contact_cooldown_remaining > 0:
-            yield
-            while self.contact_cooldown_remaining > 0:
-                await asyncio.sleep(1)
+    @rx.event(background=True)
+    async def run_contact_cooldown(self):
+        """Count down without blocking other UI events."""
+        while True:
+            async with self:
+                remaining = self.contact_cooldown_remaining
+            if remaining <= 0:
+                break
+            await asyncio.sleep(1)
+            async with self:
                 self.contact_cooldown_remaining = max(0, self.contact_cooldown_remaining - 1)
-                yield
+            yield
 
     def set_contact_email(self, value: str):
         """Live-validate the email field as the user types."""
@@ -525,6 +532,16 @@ class State(rx.State):
             self.contact_message_error = "Please include a message so we can help."
             return
         self.contact_message_error = ""
+
+    def reset_contact_view(self):
+        """Clear contact form UI state when visiting the page."""
+        self.contact_status = ""
+        self.contact_error = ""
+        self.contact_email_error = ""
+        self.contact_message_error = ""
+        self.contact_form_email = ""
+        self.contact_form_message = ""
+        self.contact_form_key += 1
 
     def command_palette_select_active(self):
         """Navigate to the currently selected item."""

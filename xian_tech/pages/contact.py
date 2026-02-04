@@ -283,7 +283,8 @@ def contact_page() -> rx.Component:
                 spacing="6",
                 align_items="start",
                 width="100%",
-            )
+            ),
+            on_mount=State.reset_contact_view,
         )
     )
 
