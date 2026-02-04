@@ -49,8 +49,10 @@ FAQ_ITEMS = [
                 "to entry by using Python."
             ),
             (
-                "Realistically, a top-100 position is unlikely without significant funding and marketing. The network was "
-                "built with roughly $150k from supporters, which is not enough for large-scale promotion in a crowded market."
+                "Realistically, a top-100 position is unlikely without significant funding and marketing. The original project "
+                "that created the contracting engine raised around $12M but later dissolved, leaving the community without "
+                "resources. The current Xian Network effort was started with roughly $150k from dedicated supporters—an amount "
+                "that is meaningful for core development but not enough for large-scale promotion in a crowded market."
             ),
         ],
     },
@@ -115,6 +117,17 @@ FAQ_ITEMS = [
             (
                 "It does not operate a standalone website. Instead, it is integrated into the Xian Technology site, which was built "
                 "as a first step to create a single entry point for everything related to Xian and the technology stack."
+            ),
+        ],
+    },
+    {
+        "id": "foundation-fulltime",
+        "question": "Is anyone at the Xian Foundation or Xian Network working full time on Xian?",
+        "answer": [
+            (
+                "No. The core contributors work on Xian in their free time so the project never depends on funding to keep "
+                "moving forward. Continuing to build the Xian technology stack without direct financial incentives also "
+                "signals long-term commitment and belief in the mission."
             ),
         ],
     },
