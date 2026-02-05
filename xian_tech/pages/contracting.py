@@ -1,13 +1,11 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section
+from ..components.common import linked_heading, page_layout, section, section_panel, subsection
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
-    BORDER_BRIGHT,
     BORDER_COLOR,
-    PRIMARY_BG,
     SURFACE,
     SURFACE_HOVER,
     TEXT_MUTED,
@@ -146,6 +144,55 @@ SEARCH_SECTIONS = [
 
 def contracting_page() -> rx.Component:
     """Python smart contract engine overview."""
+    def choice_card(title: str, body: str, icon: str) -> rx.Component:
+        return rx.box(
+            rx.vstack(
+                rx.flex(
+                    rx.icon(tag=icon, size=28, color=ACCENT),
+                    rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
+                    direction={"base": "row", "lg": "column"},
+                    align={"base": "center", "lg": "start"},
+                    spacing="3",
+                ),
+                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+                spacing="3",
+                align_items="start",
+            ),
+            padding="2rem",
+            background=SURFACE,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="14px",
+            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
+            height="100%",
+            width="100%",
+            display="flex",
+            flex_direction="column",
+            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
+            background_size="200% 200%",
+            background_position="left center",
+            _hover={
+                "borderColor": ACCENT,
+                "backgroundColor": SURFACE_HOVER,
+                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+                "backgroundPosition": "right center",
+            },
+        )
+
+    def timeline_item(year: str, text: str) -> rx.Component:
+        return rx.hstack(
+            rx.box(
+                rx.text(year, size="2", weight="bold", color=ACCENT),
+                padding="0.2rem 0.6rem",
+                background=ACCENT_SOFT,
+                border=f"1px solid {ACCENT_GLOW}",
+                border_radius="6px",
+            ),
+            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.7"),
+            spacing="3",
+            align_items="center",
+            width="100%",
+        )
+
     return page_layout(
         section(
             rx.vstack(
@@ -167,7 +214,7 @@ def contracting_page() -> rx.Component:
                     "The heart of Xian is a native Python contracting engine—no transpilers, no second-class runtimes. Deterministic, stamp-metered execution keeps performance predictable while making audits and upgrades straightforward.",
                     size="4",
                     color=TEXT_MUTED,
-                    max_width="900px",
+                    width="100%",
                     line_height="1.7",
                 ),
                 spacing="5",
@@ -175,40 +222,61 @@ def contracting_page() -> rx.Component:
             )
         ),
         section(
-            rx.vstack(
+            section_panel(
+                rx.flex(
+                    linked_heading("Contracting Engine", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-contracting",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://docs.xian.technology",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "The contracting engine executes pure Python contracts with deterministic rules and a stamp-metered "
+                    "budget. It keeps developer ergonomics high without compromising on predictable execution.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
                 rx.grid(
                     *[
-                        rx.box(
-                            rx.vstack(
-                                rx.hstack(
-                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
-                                    rx.heading(item["title"], size="5", color=TEXT_PRIMARY, weight="bold"),
-                                    align_items="center",
-                                    gap="0.75rem",
-                                ),
-                                rx.text(item["body"], size="3", color=TEXT_MUTED, line_height="1.7"),
-                                spacing="3",
-                                align_items="start",
-                            ),
-                            padding="2.25rem",
-                            background=SURFACE,
-                            border=f"1px solid {BORDER_COLOR}",
-                            border_radius="14px",
-                            border_left=f"4px solid {ACCENT}",
-                            transition="all 0.3s ease",
-                            _hover={
-                                "borderColor": BORDER_BRIGHT,
-                                "backgroundColor": SURFACE_HOVER,
-                            },
-                            height="100%",
-                        )
+                        choice_card(item["title"], item["body"], item["icon"])
                         for item in HIGHLIGHTS
                     ],
-                    template_columns={"base": "1fr", "md": "repeat(2, 1fr)", "lg": "repeat(4, 1fr)"},
-                    gap="1.25rem",
+                    columns={"base": "repeat(1, minmax(0, 1fr))", "md": "repeat(2, minmax(0, 1fr))", "lg": "repeat(4, minmax(0, 1fr))"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
-                spacing="5",
-                align_items="start",
             ),
             padding_top="0",
         ),
@@ -329,6 +397,49 @@ def contracting_page() -> rx.Component:
                 default_value="xian",
                 width="100%",
                 min_width="0",
+            ),
+            rx.vstack(
+                linked_heading("Python Adoption", size="5", color=TEXT_PRIMARY, weight="bold"),
+                rx.text(
+                    "Both Ethereum and Algorand introduced Python-like workflows after developers struggled with the "
+                    "native contract languages. Algorand’s path shows a clear, incremental shift toward Python:",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
+                rx.vstack(
+                    timeline_item("2019", "Algorand launched with TEAL only, an assembly-like language."),
+                    timeline_item("2020", "PyTeal arrived as a Python wrapper/compiler to make TEAL development easier."),
+                    timeline_item("2025", "Algorand Python shipped as a next-generation, native Python experience."),
+                    spacing="2",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.text(
+                    "Python support arrived about a year after launch, starting as a high-level abstraction over TEAL and "
+                    "evolving into a native experience over time.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
+                rx.text(
+                    "A side effect of pure Python contracts is that AI assistants can draft nearly correct smart contracts "
+                    "on the first try when guided by the ",
+                    rx.link(
+                        "AI Contracting Guide",
+                        href="/tooling#ai-guides",
+                        color=ACCENT,
+                        _hover={"color": ACCENT},
+                    ),
+                    ", which accelerates adoption and shortens development cycles.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                ),
+                spacing="4",
+                align_items="start",
+                width="100%",
+                margin_top="3rem",
             ),
             padding_top="0",
         ),
