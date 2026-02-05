@@ -385,6 +385,70 @@ def node_network_page() -> rx.Component:
                 ),
             ),
         )
+        ,
+        section(
+            section_panel(
+                rx.flex(
+                    linked_heading("xian-node-skill", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://docs.xian.technology/",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "Agents can now run and manage Xian nodes end-to-end. The xian-node-skill packages the exact "
+                    "steps for provisioning, configuration, and operations so assistants can safely help bootstrap "
+                    "mainnet/testnet nodes and keep them healthy.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+                rx.box(
+                    rx.text(
+                        "Use it to standardize node workflows for AI assistants or internal automation.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
+                ),
+            ),
+            padding_top="0",
+        ),
     )
 
 
