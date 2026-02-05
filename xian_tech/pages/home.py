@@ -95,7 +95,13 @@ def hero_section() -> rx.Component:
                     rx.button(
                         rx.flex(
                             rx.text("View on GitHub", size="3", weight="medium"),
-                            rx.text("→", weight="bold", size="4"),
+                            rx.text(
+                                "→",
+                                weight="bold",
+                                size="4",
+                                class_name="github-arrow",
+                                style={"transition": "transform 0.2s ease"},
+                            ),
                             gap="0.75rem",
                             align_items="center",
                         ),
@@ -108,6 +114,7 @@ def hero_section() -> rx.Component:
                         _hover={
                             "backgroundColor": ACCENT_HOVER,
                             "boxShadow": f"0 12px 30px {ACCENT_SOFT}",
+                            "& .github-arrow": {"transform": "translateX(6px)"},
                         },
                         transition="all 0.2s ease",
                     ),
