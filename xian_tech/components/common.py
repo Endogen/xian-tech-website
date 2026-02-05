@@ -769,60 +769,6 @@ def feature_card(title: str, description: str, icon: str) -> rx.Component:
     )
 
 
-COMMAND_SCRIPT = """
-(() => {
-  if (window.__xianCommandHotkeys) return;
-  window.__xianCommandHotkeys = true;
-  const trigger = () => document.getElementById("command-palette-trigger")?.click();
-  const close = () => document.getElementById("command-palette-close")?.click();
-  const moveUp = () => document.getElementById("command-palette-up")?.click();
-  const moveDown = () => document.getElementById("command-palette-down")?.click();
-  const selectActive = () => document.getElementById("command-palette-select")?.click();
-  const closeLightbox = () => document.getElementById("image-lightbox-close")?.click();
-  const isLightboxOpen = () => document.getElementById("image-lightbox-container");
-  const scrollToActive = () => {
-    setTimeout(() => {
-      const active = document.getElementById("palette-active-item");
-      if (active) {
-        active.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      }
-    }, 50);
-  };
-  window.addEventListener("keydown", (event) => {
-    const key = event.key?.toLowerCase();
-    if ((event.metaKey || event.ctrlKey) && key === "k") {
-      event.preventDefault();
-      trigger();
-    }
-    if (key === "escape") {
-      if (isLightboxOpen()) {
-        closeLightbox();
-      } else {
-        close();
-      }
-    }
-    if (key === "arrowup") {
-      event.preventDefault();
-      moveUp();
-      scrollToActive();
-    }
-    if (key === "arrowdown") {
-      event.preventDefault();
-      moveDown();
-      scrollToActive();
-    }
-    if (key === "enter") {
-      const active = document.activeElement;
-      const isInput = active?.tagName === "INPUT";
-      if (isInput) {
-        event.preventDefault();
-        selectActive();
-      }
-    }
-  });
-})();
-"""
-
 
 def command_palette() -> rx.Component:
     """Global command palette with CMD/CTRL + K shortcut."""
@@ -905,7 +851,7 @@ def command_palette() -> rx.Component:
         rx.button(on_click=State.command_palette_move_up, id="command-palette-up", display="none"),
         rx.button(on_click=State.command_palette_move_down, id="command-palette-down", display="none"),
         rx.button(on_click=State.command_palette_select_active, id="command-palette-select", display="none"),
-        rx.script(COMMAND_SCRIPT),
+        rx.script(src="/js/command-palette.js"),
         rx.cond(
             State.command_palette_open,
             rx.fragment(

@@ -1,0 +1,18 @@
+html {
+  scroll-padding-top: 6.5rem;
+}
+
+@keyframes quote-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - var(--quote-gap-half)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-track {
+    animation-play-state: paused !important;
+  }
+}
