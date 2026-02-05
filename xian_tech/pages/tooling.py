@@ -120,6 +120,14 @@ SEARCH_SECTIONS = [
         "keywords": ["MCP", "AI assistants", "Wallets", "DEX"],
     },
     {
+        "title": "AI Skills",
+        "subtitle": "Agent-ready skills for Xian SDK usage and node operations.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": ["AI skills", "Agents", "xian-py", "Nodes"],
+    },
+    {
         "title": "AI Guides",
         "subtitle": "AI-ready guides for building and reviewing Xian contracts.",
         "category": "Technology",
@@ -818,6 +826,115 @@ def tooling_page() -> rx.Component:
                 ),
             )
         ),
+        section(
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        linked_heading("AI Skills", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-ai-skills",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-ai-skills",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            spacing="4",
+                            align_items="center",
+                        ),
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
+                    ),
+                    rx.text(
+                        "Agent-ready skill packs that teach AI assistants how to build on Xian, operate nodes, and "
+                        "work with the core Python tooling.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.grid(
+                    rx.box(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.icon(tag="code", size=24, color=ACCENT),
+                                rx.heading("xian-sdk-skill", size="5", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.text(
+                                "Guides agents through xian-py workflows: wallet creation (including HD/BIP39), "
+                                "token transfers, contract deployment and calls, state queries, and transaction "
+                                "simulation for reliable automation.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        height="100%",
+                    ),
+                    rx.box(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.icon(tag="server", size=24, color=ACCENT),
+                                rx.heading("xian-node-skill", size="5", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.text(
+                                "Covers node operations via xian-stack: joining mainnet/testnet, creating networks, "
+                                "validator and service node setup, monitoring, CometBFT configuration, and Docker "
+                                "deployment basics.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                            ),
+                            spacing="3",
+                            align_items="start",
+                        ),
+                        padding="1.75rem",
+                        background=SURFACE,
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="14px",
+                        height="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+            )
+        )
     )
 
 
