@@ -871,7 +871,7 @@ def command_palette() -> rx.Component:
         rx.button(on_click=State.command_palette_select_active, id="command-palette-select", display="none"),
         rx.script(src="/js/command-palette.js"),
         rx.cond(
-            State.command_palette_open,
+            State.command_palette_visible,
             rx.fragment(
                 rx.center(
                     rx.box(
@@ -970,6 +970,14 @@ def command_palette() -> rx.Component:
                         padding="2rem",
                         z_index="1001",
                         on_click=rx.stop_propagation,
+                        opacity=rx.cond(State.command_palette_open, "1", "0"),
+                        transform=rx.cond(
+                            State.command_palette_open,
+                            "translateY(0)",
+                            "translateY(-14px)",
+                        ),
+                        transition="opacity 0.2s ease, transform 0.2s ease",
+                        will_change="opacity, transform",
                     ),
                     position="fixed",
                     top="0",
@@ -982,6 +990,9 @@ def command_palette() -> rx.Component:
                     on_click=State.close_command_palette,
                     align_items="flex-start",
                     padding_top="8vh",
+                    opacity=rx.cond(State.command_palette_open, "1", "0"),
+                    transition="opacity 0.2s ease",
+                    pointer_events=rx.cond(State.command_palette_open, "auto", "none"),
                 ),
             ),
         ),

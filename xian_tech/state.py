@@ -76,6 +76,7 @@ class State(rx.State):
     mobile_nav_open: bool = False
     nav_hover_label: str = ""
     command_palette_open: bool = False
+    command_palette_visible: bool = False
     command_query: str = ""
     command_palette_active_id: str | None = None
     image_lightbox_open: bool = False
@@ -119,17 +120,25 @@ class State(rx.State):
         """Clear nav hover state."""
         self.nav_hover_label = ""
 
-    def open_command_palette(self):
+    async def open_command_palette(self):
         """Show the command palette."""
-        self.command_palette_open = True
+        if self.command_palette_open and self.command_palette_visible:
+            return
+        self.command_palette_visible = True
+        self.command_palette_open = False
         actions = self.command_palette_actions
         self.command_palette_active_id = actions[0]["id"] if actions else None
+        yield
+        self.command_palette_open = True
 
-    def close_command_palette(self):
+    async def close_command_palette(self):
         """Hide the command palette and reset the query."""
         self.command_palette_open = False
         self.command_query = ""
         self.command_palette_active_id = None
+        yield
+        await asyncio.sleep(0.2)
+        self.command_palette_visible = False
 
     def set_command_query(self, value: str):
         """Update the palette query."""
@@ -554,12 +563,12 @@ class State(rx.State):
         self.contact_form_message = ""
         self.contact_form_key += 1
 
-    def command_palette_select_active(self):
+    async def command_palette_select_active(self):
         """Navigate to the currently selected item."""
         active = self.command_palette_active_action
         if not active["placeholder"]:
-            self.close_command_palette()
-        return rx.redirect(active["href"])
+            yield State.close_command_palette
+        yield rx.redirect(active["href"])
 
     @rx.var(cache=True, auto_deps=False, deps=["command_query"])
     def command_palette_actions(self) -> list[CommandAction]:
