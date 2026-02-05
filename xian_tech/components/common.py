@@ -496,7 +496,7 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
             padding="1rem",
             background=SURFACE_BRIGHT,
             border=f"1px solid {BORDER_BRIGHT}",
-            border_radius="12px",
+            border_radius="8px",
             box_shadow="0 20px 36px rgba(0,0,0,0.35)",
             min_width="260px",
         ),
@@ -789,16 +789,20 @@ def command_palette() -> rx.Component:
 
         return rx.link(
             rx.hstack(
-                rx.box(
-                    action["badge"],
-                    font_size="0.75rem",
-                    color=ACCENT,
-                    background=ACCENT_SOFT,
-                    padding="0.15rem 0.5rem",
-                    border_radius="6px",
-                ),
                 rx.vstack(
-                    rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
+                    rx.hstack(
+                        rx.text(action["title"], size="3", weight="medium", color=TEXT_PRIMARY),
+                        rx.box(
+                            action["badge"],
+                            font_size="0.7rem",
+                            color=ACCENT,
+                            background=ACCENT_SOFT,
+                            padding="0.1rem 0.45rem",
+                            border_radius="6px",
+                        ),
+                        spacing="2",
+                        align_items="center",
+                    ),
                     rx.text(action["subtitle"], size="2", color=TEXT_MUTED),
                     spacing="1",
                     align_items="start",
