@@ -15,11 +15,11 @@ from ..theme import (
 SEARCH_SECTIONS = [
     {
         "title": "API References",
-        "subtitle": "Reference endpoints for BDS, transactions, and contracts.",
+        "subtitle": "Reference endpoints for CometBFT RPC, BDS, transactions, and contracts.",
         "category": "Developers",
         "badge": "Page",
         "href": "/api",
-        "keywords": ["API", "References", "BDS", "Endpoints"],
+        "keywords": ["API", "References", "RPC", "CometBFT", "BDS", "Endpoints"],
     }
 ]
 
