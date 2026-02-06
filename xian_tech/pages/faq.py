@@ -87,6 +87,21 @@ FAQ_ITEMS = [
         ],
     },
     {
+        "id": "xian-name",
+        "question": "Where does the name Xian come from?",
+        "answer": [
+            (
+                "Xian refers to mythological immortals in Chinese tradition, associated with transcendence, resilience, "
+                "and renewal."
+            ),
+            (
+                "The name reflects the project's history: it lived on after Lamden ended and was effectively reborn as a "
+                "new community-led network and technology stack. Xian is meant to signal a project that does not die, but "
+                "evolves."
+            ),
+        ],
+    },
+    {
         "id": "foundation-connection",
         "question": "What exactly is the Xian Foundation and what is its connection to the Xian Network?",
         "answer": [
