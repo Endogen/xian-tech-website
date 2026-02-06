@@ -961,7 +961,7 @@ def command_palette() -> rx.Component:
                         width="min(960px, 92vw)",
                         max_width="960px",
                         background=PRIMARY_BG,
-                        border_radius="20px",
+                        border_radius="14px",
                         border=f"1px solid {BORDER_COLOR}",
                         box_shadow=rx.color_mode_cond(
                             light="0 30px 120px rgba(15, 23, 42, 0.25)",
