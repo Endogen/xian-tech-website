@@ -137,7 +137,7 @@ class State(rx.State):
         self.command_query = ""
         self.command_palette_active_id = None
         yield
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.4)
         self.command_palette_visible = False
 
     def set_command_query(self, value: str):
