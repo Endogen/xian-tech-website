@@ -84,6 +84,10 @@ HIGHLIGHTS = [
             "No custom DSLs or transpilers. Contracts are idiomatic Python, making audits and upgrades straightforward "
             "and letting teams use the language they already know."
         ),
+        "detail": (
+            "Execution stays on the standard Python VM end to end, so there is no translation layer where semantics can drift "
+            "or opaque behavior can creep in."
+        ),
     },
     {
         "title": "Native value semantics",
@@ -91,6 +95,21 @@ HIGHLIGHTS = [
         "body": (
             "We avoid bespoke integer abstractions for balances. The engine stays Python-native rather than inventing "
             "a special-purpose blockchain language."
+        ),
+        "detail": (
+            "Decimal-friendly value types keep amounts natural to read and reason about. Solidity-style integer scaling forces "
+            "manual conversions and can still introduce precision pitfalls."
+        ),
+    },
+    {
+        "title": "Deterministic fees",
+        "icon": "calculator",
+        "body": (
+            "Fees are deterministic and compute-based, so outcomes and costs can be simulated before a transaction is sent."
+        ),
+        "detail": (
+            "Stamps map directly to the computation required for contract execution. A dry run yields both the expected result "
+            "and the exact fee, so you can verify the outcome or opt out before spending."
         ),
     },
     {
@@ -100,6 +119,10 @@ HIGHLIGHTS = [
             "The contracting library can run independently and could integrate with other node systems—not just CometBFT—"
             "or power entirely different use cases."
         ),
+        "detail": (
+            "You can embed the engine inside a local app, test harness, or other runtime. Blockchain integration is a choice, "
+            "not a requirement."
+        ),
     },
     {
         "title": "Upgradable patterns",
@@ -107,6 +130,21 @@ HIGHLIGHTS = [
         "body": (
             "With the right design patterns, you can ship upgradable contracts when you need them—without forcing "
             "complexity on contracts that don't."
+        ),
+        "detail": (
+            "Contracts can call other contracts, and routing through a registry lets you swap implementations. Bind that switch "
+            "to a multisig so upgrades only happen with explicit consensus."
+        ),
+    },
+    {
+        "title": "Event-driven observability",
+        "icon": "activity",
+        "body": (
+            "Contracts emit structured, typed events so external systems can track state changes without polling."
+        ),
+        "detail": (
+            "Index by sender, receiver, or any custom field to power real-time dashboards, analytics, or reactive workflows "
+            "that respond to contract activity."
         ),
     },
 ]
@@ -144,7 +182,7 @@ SEARCH_SECTIONS = [
 
 def contracting_page() -> rx.Component:
     """Python smart contract engine overview."""
-    def choice_card(title: str, body: str, icon: str) -> rx.Component:
+    def choice_card(title: str, body: str, detail: str, icon: str) -> rx.Component:
         return rx.box(
             rx.vstack(
                 rx.flex(
@@ -155,6 +193,7 @@ def contracting_page() -> rx.Component:
                     spacing="3",
                 ),
                 rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+                rx.text(detail, size="2", color=TEXT_MUTED, line_height="1.6"),
                 spacing="3",
                 align_items="start",
             ),
@@ -269,10 +308,10 @@ def contracting_page() -> rx.Component:
                 ),
                 rx.grid(
                     *[
-                        choice_card(item["title"], item["body"], item["icon"])
+                        choice_card(item["title"], item["body"], item["detail"], item["icon"])
                         for item in HIGHLIGHTS
                     ],
-                    columns={"base": "repeat(1, minmax(0, 1fr))", "md": "repeat(2, minmax(0, 1fr))", "lg": "repeat(4, minmax(0, 1fr))"},
+                    columns={"base": "repeat(1, minmax(0, 1fr))", "lg": "repeat(3, minmax(0, 1fr))"},
                     spacing="4",
                     width="100%",
                     align="stretch",
