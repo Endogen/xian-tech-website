@@ -198,6 +198,23 @@ FAQ_ITEMS = [
 
 def _faq_item(item: dict[str, Any]) -> rx.Component:
     """Single FAQ entry with expandable detail."""
+    overlay_background = rx.color_mode_cond(
+        light=(
+            "linear-gradient(135deg, rgba(80, 177, 101, 0.2), rgba(80, 177, 101, 0.08)), "
+            "linear-gradient(to right, rgba(128, 128, 128, 0.08) 1px, transparent 1px), "
+            "linear-gradient(to bottom, rgba(128, 128, 128, 0.08) 1px, transparent 1px)"
+        ),
+        dark=(
+            "linear-gradient(135deg, rgba(0, 255, 136, 0.14), rgba(0, 255, 136, 0.05)), "
+            "linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px), "
+            "linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px)"
+        ),
+    )
+    watermark_color = rx.color_mode_cond(
+        light="rgba(46, 140, 71, 0.15)",
+        dark="rgba(0, 255, 136, 0.08)",
+    )
+
     answer_blocks = [
         rx.text(
             paragraph,
@@ -253,6 +270,7 @@ def _faq_item(item: dict[str, Any]) -> rx.Component:
         border=f"1px solid {BORDER_COLOR}",
         transition="all 0.2s ease",
         overflow="hidden",
+        position="relative",
         _hover={
             "borderColor": ACCENT,
             "boxShadow": rx.color_mode_cond(
@@ -261,6 +279,43 @@ def _faq_item(item: dict[str, Any]) -> rx.Component:
             ),
         },
         style={
+            "& > *": {
+                "position": "relative",
+                "zIndex": "1",
+            },
+            "&::before": {
+                "content": '""',
+                "position": "absolute",
+                "inset": "0",
+                "backgroundImage": overlay_background,
+                "backgroundSize": "auto, 20px 20px, 20px 20px",
+                "opacity": "0",
+                "transition": "opacity 0.55s ease",
+                "pointerEvents": "none",
+                "zIndex": "0",
+            },
+            "&::after": {
+                "content": '"?"',
+                "position": "absolute",
+                "right": "-0.35rem",
+                "bottom": "-0.75rem",
+                "fontSize": "7.5rem",
+                "lineHeight": "1",
+                "fontWeight": "700",
+                "color": watermark_color,
+                "opacity": "0",
+                "transform": "rotate(12deg) scale(1.85)",
+                "transition": "opacity 0.7s ease, transform 0.7s ease",
+                "pointerEvents": "none",
+                "zIndex": "0",
+            },
+            "&:hover::before": {
+                "opacity": "1",
+            },
+            "&:hover::after": {
+                "opacity": "1",
+                "transform": "rotate(0deg) scale(1.85)",
+            },
             "&:first-child": {
                 "border_top_left_radius": "14px",
                 "border_top_right_radius": "14px",
