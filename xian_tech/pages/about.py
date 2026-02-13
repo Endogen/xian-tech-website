@@ -2,7 +2,7 @@ from typing import Any
 
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section
+from ..components.common import icon_watermark_hover_card, linked_heading, page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -212,7 +212,7 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
             transform="translateY(-50%)",
             z_index="1",
         ),
-        rx.box(
+        icon_watermark_hover_card(
             rx.accordion.root(
                 rx.accordion.item(
                     rx.accordion.header(
@@ -274,12 +274,12 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
                 variant="ghost",
                 width="100%",
             ),
+            icon="history",
+            padding="0",
+            content_spacing="0",
             background=SURFACE,
+            border=f"1px solid {BORDER_COLOR}",
             border_radius="14px",
-            border_width="1px",
-            border_style="solid",
-            border_color=BORDER_COLOR,
-            transition="all 0.2s ease",
             _hover={
                 "borderColor": ACCENT,
                 "boxShadow": hover_shadow,
@@ -292,7 +292,9 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
 
 def _team_card(member: dict[str, Any]) -> rx.Component:
     """Profile card for a team member."""
-    return rx.box(
+    role = member.get("role", "").lower()
+    icon = "cpu" if "engineering" in role else "search" if "research" in role else "users"
+    return icon_watermark_hover_card(
         rx.flex(
             rx.box(
                 rx.image(
@@ -339,15 +341,9 @@ def _team_card(member: dict[str, Any]) -> rx.Component:
             align_items="start",
             height="100%",
         ),
+        icon=icon,
         padding="1.5rem",
-        background=SURFACE,
-        border=f"1px solid {BORDER_COLOR}",
         border_radius="16px",
-        transition="all 0.25s ease",
-        _hover={
-            "borderColor": ACCENT,
-            "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
-        },
         style={"&:hover img": {"transform": "scale(1.04)"}},
         height="100%",
     )
@@ -482,13 +478,12 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
         light=LIGHT_CARD_BG_BRIGHT if highlight else LIGHT_CARD_BG,
         dark=DARK_CARD_BG_BRIGHT if highlight else DARK_CARD_BG,
     )
-    return rx.box(
-        rx.vstack(
-            rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
-            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-            spacing="3",
-            align_items="start",
-        ),
+    title_lower = title.lower()
+    icon = "landmark" if "foundation" in title_lower else "cpu" if "technology" in title_lower else "network"
+    return icon_watermark_hover_card(
+        rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
+        rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+        icon=icon,
         padding="1.75rem",
         background=card_bg,
         border=f"1px solid {ACCENT_GLOW}" if highlight else f"1px solid {BORDER_COLOR}",
@@ -528,20 +523,16 @@ def _network_card(title: str, body: str) -> rx.Component:
         )
 
     return rx.box(
-        rx.box(
-            rx.vstack(
-                rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
-                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-                spacing="3",
-                align_items="start",
-            ),
+        icon_watermark_hover_card(
+            rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            icon="network",
             class_name="network-card",
             padding="1.75rem",
             background=card_bg,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="16px",
             box_shadow="0 6px 18px rgba(0,0,0,0.12)",
-            transition="all 0.25s ease",
             height="100%",
         ),
         rx.box(

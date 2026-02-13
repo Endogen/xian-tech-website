@@ -1,6 +1,14 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section, section_panel, subsection
+from ..components.common import (
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+    section_panel,
+    subsection,
+)
 from ..data import BDS_COMPONENTS
 from ..state import State
 from ..theme import (
@@ -139,74 +147,71 @@ SEARCH_SECTIONS = [
 
 
 def _sdk_install_card() -> rx.Component:
-    return rx.box(
-        rx.vstack(
+    return icon_watermark_hover_card(
+        rx.hstack(
+            hover_icon_chip("download"),
             rx.text("Install", size="3", weight="bold", color=TEXT_PRIMARY),
-            rx.flex(
-                rx.text("$", color=ACCENT, weight="bold", size="3"),
-                rx.text(
-                    SDK_INSTALL_COMMAND,
-                    color=TEXT_PRIMARY,
-                    size="3",
-                    font_family="'SF Mono', 'Monaco', monospace",
-                ),
-                rx.spacer(),
-                rx.button(
-                    rx.box(
-                        rx.icon(
-                            tag="clipboard_copy",
-                            size=18,
-                            color="currentColor",
-                            opacity=rx.cond(State.sdk_install_copied, "0", "1"),
-                            transform=rx.cond(State.sdk_install_copied, "scale(0.85)", "scale(1)"),
-                            transition="opacity 0.2s ease, transform 0.2s ease",
-                            position="absolute",
-                            top="0",
-                            left="0",
-                        ),
-                        rx.icon(
-                            tag="check",
-                            size=18,
-                            color="currentColor",
-                            opacity=rx.cond(State.sdk_install_copied, "1", "0"),
-                            transform=rx.cond(State.sdk_install_copied, "scale(1)", "scale(0.85)"),
-                            transition="opacity 0.2s ease, transform 0.2s ease",
-                            position="absolute",
-                            top="0",
-                            left="0",
-                        ),
-                        width="18px",
-                        height="18px",
-                        position="relative",
-                        display="inline-block",
-                    ),
-                    on_click=State.copy_sdk_install_command,
-                    variant="ghost",
-                    cursor="pointer",
-                    padding="0.35rem",
-                    background_color="transparent",
-                    color=rx.cond(State.sdk_install_copied, ACCENT, TEXT_MUTED),
-                    border="none",
-                    _hover={"color": ACCENT, "background_color": "transparent"},
-                    aria_label="Copy install command",
-                ),
-                gap="0.75rem",
-                padding="1rem 1.5rem",
-                background=CODE_BG,
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="8px",
-                align_items="center",
-                width="100%",
-            ),
             spacing="3",
-            align_items="start",
+            align_items="center",
+        ),
+        rx.flex(
+            rx.text("$", color=ACCENT, weight="bold", size="3"),
+            rx.text(
+                SDK_INSTALL_COMMAND,
+                color=TEXT_PRIMARY,
+                size="3",
+                font_family="'SF Mono', 'Monaco', monospace",
+            ),
+            rx.spacer(),
+            rx.button(
+                rx.box(
+                    rx.icon(
+                        tag="clipboard_copy",
+                        size=18,
+                        color="currentColor",
+                        opacity=rx.cond(State.sdk_install_copied, "0", "1"),
+                        transform=rx.cond(State.sdk_install_copied, "scale(0.85)", "scale(1)"),
+                        transition="opacity 0.2s ease, transform 0.2s ease",
+                        position="absolute",
+                        top="0",
+                        left="0",
+                    ),
+                    rx.icon(
+                        tag="check",
+                        size=18,
+                        color="currentColor",
+                        opacity=rx.cond(State.sdk_install_copied, "1", "0"),
+                        transform=rx.cond(State.sdk_install_copied, "scale(1)", "scale(0.85)"),
+                        transition="opacity 0.2s ease, transform 0.2s ease",
+                        position="absolute",
+                        top="0",
+                        left="0",
+                    ),
+                    width="18px",
+                    height="18px",
+                    position="relative",
+                    display="inline-block",
+                ),
+                on_click=State.copy_sdk_install_command,
+                variant="ghost",
+                cursor="pointer",
+                padding="0.35rem",
+                background_color="transparent",
+                color=rx.cond(State.sdk_install_copied, ACCENT, TEXT_MUTED),
+                border="none",
+                _hover={"color": ACCENT, "background_color": "transparent"},
+                aria_label="Copy install command",
+            ),
+            gap="0.75rem",
+            padding="1rem 1.5rem",
+            background=CODE_BG,
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="8px",
+            align_items="center",
             width="100%",
         ),
+        icon="download",
         padding="1.75rem",
-        background=SURFACE,
-        border=f"1px solid {BORDER_COLOR}",
-        border_radius="14px",
-        width="100%",
     )
 
 
@@ -308,37 +313,17 @@ def tooling_page() -> rx.Component:
                 ),
                 rx.grid(
                     *[
-                        rx.box(
-                            rx.vstack(
-                                rx.flex(
-                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
-                                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
-                                    direction={"base": "row", "lg": "column"},
-                                    align={"base": "center", "lg": "start"},
-                                    spacing="3",
-                                ),
-                                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                        icon_watermark_hover_card(
+                            rx.flex(
+                                hover_icon_chip(item["icon"]),
+                                rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                                direction={"base": "row", "lg": "column"},
+                                align={"base": "center", "lg": "start"},
                                 spacing="3",
-                                align_items="start",
                             ),
+                            rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                            icon=item["icon"],
                             padding="2rem",
-                            background=SURFACE,
-                            border=f"1px solid {BORDER_COLOR}",
-                            border_radius="14px",
-                            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-                            height="100%",
-                            width="100%",
-                            display="flex",
-                            flex_direction="column",
-                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                            background_size="200% 200%",
-                            background_position="left center",
-                            _hover={
-                                "borderColor": ACCENT,
-                                "backgroundColor": SURFACE_HOVER,
-                                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                                "backgroundPosition": "right center",
-                            },
                         )
                         for item in BDS_COMPONENTS
                     ],
@@ -480,45 +465,43 @@ def tooling_page() -> rx.Component:
                 ),
                 rx.grid(
                     _sdk_install_card(),
-                    rx.box(
-                        rx.vstack(
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("list_checks"),
                             rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.vstack(
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                rx.hstack(
-                                    rx.icon(tag="check", size=16, color=ACCENT),
-                                    rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                spacing="2",
-                                align_items="start",
-                            ),
                             spacing="3",
+                            align_items="center",
+                        ),
+                        rx.vstack(
+                            rx.hstack(
+                                rx.icon(tag="check", size=16, color=ACCENT),
+                                rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            rx.hstack(
+                                rx.icon(tag="check", size=16, color=ACCENT),
+                                rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            rx.hstack(
+                                rx.icon(tag="check", size=16, color=ACCENT),
+                                rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            rx.hstack(
+                                rx.icon(tag="check", size=16, color=ACCENT),
+                                rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            spacing="2",
                             align_items="start",
                         ),
+                        icon="list_checks",
                         padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
                     ),
                     columns={"base": "1", "lg": "2"},
                     spacing="4",
@@ -657,66 +640,62 @@ def tooling_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.grid(
-                    rx.box(
-                        rx.vstack(
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("bot"),
                             rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.vstack(
-                                _feature_item("Create or import standard and HD wallets."),
-                                _feature_item("Check balances, send tokens, and simulate transactions."),
-                                _feature_item("Query contract state, source, and token metadata."),
-                                _feature_item("DEX helpers for buy/sell plus real-time pricing."),
-                                _feature_item("Crypto utilities for signing and encryption."),
-                                spacing="2",
-                                align_items="start",
-                            ),
                             spacing="3",
-                            align_items="start",
+                            align_items="center",
                         ),
-                        padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
-                    ),
-                    rx.box(
                         rx.vstack(
-                            rx.text("Install & use", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.text(
-                                "Clone the repo and build the Docker image locally:",
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.6",
-                            ),
-                            rx.code_block(
-                                MCP_QUICKSTART,
-                                language="bash",
-                                show_line_numbers=False,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            rx.text(
-                                "Then register the server in your MCP config (Claude Desktop or LM Studio):",
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.6",
-                            ),
-                            rx.code_block(
-                                MCP_CONFIG_SNIPPET,
-                                language="json",
-                                show_line_numbers=False,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            spacing="3",
+                            _feature_item("Create or import standard and HD wallets."),
+                            _feature_item("Check balances, send tokens, and simulate transactions."),
+                            _feature_item("Query contract state, source, and token metadata."),
+                            _feature_item("DEX helpers for buy/sell plus real-time pricing."),
+                            _feature_item("Crypto utilities for signing and encryption."),
+                            spacing="2",
                             align_items="start",
                         ),
+                        icon="bot",
                         padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
+                    ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("terminal"),
+                            rx.text("Install & use", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.text(
+                            "Clone the repo and build the Docker image locally:",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        rx.code_block(
+                            MCP_QUICKSTART,
+                            language="bash",
+                            show_line_numbers=False,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Then register the server in your MCP config (Claude Desktop or LM Studio):",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        rx.code_block(
+                            MCP_CONFIG_SNIPPET,
+                            language="json",
+                            show_line_numbers=False,
+                            wrap_long_lines=False,
+                            custom_style={"overflowX": "auto"},
+                            width="100%",
+                        ),
+                        icon="terminal",
+                        padding="1.75rem",
                     ),
                     columns={"base": "1", "lg": "2"},
                     spacing="4",
@@ -777,47 +756,43 @@ def tooling_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.grid(
-                    rx.box(
-                        rx.vstack(
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("book_open"),
                             rx.text("Guide highlights", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.vstack(
-                                _feature_item("Python 3.11 only with strict builtins and no standard imports."),
-                                _feature_item("Only @construct and @export; no return type annotations."),
-                                _feature_item("Use Variable/Hash for state; no tuple unpacking or Hash membership checks."),
-                                _feature_item("importlib for cross-contract calls; no nested imports."),
-                                _feature_item("Events, limits, and stamp costs spelled out for safe design."),
-                                spacing="2",
-                                align_items="start",
-                            ),
                             spacing="3",
-                            align_items="start",
+                            align_items="center",
                         ),
-                        padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
-                    ),
-                    rx.box(
                         rx.vstack(
-                            rx.text("How to use", size="3", weight="bold", color=TEXT_PRIMARY),
-                            rx.vstack(
-                                _feature_item("Start from the contract template and keep state at top level."),
-                                _feature_item("Annotate every @export parameter; avoid underscore names."),
-                                _feature_item("Use ctx.caller/ctx.signer and injected globals (now, block_num)."),
-                                _feature_item("Validate against the guide checklist before deployment."),
-                                _feature_item("Use the contracting guide as a prompt or review checklist for AI workflows."),
-                                spacing="2",
-                                align_items="start",
-                            ),
-                            spacing="3",
+                            _feature_item("Python 3.11 only with strict builtins and no standard imports."),
+                            _feature_item("Only @construct and @export; no return type annotations."),
+                            _feature_item("Use Variable/Hash for state; no tuple unpacking or Hash membership checks."),
+                            _feature_item("importlib for cross-contract calls; no nested imports."),
+                            _feature_item("Events, limits, and stamp costs spelled out for safe design."),
+                            spacing="2",
                             align_items="start",
                         ),
+                        icon="book_open",
                         padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
-                        width="100%",
+                    ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("list_checks"),
+                            rx.text("How to use", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.vstack(
+                            _feature_item("Start from the contract template and keep state at top level."),
+                            _feature_item("Annotate every @export parameter; avoid underscore names."),
+                            _feature_item("Use ctx.caller/ctx.signer and injected globals (now, block_num)."),
+                            _feature_item("Validate against the guide checklist before deployment."),
+                            _feature_item("Use the contracting guide as a prompt or review checklist for AI workflows."),
+                            spacing="2",
+                            align_items="start",
+                        ),
+                        icon="list_checks",
+                        padding="1.75rem",
                     ),
                     columns={"base": "1", "lg": "2"},
                     spacing="4",
@@ -878,54 +853,42 @@ def tooling_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.grid(
-                    rx.box(
-                        rx.vstack(
-                            rx.hstack(
-                                rx.icon(tag="code", size=24, color=ACCENT),
-                                rx.heading("xian-sdk-skill", size="5", weight="bold", color=TEXT_PRIMARY),
-                                spacing="3",
-                                align_items="center",
-                            ),
-                            rx.text(
-                                "Guides agents through xian-py workflows: wallet creation (including HD/BIP39), "
-                                "token transfers, contract deployment and calls, state queries, and transaction "
-                                "simulation for reliable automation.",
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.7",
-                            ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("code", size=24),
+                            rx.heading("xian-sdk-skill", size="5", weight="bold", color=TEXT_PRIMARY),
                             spacing="3",
-                            align_items="start",
+                            align_items="center",
                         ),
+                        rx.text(
+                            "Guides agents through xian-py workflows: wallet creation (including HD/BIP39), "
+                            "token transfers, contract deployment and calls, state queries, and transaction "
+                            "simulation for reliable automation.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.7",
+                        ),
+                        icon="code",
                         padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
                         height="100%",
                     ),
-                    rx.box(
-                        rx.vstack(
-                            rx.hstack(
-                                rx.icon(tag="server", size=24, color=ACCENT),
-                                rx.heading("xian-node-skill", size="5", weight="bold", color=TEXT_PRIMARY),
-                                spacing="3",
-                                align_items="center",
-                            ),
-                            rx.text(
-                                "Covers node operations via xian-stack: joining mainnet/testnet, creating networks, "
-                                "validator and service node setup, monitoring, CometBFT configuration, and Docker "
-                                "deployment basics.",
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.7",
-                            ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("server", size=24),
+                            rx.heading("xian-node-skill", size="5", weight="bold", color=TEXT_PRIMARY),
                             spacing="3",
-                            align_items="start",
+                            align_items="center",
                         ),
+                        rx.text(
+                            "Covers node operations via xian-stack: joining mainnet/testnet, creating networks, "
+                            "validator and service node setup, monitoring, CometBFT configuration, and Docker "
+                            "deployment basics.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.7",
+                        ),
+                        icon="server",
                         padding="1.75rem",
-                        background=SURFACE,
-                        border=f"1px solid {BORDER_COLOR}",
-                        border_radius="14px",
                         height="100%",
                     ),
                     columns={"base": "1", "lg": "2"},

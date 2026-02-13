@@ -1,6 +1,15 @@
 import reflex as rx
 
-from ..components.common import code_block, linked_heading, page_layout, section, section_panel, subsection
+from ..components.common import (
+    code_block,
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+    section_panel,
+    subsection,
+)
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -63,38 +72,24 @@ def change_metadata(key: str, value):
 
 def tutorials_page() -> rx.Component:
     """Tutorials page."""
-    def concept_card(title: str, body: str, points: list[str]) -> rx.Component:
-        return rx.box(
-            rx.vstack(
+    def concept_card(title: str, body: str, points: list[str], icon: str) -> rx.Component:
+        return icon_watermark_hover_card(
+            rx.flex(
+                hover_icon_chip(icon),
                 rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
-                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-                rx.vstack(
-                    *[rx.text(f"• {item}", size="3", color=TEXT_MUTED, line_height="1.7") for item in points],
-                    spacing="1",
-                    align_items="start",
-                    width="100%",
-                ),
+                direction={"base": "row", "lg": "column"},
+                align={"base": "center", "lg": "start"},
                 spacing="3",
-                align_items="start",
             ),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            rx.vstack(
+                *[rx.text(f"• {item}", size="3", color=TEXT_MUTED, line_height="1.7") for item in points],
+                spacing="1",
+                align_items="start",
+                width="100%",
+            ),
+            icon=icon,
             padding="2rem",
-            background=SURFACE,
-            border=f"1px solid {BORDER_COLOR}",
-            border_radius="14px",
-            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-            height="100%",
-            width="100%",
-            display="flex",
-            flex_direction="column",
-            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-            background_size="200% 200%",
-            background_position="left center",
-            _hover={
-                "borderColor": ACCENT,
-                "backgroundColor": SURFACE_HOVER,
-                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                "backgroundPosition": "right center",
-            },
         )
 
     def step_block(step: str, title: str, body: str, snippet: str | None = None) -> rx.Component:
@@ -240,6 +235,7 @@ def tutorials_page() -> rx.Component:
                             "Names must start with con_, be lowercase, and match ^con_[a-z][a-z0-9_]*$.",
                             "Use @export for public functions, @construct for one-time initialization.",
                         ],
+                        "code",
                     ),
                     concept_card(
                         "State & storage",
@@ -250,6 +246,7 @@ def tutorials_page() -> rx.Component:
                             "Use .set() / .get() for Variables, and indexing for Hash (total.set(100), balances[ctx.caller] = 10).",
                             "ForeignHash and ForeignVariable read state from other contracts.",
                         ],
+                        "database",
                     ),
                     concept_card(
                         "Execution context",
@@ -258,6 +255,7 @@ def tutorials_page() -> rx.Component:
                             "ctx.caller changes with each contract hop; ctx.signer stays constant.",
                             "ctx.this is the current contract identity; ctx.owner can gate calls.",
                         ],
+                        "user",
                     ),
                     concept_card(
                         "Deterministic Python",
@@ -266,6 +264,7 @@ def tutorials_page() -> rx.Component:
                             "Classes are not allowed; use dictionaries for structured data.",
                             "Many built-ins are removed and exceptions are heavily restricted.",
                         ],
+                        "shield",
                     ),
                     concept_card(
                         "Stamps & limits",
@@ -274,6 +273,7 @@ def tutorials_page() -> rx.Component:
                             "Reads are free; writes cost stamps based on bytes written.",
                             "If stamps run out, execution reverts. Limits apply to memory and calls.",
                         ],
+                        "gauge",
                     ),
                     columns={"base": "1fr", "lg": "repeat(2, minmax(0, 1fr))"},
                     gap="1.5rem",

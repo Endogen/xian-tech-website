@@ -2,7 +2,7 @@ from typing import Any
 
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import icon_watermark_hover_card, page_layout, section
 from ..state import State
 from ..theme import (
     ACCENT,
@@ -204,7 +204,7 @@ def contact_page() -> rx.Component:
                         rx.box(),
                     ),
                 ),
-                rx.box(
+                icon_watermark_hover_card(
                     rx.form(
                         rx.vstack(
                             rx.grid(
@@ -274,11 +274,8 @@ def contact_page() -> rx.Component:
                         reset_on_submit=False,
                         key=State.contact_form_key,
                     ),
+                    icon="mail",
                     padding="3rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    width="100%",
                 ),
                 spacing="6",
                 align_items="start",

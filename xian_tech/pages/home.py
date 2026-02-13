@@ -198,12 +198,6 @@ def mission_section() -> rx.Component:
             align_items="flex-start",
         )
 
-    card_props = {
-        "display": "flex",
-        "flex_direction": "column",
-        "align_self": "stretch",
-    }
-
     return section(
         rx.vstack(
             linked_heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
@@ -214,70 +208,34 @@ def mission_section() -> rx.Component:
                 line_height="1.7",
             ),
             rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Keep it simple & powerful", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Keep ABCI and the contracting engine clean, deterministic, and auditable."),
-                        bullet("Maintain compatibility with new Python interpreters without breaking contracts."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Keep it simple & powerful", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Keep ABCI and the contracting engine clean, deterministic, and auditable."),
+                    bullet("Maintain compatibility with new Python interpreters without breaking contracts."),
+                    icon="shield",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Extend functionality", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Evolve node features and operational insight."),
-                        bullet("Ship and maintain high-value system contracts."),
-                        bullet("Deliver tools (CLI, SDKs, services) to interface easily with Xian."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Extend functionality", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Evolve node features and operational insight."),
+                    bullet("Ship and maintain high-value system contracts."),
+                    bullet("Deliver tools (CLI, SDKs, services) to interface easily with Xian."),
+                    icon="puzzle",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Smooth setup for local nodes and multi-node environments."),
-                        bullet("Documented patterns for distributed production networks."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Smooth setup for local nodes and multi-node environments."),
+                    bullet("Documented patterns for distributed production networks."),
+                    icon="network",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Explain how the stack works and how to build on it and interface with it."),
-                        bullet("Keep upgrade paths, examples, and reference guides current."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Explain how the stack works and how to build on it and interface with it."),
+                    bullet("Keep upgrade paths, examples, and reference guides current."),
+                    icon="book_open",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
                 columns={
                     "base": "repeat(1, minmax(0, 1fr))",
