@@ -756,7 +756,7 @@ def icon_watermark_hover_card(
 ) -> rx.Component:
     """Reusable card shell with animated icon watermark hover effect."""
     gradient_overlay = rx.color_mode_cond(
-        light="linear-gradient(135deg, rgba(80, 177, 101, 0.1), rgba(80, 177, 101, 0.04))",
+        light="linear-gradient(135deg, rgba(80, 177, 101, 0.2), rgba(80, 177, 101, 0.08))",
         dark="linear-gradient(135deg, rgba(0, 255, 136, 0.14), rgba(0, 255, 136, 0.05))",
     )
     mesh_overlay = rx.color_mode_cond(
@@ -764,8 +764,20 @@ def icon_watermark_hover_card(
         dark="linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px)",
     )
     blob_overlay = rx.color_mode_cond(
-        light="radial-gradient(circle, rgba(80, 177, 101, 0.34) 0%, rgba(80, 177, 101, 0) 70%)",
+        light="radial-gradient(circle, rgba(80, 177, 101, 0.5) 0%, rgba(80, 177, 101, 0) 70%)",
         dark="radial-gradient(circle, rgba(0, 255, 136, 0.32) 0%, rgba(0, 255, 136, 0) 72%)",
+    )
+    watermark_icon_color = rx.color_mode_cond(
+        light="#2e8c47",
+        dark=ACCENT,
+    )
+    hover_mesh_opacity = rx.color_mode_cond(light="0.16", dark="0.1")
+    hover_blob_opacity = rx.color_mode_cond(light="0.2", dark="0.2")
+    hover_noise_opacity = rx.color_mode_cond(light="0.14", dark="0.2")
+    hover_watermark_opacity = rx.color_mode_cond(light="0.13", dark="0.07")
+    hover_shadow = rx.color_mode_cond(
+        light="0 18px 32px rgba(80, 177, 101, 0.2)",
+        dark=f"0 18px 32px {ACCENT_SOFT}",
     )
     icon_chip_bg = rx.color_mode_cond(
         light="linear-gradient(135deg, #f9fafb, #f3f4f6)",
@@ -870,17 +882,17 @@ def icon_watermark_hover_card(
             "opacity": "1",
         },
         "&:hover .wm-card-mesh": {
-            "opacity": "0.1",
+            "opacity": hover_mesh_opacity,
         },
         "&:hover .wm-card-blob": {
-            "opacity": rx.color_mode_cond(light="0.1", dark="0.2"),
+            "opacity": hover_blob_opacity,
             "transform": "scale(1.25)",
         },
         "&:hover .wm-card-noise": {
-            "opacity": "0.2",
+            "opacity": hover_noise_opacity,
         },
         "&:hover .wm-card-watermark": {
-            "opacity": "0.07",
+            "opacity": hover_watermark_opacity,
             "transform": "rotate(0deg) scale(2.5)",
         },
         "&:hover .wm-card-icon-chip": {
@@ -892,7 +904,7 @@ def icon_watermark_hover_card(
     hover_style = {
         "borderColor": ACCENT,
         "backgroundColor": SURFACE_HOVER,
-        "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+        "boxShadow": hover_shadow,
     }
     hover_style.update(custom_hover)
 
@@ -902,7 +914,7 @@ def icon_watermark_hover_card(
         rx.box(class_name="wm-card-blob"),
         rx.box(class_name="wm-card-noise"),
         rx.box(
-            rx.icon(tag=icon, size=watermark_icon_size, color=ACCENT),
+            rx.icon(tag=icon, size=watermark_icon_size, color=watermark_icon_color),
             class_name="wm-card-watermark",
         ),
         rx.vstack(
