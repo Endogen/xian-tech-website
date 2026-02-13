@@ -7,7 +7,6 @@ from ..data import NAV_LINKS
 from ..state import State
 from ..theme import (
     ACCENT,
-    ACCENT_GLOW,
     ACCENT_SOFT,
     BORDER_BRIGHT,
     BORDER_COLOR,
@@ -739,33 +738,200 @@ def code_block(code: str) -> rx.Component:
     )
 
 
-def feature_card(title: str, description: str, icon: str) -> rx.Component:
-    """Feature card with hover affordances."""
+def hover_icon_chip(icon: str, *, size: int = 28) -> rx.Component:
+    """Icon chip tuned for the card watermark hover effect."""
     return rx.box(
-        rx.vstack(
-            rx.icon(tag=icon, size=28, color=ACCENT),
-            rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
-            rx.text(
-                description,
-                size="3",
-                color=TEXT_MUTED,
-                line_height="1.7",
-            ),
-            spacing="5",
-            align_items="start",
-        ),
-        padding="2.5rem",
-        background=SURFACE,
-        border=f"1px solid {BORDER_COLOR}",
-        border_radius="14px",
-        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        _hover={
-            "borderColor": ACCENT,
-            "backgroundColor": SURFACE_HOVER,
-            "transform": "translateY(-8px)",
-            "boxShadow": f"0 20px 40px {ACCENT_SOFT}",
+        rx.icon(tag=icon, size=size, color=ACCENT, class_name="wm-card-chip-icon"),
+        class_name="wm-card-icon-chip",
+    )
+
+
+def icon_watermark_hover_card(
+    *children: rx.Component,
+    icon: str,
+    watermark_icon_size: int = 128,
+    content_spacing: str = "3",
+    content_align_items: str = "start",
+    **kwargs: Any,
+) -> rx.Component:
+    """Reusable card shell with animated icon watermark hover effect."""
+    gradient_overlay = rx.color_mode_cond(
+        light="linear-gradient(135deg, rgba(80, 177, 101, 0.1), rgba(80, 177, 101, 0.04))",
+        dark="linear-gradient(135deg, rgba(0, 255, 136, 0.14), rgba(0, 255, 136, 0.05))",
+    )
+    mesh_overlay = rx.color_mode_cond(
+        light="linear-gradient(to right, rgba(128, 128, 128, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(128, 128, 128, 0.08) 1px, transparent 1px)",
+        dark="linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px)",
+    )
+    blob_overlay = rx.color_mode_cond(
+        light="radial-gradient(circle, rgba(80, 177, 101, 0.34) 0%, rgba(80, 177, 101, 0) 70%)",
+        dark="radial-gradient(circle, rgba(0, 255, 136, 0.32) 0%, rgba(0, 255, 136, 0) 72%)",
+    )
+    icon_chip_bg = rx.color_mode_cond(
+        light="linear-gradient(135deg, #f9fafb, #f3f4f6)",
+        dark="linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
+    )
+    icon_chip_border = rx.color_mode_cond(
+        light="rgba(229, 231, 235, 0.95)",
+        dark="rgba(255, 255, 255, 0.1)",
+    )
+
+    custom_hover = kwargs.pop("_hover", {})
+    custom_style = kwargs.pop("style", {})
+
+    kwargs.setdefault("padding", "2rem")
+    kwargs.setdefault("background", SURFACE)
+    kwargs.setdefault("border", f"1px solid {BORDER_COLOR}")
+    kwargs.setdefault("border_radius", "14px")
+    kwargs.setdefault("height", "100%")
+    kwargs.setdefault("width", "100%")
+    kwargs.setdefault("display", "flex")
+    kwargs.setdefault("flex_direction", "column")
+    kwargs.setdefault("position", "relative")
+    kwargs.setdefault("overflow", "hidden")
+    kwargs.setdefault("transition", "all 0.5s ease")
+
+    style = {
+        "& .wm-card-content": {
+            "position": "relative",
+            "zIndex": "1",
         },
-        height="100%",
+        "& .wm-card-gradient": {
+            "position": "absolute",
+            "inset": "0",
+            "background": gradient_overlay,
+            "opacity": "0",
+            "transition": "opacity 0.5s ease",
+            "pointerEvents": "none",
+            "zIndex": "0",
+        },
+        "& .wm-card-mesh": {
+            "position": "absolute",
+            "inset": "0",
+            "background": mesh_overlay,
+            "backgroundSize": "20px 20px",
+            "opacity": "0",
+            "transition": "opacity 0.7s ease",
+            "pointerEvents": "none",
+            "zIndex": "0",
+        },
+        "& .wm-card-blob": {
+            "position": "absolute",
+            "right": "-5rem",
+            "top": "-5rem",
+            "height": "16rem",
+            "width": "16rem",
+            "borderRadius": "999px",
+            "background": blob_overlay,
+            "opacity": "0",
+            "transform": "scale(1)",
+            "filter": "blur(60px)",
+            "transition": "opacity 0.7s ease, transform 0.7s ease",
+            "pointerEvents": "none",
+            "zIndex": "0",
+        },
+        "& .wm-card-noise": {
+            "position": "absolute",
+            "inset": "0",
+            "opacity": "0",
+            "transition": "opacity 0.5s ease",
+            "backgroundImage": "url('https://grainy-gradients.vercel.app/noise.svg')",
+            "mixBlendMode": "overlay",
+            "filter": "brightness(1) contrast(1.5)",
+            "pointerEvents": "none",
+            "zIndex": "0",
+        },
+        "& .wm-card-watermark": {
+            "position": "absolute",
+            "bottom": "-1rem",
+            "right": "-1rem",
+            "opacity": "0",
+            "transform": "rotate(12deg) scale(2.5)",
+            "transition": "opacity 0.7s ease, transform 0.7s ease",
+            "pointerEvents": "none",
+            "zIndex": "0",
+        },
+        "& .wm-card-icon-chip": {
+            "position": "relative",
+            "display": "inline-flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "padding": "0.75rem",
+            "borderRadius": "0.75rem",
+            "background": icon_chip_bg,
+            "border": f"1px solid {icon_chip_border}",
+            "boxShadow": "0 1px 2px rgba(15, 23, 42, 0.08)",
+            "transition": "transform 0.5s ease, border-color 0.35s ease",
+        },
+        "& .wm-card-chip-icon": {
+            "transition": "color 0.3s ease",
+        },
+        "&:hover .wm-card-gradient": {
+            "opacity": "1",
+        },
+        "&:hover .wm-card-mesh": {
+            "opacity": "0.1",
+        },
+        "&:hover .wm-card-blob": {
+            "opacity": rx.color_mode_cond(light="0.1", dark="0.2"),
+            "transform": "scale(1.25)",
+        },
+        "&:hover .wm-card-noise": {
+            "opacity": "0.2",
+        },
+        "&:hover .wm-card-watermark": {
+            "opacity": "0.07",
+            "transform": "rotate(0deg) scale(2.5)",
+        },
+        "&:hover .wm-card-icon-chip": {
+            "transform": "scale(1.05)",
+        },
+    }
+    style.update(custom_style)
+
+    hover_style = {
+        "borderColor": ACCENT,
+        "backgroundColor": SURFACE_HOVER,
+        "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
+    }
+    hover_style.update(custom_hover)
+
+    return rx.box(
+        rx.box(class_name="wm-card-gradient"),
+        rx.box(class_name="wm-card-mesh"),
+        rx.box(class_name="wm-card-blob"),
+        rx.box(class_name="wm-card-noise"),
+        rx.box(
+            rx.icon(tag=icon, size=watermark_icon_size, color=ACCENT),
+            class_name="wm-card-watermark",
+        ),
+        rx.vstack(
+            *children,
+            spacing=content_spacing,
+            align_items=content_align_items,
+            width="100%",
+            class_name="wm-card-content",
+        ),
+        style=style,
+        _hover=hover_style,
+        **kwargs,
+    )
+
+
+def feature_card(title: str, description: str, icon: str) -> rx.Component:
+    """Feature card with animated icon watermark hover affordance."""
+    return icon_watermark_hover_card(
+        hover_icon_chip(icon),
+        rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
+        rx.text(
+            description,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.7",
+        ),
+        icon=icon,
+        padding="2.5rem",
+        content_spacing="5",
     )
 
 
@@ -1184,6 +1350,8 @@ __all__ = [
     "command_palette_button",
     "code_block",
     "feature_card",
+    "hover_icon_chip",
+    "icon_watermark_hover_card",
     "nav_bar",
     "nav_link",
     "page_layout",
