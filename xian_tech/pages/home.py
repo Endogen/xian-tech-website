@@ -136,6 +136,31 @@ def hero_section() -> rx.Component:
 
 def stack_overview() -> rx.Component:
     """Stack overview grid."""
+    icon_chip_bg = rx.color_mode_cond(
+        light="rgba(80, 177, 101, 0.12)",
+        dark="rgba(0, 255, 136, 0.14)",
+    )
+    icon_chip_hover_bg = rx.color_mode_cond(
+        light="rgba(80, 177, 101, 0.2)",
+        dark="rgba(0, 255, 136, 0.22)",
+    )
+    icon_chip_border = rx.color_mode_cond(
+        light="rgba(80, 177, 101, 0.35)",
+        dark="rgba(0, 255, 136, 0.35)",
+    )
+    card_mesh_overlay = rx.color_mode_cond(
+        light="linear-gradient(to right, rgba(128, 128, 128, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(128, 128, 128, 0.08) 1px, transparent 1px)",
+        dark="linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px)",
+    )
+    card_blob_overlay = rx.color_mode_cond(
+        light="radial-gradient(circle, rgba(80, 177, 101, 0.34) 0%, rgba(80, 177, 101, 0) 70%)",
+        dark="radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0) 72%)",
+    )
+    icon_inner_glow = rx.color_mode_cond(
+        light="radial-gradient(circle, rgba(80, 177, 101, 0.34) 0%, rgba(80, 177, 101, 0) 68%)",
+        dark="radial-gradient(circle, rgba(0, 255, 136, 0.32) 0%, rgba(0, 255, 136, 0) 70%)",
+    )
+
     return section(
         rx.vstack(
             rx.text(
@@ -150,9 +175,19 @@ def stack_overview() -> rx.Component:
                 *[
                     rx.link(
                         rx.box(
+                            rx.box(class_name="stack-card-mesh"),
+                            rx.box(class_name="stack-card-blob"),
+                            rx.box(
+                                rx.icon(tag=item["icon"], size=58, color=ACCENT),
+                                class_name="stack-card-watermark",
+                            ),
                             rx.vstack(
                                 rx.flex(
-                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
+                                    rx.box(
+                                        rx.box(class_name="stack-card-icon-glow"),
+                                        rx.icon(tag=item["icon"], size=28, color=ACCENT, class_name="stack-card-icon"),
+                                        class_name="stack-card-icon-wrap",
+                                    ),
                                     rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
                                     direction={"base": "row", "lg": "column"},
                                     align={"base": "center", "lg": "start"},
@@ -161,24 +196,113 @@ def stack_overview() -> rx.Component:
                                 rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
                                 spacing="3",
                                 align_items="start",
+                                class_name="stack-card-content",
                             ),
                             padding="2rem",
                             background=SURFACE,
                             border=f"1px solid {BORDER_COLOR}",
                             border_radius="14px",
-                            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
+                            transition="box-shadow 0.3s ease, border-color 0.2s ease",
                             height="100%",
                             width="100%",
                             display="flex",
                             flex_direction="column",
-                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                            background_size="200% 200%",
-                            background_position="left center",
+                            position="relative",
+                            overflow="hidden",
+                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.07), rgba(0, 179, 92, 0))",
+                            style={
+                                "& .stack-card-content": {
+                                    "position": "relative",
+                                    "zIndex": "1",
+                                },
+                                "& .stack-card-mesh": {
+                                    "position": "absolute",
+                                    "inset": "0",
+                                    "background": card_mesh_overlay,
+                                    "backgroundSize": "22px 22px",
+                                    "opacity": "0",
+                                    "transition": "opacity 0.55s ease",
+                                    "pointerEvents": "none",
+                                    "zIndex": "0",
+                                },
+                                "& .stack-card-blob": {
+                                    "position": "absolute",
+                                    "right": "-5rem",
+                                    "top": "-5rem",
+                                    "height": "16rem",
+                                    "width": "16rem",
+                                    "borderRadius": "999px",
+                                    "background": card_blob_overlay,
+                                    "opacity": "0",
+                                    "transform": "scale(0.75)",
+                                    "transition": "opacity 0.65s ease, transform 0.7s ease",
+                                    "pointerEvents": "none",
+                                    "zIndex": "0",
+                                },
+                                "& .stack-card-watermark": {
+                                    "position": "absolute",
+                                    "bottom": "-0.65rem",
+                                    "right": "-0.75rem",
+                                    "opacity": "0",
+                                    "transform": "rotate(12deg) scale(2.35)",
+                                    "transformOrigin": "center",
+                                    "transition": "opacity 0.65s ease, transform 0.7s ease",
+                                    "pointerEvents": "none",
+                                    "zIndex": "0",
+                                },
+                                "& .stack-card-icon-wrap": {
+                                    "position": "relative",
+                                    "display": "inline-flex",
+                                    "alignItems": "center",
+                                    "justifyContent": "center",
+                                    "width": "2.75rem",
+                                    "height": "2.75rem",
+                                    "borderRadius": "999px",
+                                    "background": icon_chip_bg,
+                                    "border": f"1px solid {icon_chip_border}",
+                                    "transition": "background-color 0.3s ease, border-color 0.3s ease",
+                                },
+                                "& .stack-card-icon-glow": {
+                                    "position": "absolute",
+                                    "inset": "-38%",
+                                    "borderRadius": "999px",
+                                    "background": icon_inner_glow,
+                                    "opacity": "0",
+                                    "transform": "scale(0.4)",
+                                    "transition": "opacity 0.35s ease, transform 0.45s ease",
+                                },
+                                "& .stack-card-icon": {
+                                    "position": "relative",
+                                    "zIndex": "1",
+                                    "transition": "transform 0.35s ease",
+                                },
+                                "&:hover .stack-card-icon-wrap": {
+                                    "background": icon_chip_hover_bg,
+                                    "borderColor": ACCENT_GLOW,
+                                },
+                                "&:hover .stack-card-icon-glow": {
+                                    "opacity": "1",
+                                    "transform": "scale(1)",
+                                },
+                                "&:hover .stack-card-icon": {
+                                    "transform": "scale(1.08)",
+                                },
+                                "&:hover .stack-card-mesh": {
+                                    "opacity": "0.1",
+                                },
+                                "&:hover .stack-card-blob": {
+                                    "opacity": "1",
+                                    "transform": "scale(1.25)",
+                                },
+                                "&:hover .stack-card-watermark": {
+                                    "opacity": "0.085",
+                                    "transform": "rotate(0deg) scale(2.6)",
+                                },
+                            },
                             _hover={
                                 "borderColor": ACCENT,
                                 "backgroundColor": SURFACE_HOVER,
                                 "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                                "backgroundPosition": "right center",
                             },
                         ),
                         href=item["href"],
