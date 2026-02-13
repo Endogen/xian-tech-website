@@ -478,12 +478,13 @@ def _term_card(title: str, body: str, highlight: bool = False) -> rx.Component:
         light=LIGHT_CARD_BG_BRIGHT if highlight else LIGHT_CARD_BG,
         dark=DARK_CARD_BG_BRIGHT if highlight else DARK_CARD_BG,
     )
-    title_lower = title.lower()
-    icon = "landmark" if "foundation" in title_lower else "cpu" if "technology" in title_lower else "network"
-    return icon_watermark_hover_card(
-        rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
-        rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-        icon=icon,
+    return rx.box(
+        rx.vstack(
+            rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            spacing="3",
+            align_items="start",
+        ),
         padding="1.75rem",
         background=card_bg,
         border=f"1px solid {ACCENT_GLOW}" if highlight else f"1px solid {BORDER_COLOR}",
@@ -523,16 +524,20 @@ def _network_card(title: str, body: str) -> rx.Component:
         )
 
     return rx.box(
-        icon_watermark_hover_card(
-            rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
-            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-            icon="network",
+        rx.box(
+            rx.vstack(
+                rx.text(title, size="4", weight="bold", color=TEXT_PRIMARY),
+                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+                spacing="3",
+                align_items="start",
+            ),
             class_name="network-card",
             padding="1.75rem",
             background=card_bg,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="16px",
             box_shadow="0 6px 18px rgba(0,0,0,0.12)",
+            transition="all 0.25s ease",
             height="100%",
         ),
         rx.box(
