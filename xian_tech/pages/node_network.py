@@ -1,6 +1,14 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section, section_panel, subsection
+from ..components.common import (
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+    section_panel,
+    subsection,
+)
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -140,38 +148,19 @@ def node_network_page() -> rx.Component:
         )
 
     def stack_card(title: str, body: str, command: str, icon: str) -> rx.Component:
-        return rx.box(
-            rx.vstack(
-                rx.flex(
-                    rx.icon(tag=icon, size=22, color=ACCENT),
-                    rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
-                    direction={"base": "row", "lg": "column"},
-                    align={"base": "center", "lg": "start"},
-                    spacing="3",
-                ),
-                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-                command_block(command),
-                spacing="4",
-                align_items="start",
+        return icon_watermark_hover_card(
+            rx.flex(
+                hover_icon_chip(icon, size=22),
+                rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
+                direction={"base": "row", "lg": "column"},
+                align={"base": "center", "lg": "start"},
+                spacing="3",
             ),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            command_block(command),
+            icon=icon,
             padding="2rem",
-            background=SURFACE,
-            border=f"1px solid {BORDER_COLOR}",
-            border_radius="14px",
-            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-            _hover={
-                "borderColor": ACCENT,
-                "backgroundColor": SURFACE_HOVER,
-                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                "backgroundPosition": "right center",
-            },
-            height="100%",
-            width="100%",
-            display="flex",
-            flex_direction="column",
-            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-            background_size="200% 200%",
-            background_position="left center",
+            content_spacing="4",
         )
 
     return page_layout(

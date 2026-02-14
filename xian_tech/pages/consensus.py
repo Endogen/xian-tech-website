@@ -1,6 +1,14 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section, section_panel, subsection
+from ..components.common import (
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+    section_panel,
+    subsection,
+)
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -59,53 +67,26 @@ SEARCH_SECTIONS = [
 
 def consensus_page() -> rx.Component:
     """CometBFT consensus overview."""
-    def info_card(title: str, body: str) -> rx.Component:
-        return rx.box(
-            rx.vstack(
-                rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
-                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-                spacing="3",
-                align_items="start",
-            ),
+    def info_card(title: str, body: str, icon: str = "circle_help") -> rx.Component:
+        return icon_watermark_hover_card(
+            rx.heading(title, size="5", color=TEXT_PRIMARY, weight="bold"),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            icon=icon,
             padding="2.25rem",
-            background=SURFACE,
-            border=f"1px solid {BORDER_COLOR}",
-            border_radius="14px",
-            _hover={"backgroundColor": SURFACE_HOVER, "transform": "translateY(-2px)"},
         )
 
     def choice_card(title: str, body: str, icon: str) -> rx.Component:
-        return rx.box(
-            rx.vstack(
-                rx.flex(
-                    rx.icon(tag=icon, size=28, color=ACCENT),
-                    rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
-                    direction={"base": "row", "lg": "column"},
-                    align={"base": "center", "lg": "start"},
-                    spacing="3",
-                ),
-                rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+        return icon_watermark_hover_card(
+            rx.flex(
+                hover_icon_chip(icon),
+                rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
+                direction={"base": "row", "lg": "column"},
+                align={"base": "center", "lg": "start"},
                 spacing="3",
-                align_items="start",
             ),
+            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
+            icon=icon,
             padding="2rem",
-            background=SURFACE,
-            border=f"1px solid {BORDER_COLOR}",
-            border_radius="14px",
-            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-            height="100%",
-            width="100%",
-            display="flex",
-            flex_direction="column",
-            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-            background_size="200% 200%",
-            background_position="left center",
-            _hover={
-                "borderColor": ACCENT,
-                "backgroundColor": SURFACE_HOVER,
-                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                "backgroundPosition": "right center",
-            },
         )
 
     return page_layout(

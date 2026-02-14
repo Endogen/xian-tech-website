@@ -1,6 +1,14 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section, section_panel, subsection
+from ..components.common import (
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+    section_panel,
+    subsection,
+)
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -209,9 +217,17 @@ def api_page() -> rx.Component:
     def rpc_card(item: dict[str, str]) -> rx.Component:
         href = f"{RPC_DOCS_BASE}/{item['tag']}/{item['operation_id']}"
         route = f"/{item['operation_id']}"
+        tag_icon = {
+            "Info": "circle_help",
+            "Tx": "send",
+            "ABCI": "database",
+            "Unsafe": "triangle_alert",
+        }
+        icon = tag_icon.get(item["tag"], "code")
         return rx.link(
-            rx.box(
-                rx.vstack(
+            icon_watermark_hover_card(
+                rx.flex(
+                    hover_icon_chip(icon),
                     rx.text(
                         route,
                         size="4",
@@ -219,25 +235,13 @@ def api_page() -> rx.Component:
                         color=TEXT_PRIMARY,
                         font_family="'SF Mono', 'Monaco', 'Menlo', monospace",
                     ),
-                    rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.6"),
-                    spacing="2",
-                    align_items="start",
-                    width="100%",
+                    direction={"base": "row", "lg": "column"},
+                    align={"base": "center", "lg": "start"},
+                    spacing="3",
                 ),
+                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.6"),
+                icon=icon,
                 padding="1.5rem",
-                background=SURFACE,
-                border=f"1px solid {BORDER_COLOR}",
-                border_radius="14px",
-                background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.12), rgba(0, 179, 92, 0))",
-                background_size="200% 200%",
-                background_position="left center",
-                transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-                _hover={
-                    "borderColor": ACCENT,
-                    "backgroundColor": SURFACE_HOVER,
-                    "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                    "backgroundPosition": "right center",
-                },
                 width="100%",
                 cursor="pointer",
             ),

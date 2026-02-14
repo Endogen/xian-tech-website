@@ -1,6 +1,12 @@
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section
+from ..components.common import (
+    hover_icon_chip,
+    icon_watermark_hover_card,
+    linked_heading,
+    page_layout,
+    section,
+)
 from ..data import CORE_COMPONENTS, NOTEWORTHY_QUOTES
 from ..theme import (
     ACCENT,
@@ -136,6 +142,23 @@ def hero_section() -> rx.Component:
 
 def stack_overview() -> rx.Component:
     """Stack overview grid."""
+    def overview_card(item: dict[str, str]) -> rx.Component:
+        return rx.link(
+            icon_watermark_hover_card(
+                rx.flex(
+                    hover_icon_chip(item["icon"]),
+                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
+                    direction={"base": "row", "lg": "column"},
+                    align={"base": "center", "lg": "start"},
+                    spacing="3",
+                ),
+                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
+                icon=item["icon"],
+            ),
+            href=item["href"],
+            _hover={"textDecoration": "none"},
+        )
+
     return section(
         rx.vstack(
             rx.text(
@@ -147,45 +170,7 @@ def stack_overview() -> rx.Component:
                 text_align="center",
             ),
             rx.grid(
-                *[
-                    rx.link(
-                        rx.box(
-                            rx.vstack(
-                                rx.flex(
-                                    rx.icon(tag=item["icon"], size=28, color=ACCENT),
-                                    rx.heading(item["title"], size="5", weight="bold", color=TEXT_PRIMARY),
-                                    direction={"base": "row", "lg": "column"},
-                                    align={"base": "center", "lg": "start"},
-                                    spacing="3",
-                                ),
-                                rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.7"),
-                                spacing="3",
-                                align_items="start",
-                            ),
-                            padding="2rem",
-                            background=SURFACE,
-                            border=f"1px solid {BORDER_COLOR}",
-                            border_radius="14px",
-                            transition="background-position 0.4s ease, box-shadow 0.3s ease, border-color 0.2s ease",
-                            height="100%",
-                            width="100%",
-                            display="flex",
-                            flex_direction="column",
-                            background_image="linear-gradient(135deg, rgba(0, 179, 92, 0.08), rgba(0, 179, 92, 0))",
-                            background_size="200% 200%",
-                            background_position="left center",
-                            _hover={
-                                "borderColor": ACCENT,
-                                "backgroundColor": SURFACE_HOVER,
-                                "boxShadow": f"0 18px 32px {ACCENT_SOFT}",
-                                "backgroundPosition": "right center",
-                            },
-                        ),
-                        href=item["href"],
-                        _hover={"textDecoration": "none"},
-                    )
-                    for item in CORE_COMPONENTS
-                ],
+                *[overview_card(item) for item in CORE_COMPONENTS],
                 columns={
                     "base": "repeat(1, minmax(0, 1fr))",
                     "md": "repeat(2, minmax(0, 1fr))",
@@ -213,12 +198,6 @@ def mission_section() -> rx.Component:
             align_items="flex-start",
         )
 
-    card_props = {
-        "display": "flex",
-        "flex_direction": "column",
-        "align_self": "stretch",
-    }
-
     return section(
         rx.vstack(
             linked_heading("Our Mission", size="7", color=TEXT_PRIMARY, weight="bold"),
@@ -229,70 +208,34 @@ def mission_section() -> rx.Component:
                 line_height="1.7",
             ),
             rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Keep it simple & powerful", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Keep ABCI and the contracting engine clean, deterministic, and auditable."),
-                        bullet("Maintain compatibility with new Python interpreters without breaking contracts."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Keep it simple & powerful", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Keep ABCI and the contracting engine clean, deterministic, and auditable."),
+                    bullet("Maintain compatibility with new Python interpreters without breaking contracts."),
+                    icon="shield",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Extend functionality", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Evolve node features and operational insight."),
-                        bullet("Ship and maintain high-value system contracts."),
-                        bullet("Deliver tools (CLI, SDKs, services) to interface easily with Xian."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Extend functionality", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Evolve node features and operational insight."),
+                    bullet("Ship and maintain high-value system contracts."),
+                    bullet("Deliver tools (CLI, SDKs, services) to interface easily with Xian."),
+                    icon="puzzle",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Smooth setup for local nodes and multi-node environments."),
-                        bullet("Documented patterns for distributed production networks."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Make networks easy to run", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Smooth setup for local nodes and multi-node environments."),
+                    bullet("Documented patterns for distributed production networks."),
+                    icon="network",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
-                rx.box(
-                    rx.vstack(
-                        rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
-                        bullet("Explain how the stack works and how to build on it and interface with it."),
-                        bullet("Keep upgrade paths, examples, and reference guides current."),
-                        spacing="3",
-                        align_items="start",
-                    ),
+                icon_watermark_hover_card(
+                    rx.heading("Document everything", size="5", color=TEXT_PRIMARY, weight="bold"),
+                    bullet("Explain how the stack works and how to build on it and interface with it."),
+                    bullet("Keep upgrade paths, examples, and reference guides current."),
+                    icon="book_open",
                     padding="2.5rem",
-                    background=SURFACE,
-                    border=f"1px solid {BORDER_COLOR}",
-                    border_radius="14px",
-                    height="100%",
-                    width="100%",
-                    **card_props,
                 ),
                 columns={
                     "base": "repeat(1, minmax(0, 1fr))",

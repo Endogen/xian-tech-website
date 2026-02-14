@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..components.common import page_layout, section
+from ..components.common import icon_watermark_hover_card, page_layout, section
 from ..state import RoadmapCard, RoadmapColumn, State
 from ..theme import (
     ACCENT,
@@ -82,36 +82,34 @@ def roadmap_page() -> rx.Component:
         )
 
     def roadmap_card(card: RoadmapCard) -> rx.Component:
-        card_body = rx.box(
-            rx.vstack(
-                rx.text(card["title"], size="2", weight="bold", color=TEXT_PRIMARY),
-                rx.cond(
-                    card["tags_text"] != "",
-                    rx.flex(
-                        rx.foreach(
-                            card["tags"],
-                            lambda tag: rx.badge(
-                                tag,
-                                variant="soft",
-                                color_scheme="green",
-                                radius="small",
-                                size="1",
-                            ),
+        card_body = icon_watermark_hover_card(
+            rx.text(card["title"], size="2", weight="bold", color=TEXT_PRIMARY),
+            rx.cond(
+                card["tags_text"] != "",
+                rx.flex(
+                    rx.foreach(
+                        card["tags"],
+                        lambda tag: rx.badge(
+                            tag,
+                            variant="soft",
+                            color_scheme="green",
+                            radius="small",
+                            size="1",
                         ),
-                        wrap="wrap",
-                        gap="0.4rem",
-                        width="100%",
                     ),
-                    rx.box(),
+                    wrap="wrap",
+                    gap="0.4rem",
+                    width="100%",
                 ),
-                spacing="1",
-                align_items="start",
+                rx.box(),
             ),
+            icon="flag",
+            watermark_icon_size=72,
+            content_spacing="1",
             padding="0.65rem 0.75rem",
             background=ACCENT_SOFT,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="6px",
-            transition="all 0.2s ease",
             _hover={"backgroundColor": SURFACE_HOVER, "borderColor": ACCENT},
             width="100%",
         )
@@ -122,7 +120,7 @@ def roadmap_page() -> rx.Component:
         )
 
     def roadmap_column(column: RoadmapColumn) -> rx.Component:
-        return rx.box(
+        return icon_watermark_hover_card(
             rx.box(
                 rx.vstack(
                     rx.text(column["name"], size="4", weight="bold", color=TEXT_PRIMARY),
@@ -152,6 +150,10 @@ def roadmap_page() -> rx.Component:
                 width="100%",
                 box_sizing="border-box",
             ),
+            icon="kanban",
+            watermark_icon_size=112,
+            padding="0",
+            content_spacing="0",
             background=SURFACE,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="6px 6px 16px 16px",

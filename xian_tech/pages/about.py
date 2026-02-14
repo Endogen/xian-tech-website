@@ -2,7 +2,7 @@ from typing import Any
 
 import reflex as rx
 
-from ..components.common import linked_heading, page_layout, section
+from ..components.common import icon_watermark_hover_card, linked_heading, page_layout, section
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -212,7 +212,7 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
             transform="translateY(-50%)",
             z_index="1",
         ),
-        rx.box(
+        icon_watermark_hover_card(
             rx.accordion.root(
                 rx.accordion.item(
                     rx.accordion.header(
@@ -274,12 +274,12 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
                 variant="ghost",
                 width="100%",
             ),
+            icon="history",
+            padding="0",
+            content_spacing="0",
             background=SURFACE,
+            border=f"1px solid {BORDER_COLOR}",
             border_radius="14px",
-            border_width="1px",
-            border_style="solid",
-            border_color=BORDER_COLOR,
-            transition="all 0.2s ease",
             _hover={
                 "borderColor": ACCENT,
                 "boxShadow": hover_shadow,
@@ -292,7 +292,9 @@ def _history_item(event: dict[str, Any]) -> rx.Component:
 
 def _team_card(member: dict[str, Any]) -> rx.Component:
     """Profile card for a team member."""
-    return rx.box(
+    role = member.get("role", "").lower()
+    icon = "cpu" if "engineering" in role else "search" if "research" in role else "users"
+    return icon_watermark_hover_card(
         rx.flex(
             rx.box(
                 rx.image(
@@ -339,15 +341,9 @@ def _team_card(member: dict[str, Any]) -> rx.Component:
             align_items="start",
             height="100%",
         ),
+        icon=icon,
         padding="1.5rem",
-        background=SURFACE,
-        border=f"1px solid {BORDER_COLOR}",
         border_radius="16px",
-        transition="all 0.25s ease",
-        _hover={
-            "borderColor": ACCENT,
-            "boxShadow": f"0 14px 32px {ACCENT_SOFT}",
-        },
         style={"&:hover img": {"transform": "scale(1.04)"}},
         height="100%",
     )
