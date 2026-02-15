@@ -162,23 +162,53 @@ def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx
 
 
 def theme_toggle() -> rx.Component:
-    """Theme toggle button with minimalist icons."""
+    """Minimal theme toggle with smooth icon swap."""
     return rx.button(
-        rx.color_mode_cond(
-            light=rx.text("◑", size="6", line_height="1"),
-            dark=rx.text("◐", size="6", line_height="1"),
+        rx.box(
+            rx.icon(
+                tag="sun",
+                size=18,
+                color=TEXT_PRIMARY,
+                position="absolute",
+                transition="opacity 0.28s ease, transform 0.28s ease",
+                opacity=rx.color_mode_cond(light="1", dark="0"),
+                transform=rx.color_mode_cond(light="scale(1) rotate(0deg)", dark="scale(0.85) rotate(-20deg)"),
+                pointer_events="none",
+            ),
+            rx.icon(
+                tag="moon",
+                size=18,
+                color=TEXT_PRIMARY,
+                position="absolute",
+                transition="opacity 0.28s ease, transform 0.28s ease",
+                opacity=rx.color_mode_cond(light="0", dark="1"),
+                transform=rx.color_mode_cond(light="scale(0.85) rotate(20deg)", dark="scale(1) rotate(0deg)"),
+                pointer_events="none",
+            ),
+            position="relative",
+            width="1.5rem",
+            height="1.5rem",
+            display="inline-flex",
+            align_items="center",
+            justify_content="center",
         ),
         on_click=rx.toggle_color_mode,
+        aria_label="Toggle light and dark theme",
         variant="ghost",
         cursor="pointer",
-        padding="0.5rem",
+        padding="0",
+        min_width="0",
+        width="1.5rem",
+        height="1.5rem",
+        border_radius="0",
         background_color="transparent",
-        color=TEXT_MUTED,
         border="none",
-        transition="all 0.3s ease",
-        _hover={
-            "color": ACCENT,
-            "transform": "rotate(180deg)",
+        display="inline-flex",
+        align_items="center",
+        justify_content="center",
+        _focus_visible={
+            "outline": f"2px solid {ACCENT}",
+            "outlineOffset": "2px",
         },
     )
 
