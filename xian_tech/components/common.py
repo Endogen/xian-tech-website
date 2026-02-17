@@ -713,7 +713,7 @@ def nav_bar() -> rx.Component:
                             justify_content="center",
                             **_header_control_style(),
                         ),
-                        spacing={"initial": "6", "lg": "4"},
+                        spacing="6",
                         align_items="center",
                         flex_shrink="0",
                     ),
