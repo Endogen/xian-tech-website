@@ -23,6 +23,36 @@ from ..theme import (
 
 MD_MEDIA = "@media (min-width: 1024px)"
 NAV_DROPDOWN_LABELS = [link["label"] for link in NAV_LINKS if link.get("children")]
+HEADER_CONTROL_HEIGHT = "2.6rem"
+HEADER_CONTROL_RADIUS = "12px"
+
+
+def _header_control_style() -> dict[str, Any]:
+    """Shared visual system for top-right header controls."""
+    return {
+        "variant": "ghost",
+        "cursor": "pointer",
+        "flex_shrink": "0",
+        "height": HEADER_CONTROL_HEIGHT,
+        "border_radius": HEADER_CONTROL_RADIUS,
+        "border": f"1px solid {BORDER_COLOR}",
+        "background_color": rx.color_mode_cond(
+            light="rgba(255, 255, 255, 0.65)",
+            dark="rgba(12, 18, 26, 0.6)",
+        ),
+        "backdrop_filter": "blur(16px)",
+        "color": TEXT_PRIMARY,
+        "transition": "border-color 0.2s ease, color 0.2s ease, transform 0.15s ease",
+        "_hover": {
+            "borderColor": ACCENT,
+            "color": ACCENT,
+        },
+        "_active": {"transform": "scale(0.96)"},
+        "_focus_visible": {
+            "outline": f"2px solid {ACCENT}",
+            "outlineOffset": "2px",
+        },
+    }
 
 
 def _nav_has_dropdown(label_var: rx.Var) -> rx.Var:
@@ -168,7 +198,7 @@ def theme_toggle() -> rx.Component:
             rx.icon(
                 tag="sun",
                 size=18,
-                color=TEXT_PRIMARY,
+                color="currentColor",
                 position="absolute",
                 transition="opacity 0.28s ease, transform 0.28s ease",
                 opacity=rx.color_mode_cond(light="1", dark="0"),
@@ -178,7 +208,7 @@ def theme_toggle() -> rx.Component:
             rx.icon(
                 tag="moon",
                 size=18,
-                color=TEXT_PRIMARY,
+                color="currentColor",
                 position="absolute",
                 transition="opacity 0.28s ease, transform 0.28s ease",
                 opacity=rx.color_mode_cond(light="0", dark="1"),
@@ -194,22 +224,13 @@ def theme_toggle() -> rx.Component:
         ),
         on_click=rx.toggle_color_mode,
         aria_label="Toggle light and dark theme",
-        variant="ghost",
-        cursor="pointer",
         padding="0",
-        min_width="0",
-        width="1.5rem",
-        height="1.5rem",
-        border_radius="0",
-        background_color="transparent",
-        border="none",
+        min_width=HEADER_CONTROL_HEIGHT,
+        width=HEADER_CONTROL_HEIGHT,
         display="inline-flex",
         align_items="center",
         justify_content="center",
-        _focus_visible={
-            "outline": f"2px solid {ACCENT}",
-            "outlineOffset": "2px",
-        },
+        **_header_control_style(),
     )
 
 
@@ -451,36 +472,40 @@ def command_palette_button() -> rx.Component:
     """Compact trigger for the global command palette."""
     return rx.button(
         rx.hstack(
-            rx.text("Search the site", size="2", color=TEXT_MUTED),
+            rx.icon(tag="search", size=16, color="currentColor"),
+            rx.text(
+                "Search",
+                size="2",
+                color="currentColor",
+                opacity="0.86",
+                display=rx.breakpoints(initial="none", md="inline", lg="none"),
+            ),
+            rx.text(
+                "Search the site",
+                size="2",
+                color="currentColor",
+                opacity="0.86",
+                display=rx.breakpoints(initial="none", lg="inline"),
+            ),
             rx.box(
                 "⌘K",
                 font_size="0.75rem",
-                color=TEXT_MUTED,
+                color="currentColor",
                 padding="0.1rem 0.4rem",
-                border=f"1px solid {BORDER_COLOR}",
+                border="1px solid currentColor",
                 border_radius="0.4rem",
+                opacity="0.72",
+                display=rx.breakpoints(initial="none", lg="block"),
             ),
             align_items="center",
             gap="0.5rem",
         ),
         on_click=State.open_command_palette,
-        variant="ghost",
-        cursor="pointer",
-        padding="0.4rem 0.85rem",
-        margin_right=rx.breakpoints(initial="0.55rem", lg="0"),
-        border_radius="12px",
-        border=f"1px solid {BORDER_COLOR}",
-        background_color=rx.color_mode_cond(
-            light="rgba(255, 255, 255, 0.65)",
-            dark="rgba(12, 18, 26, 0.6)",
-        ),
-        backdrop_filter="blur(16px)",
-        color=TEXT_PRIMARY,
-        transition="all 0.2s ease",
-        _hover={
-            "borderColor": ACCENT,
-            "color": ACCENT,
-        },
+        padding=rx.breakpoints(initial="0", md="0 0.7rem", lg="0 0.85rem"),
+        width=rx.breakpoints(initial=HEADER_CONTROL_HEIGHT, md="auto"),
+        min_width=rx.breakpoints(initial=HEADER_CONTROL_HEIGHT, md="0"),
+        justify_content=rx.breakpoints(initial="center", md="flex-start"),
+        **_header_control_style(),
     )
 
 
@@ -639,18 +664,28 @@ def nav_bar() -> rx.Component:
                             rx.image(
                                 src="/xian.jpg",
                                 alt="Xian Technology Logo",
-                                width="3rem",
-                                height="3rem",
+                                width=rx.breakpoints(initial="2.35rem", md="3rem"),
+                                height=rx.breakpoints(initial="2.35rem", md="3rem"),
                                 border_radius="8px",
                                 object_fit="cover",
                             ),
                             rx.vstack(
-                                rx.text("Xian Technology", weight="bold", size="4", color=TEXT_PRIMARY),
-                                rx.text("Python-native contracting", size="2", color=TEXT_MUTED),
+                                rx.text(
+                                    "Xian Technology",
+                                    weight="bold",
+                                    size=rx.breakpoints(initial="3", md="4"),
+                                    color=TEXT_PRIMARY,
+                                ),
+                                rx.text(
+                                    "Python-native contracting",
+                                    size="2",
+                                    color=TEXT_MUTED,
+                                    display=rx.breakpoints(initial="none", md="block"),
+                                ),
                                 align_items="start",
                                 spacing="0",
                             ),
-                            gap="1rem",
+                            gap=rx.breakpoints(initial="0.6rem", md="1rem"),
                             align_items="center",
                         ),
                         href="/",
@@ -668,33 +703,28 @@ def nav_bar() -> rx.Component:
                         command_palette_button(),
                         theme_toggle(),
                         rx.button(
-                            rx.icon(tag="menu", size=24),
-                            variant="ghost",
-                            cursor="pointer",
-                            padding="0.4rem 0.55rem",
-                            border_radius="12px",
-                            border="none",
-                            background_color="transparent",
+                            rx.icon(tag="menu", size=21),
                             on_click=State.toggle_mobile_nav,
-                            _hover={"color": ACCENT},
-                            _active={"transform": "scale(0.92)"},
                             display=rx.breakpoints(initial="flex", lg="none"),
+                            padding="0",
+                            width=HEADER_CONTROL_HEIGHT,
+                            min_width=HEADER_CONTROL_HEIGHT,
                             align_items="center",
                             justify_content="center",
-                            height="2.6rem",
-                            transition="color 0.2s ease, transform 0.15s ease",
+                            **_header_control_style(),
                         ),
-                        gap="1.25rem",
+                        spacing={"initial": "6", "lg": "4"},
                         align_items="center",
+                        flex_shrink="0",
                     ),
                     align_items="center",
                     width="100%",
-                    gap="1.25rem",
+                    gap=rx.breakpoints(initial="0.65rem", md="1.25rem"),
                     justify="between",
                 ),
                 max_width=MAX_CONTENT_WIDTH,
                 margin="0 auto",
-                padding="0 2rem",
+                padding=rx.breakpoints(initial="0 1rem", md="0 1.5rem", lg="0 2rem"),
             ),
         ),
         rx.box(
