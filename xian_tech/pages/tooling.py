@@ -280,6 +280,18 @@ def tooling_page() -> rx.Component:
                             rx.link(
                                 rx.hstack(
                                     rx.icon(tag="book_open", size=18),
+                                    rx.text("DeepWiki", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-py",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
                                     rx.text("Docs", size="3"),
                                     spacing="2",
                                     align_items="center",
@@ -427,6 +439,18 @@ def tooling_page() -> rx.Component:
                                     align_items="center",
                                 ),
                                 href="https://github.com/xian-technology/xian-py",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("DeepWiki", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-py",
                                 is_external=True,
                                 color=TEXT_MUTED,
                                 _hover={"color": ACCENT},
@@ -596,6 +620,18 @@ def tooling_page() -> rx.Component:
                             rx.link(
                                 rx.hstack(
                                     rx.icon(tag="book_open", size=18),
+                                    rx.text("DeepWiki", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-mcp-server",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
                                     rx.text("Docs", size="3"),
                                     spacing="2",
                                     align_items="center",
@@ -725,6 +761,18 @@ def tooling_page() -> rx.Component:
                             rx.link(
                                 rx.hstack(
                                     rx.icon(tag="book_open", size=18),
+                                    rx.text("DeepWiki", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-ai-guides",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
                                     rx.text("Docs", size="3"),
                                     spacing="2",
                                     align_items="center",
@@ -815,6 +863,18 @@ def tooling_page() -> rx.Component:
                                     align_items="center",
                                 ),
                                 href="https://github.com/xian-technology/xian-ai-skills",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("DeepWiki", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-ai-skills",
                                 is_external=True,
                                 color=TEXT_MUTED,
                                 _hover={"color": ACCENT},

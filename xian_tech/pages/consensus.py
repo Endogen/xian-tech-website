@@ -139,6 +139,18 @@ def consensus_page() -> rx.Component:
                         rx.link(
                             rx.hstack(
                                 rx.icon(tag="book_open", size=18),
+                                rx.text("DeepWiki", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://deepwiki.com/cometbft/cometbft",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
                                 rx.text("Docs", size="3"),
                                 spacing="2",
                                 align_items="center",

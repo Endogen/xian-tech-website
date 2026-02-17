@@ -212,6 +212,18 @@ def node_network_page() -> rx.Component:
                         rx.link(
                             rx.hstack(
                                 rx.icon(tag="book_open", size=18),
+                                rx.text("DeepWiki", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://deepwiki.com/xian-technology/xian-node",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
                                 rx.text("Docs", size="3"),
                                 spacing="2",
                                 align_items="center",
@@ -388,6 +400,18 @@ def node_network_page() -> rx.Component:
                                 align_items="center",
                             ),
                             href="https://github.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("DeepWiki", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://deepwiki.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
                             is_external=True,
                             color=TEXT_MUTED,
                             _hover={"color": ACCENT},
