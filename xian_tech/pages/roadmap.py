@@ -104,6 +104,7 @@ def roadmap_page() -> rx.Component:
                 rx.box(),
             ),
             icon="flag",
+            show_watermark=False,
             watermark_icon_size=72,
             content_spacing="1",
             padding="0.65rem 0.75rem",
@@ -120,7 +121,7 @@ def roadmap_page() -> rx.Component:
         )
 
     def roadmap_column(column: RoadmapColumn) -> rx.Component:
-        return icon_watermark_hover_card(
+        return rx.box(
             rx.box(
                 rx.vstack(
                     rx.text(column["name"], size="4", weight="bold", color=TEXT_PRIMARY),
@@ -150,10 +151,6 @@ def roadmap_page() -> rx.Component:
                 width="100%",
                 box_sizing="border-box",
             ),
-            icon="kanban",
-            watermark_icon_size=112,
-            padding="0",
-            content_spacing="0",
             background=SURFACE,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="6px 6px 16px 16px",

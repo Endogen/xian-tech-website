@@ -810,6 +810,7 @@ def hover_icon_chip(icon: str, *, size: int = 28) -> rx.Component:
 def icon_watermark_hover_card(
     *children: rx.Component,
     icon: str,
+    show_watermark: bool = True,
     watermark_icon_size: int = 128,
     content_spacing: str = "3",
     content_align_items: str = "start",
@@ -969,15 +970,19 @@ def icon_watermark_hover_card(
     }
     hover_style.update(custom_hover)
 
+    watermark_layer: rx.Component = rx.box(
+        rx.icon(tag=icon, size=watermark_icon_size, color=watermark_icon_color),
+        class_name="wm-card-watermark",
+    )
+    if not show_watermark:
+        watermark_layer = rx.box()
+
     return rx.box(
         rx.box(class_name="wm-card-gradient"),
         rx.box(class_name="wm-card-mesh"),
         rx.box(class_name="wm-card-blob"),
         rx.box(class_name="wm-card-noise"),
-        rx.box(
-            rx.icon(tag=icon, size=watermark_icon_size, color=watermark_icon_color),
-            class_name="wm-card-watermark",
-        ),
+        watermark_layer,
         rx.vstack(
             *children,
             spacing=content_spacing,
