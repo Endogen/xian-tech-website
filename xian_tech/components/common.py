@@ -467,6 +467,7 @@ def command_palette_button() -> rx.Component:
         variant="ghost",
         cursor="pointer",
         padding="0.4rem 0.85rem",
+        margin_right=rx.breakpoints(initial="0.55rem", lg="0"),
         border_radius="12px",
         border=f"1px solid {BORDER_COLOR}",
         background_color=rx.color_mode_cond(
