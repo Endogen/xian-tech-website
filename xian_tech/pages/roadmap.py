@@ -111,7 +111,11 @@ def roadmap_page() -> rx.Component:
             background=ACCENT_SOFT,
             border=f"1px solid {BORDER_COLOR}",
             border_radius="6px",
-            _hover={"backgroundColor": SURFACE_HOVER, "borderColor": ACCENT},
+            _hover={
+                "backgroundColor": SURFACE_HOVER,
+                "borderColor": ACCENT,
+                "boxShadow": f"0 0 0 1px {ACCENT_GLOW}, 0 0 10px {ACCENT_SOFT}",
+            },
             width="100%",
         )
         return rx.cond(
