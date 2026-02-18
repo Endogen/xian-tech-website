@@ -838,8 +838,8 @@ def icon_watermark_hover_card(
     hover_noise_opacity = rx.color_mode_cond(light="0.14", dark="0.2")
     hover_watermark_opacity = rx.color_mode_cond(light="0.13", dark="0.07")
     hover_shadow = rx.color_mode_cond(
-        light="0 18px 32px rgba(80, 177, 101, 0.2)",
-        dark=f"0 18px 32px {ACCENT_SOFT}",
+        light="0 0 0 1px rgba(80, 177, 101, 0.16), 0 0 12px rgba(80, 177, 101, 0.12)",
+        dark="0 0 0 1px rgba(0, 255, 136, 0.2), 0 0 12px rgba(0, 255, 136, 0.12)",
     )
     icon_chip_bg = rx.color_mode_cond(
         light="linear-gradient(135deg, #f9fafb, #f3f4f6)",
