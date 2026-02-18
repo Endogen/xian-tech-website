@@ -104,7 +104,7 @@ def _dev_card(link: dict) -> rx.Component:
             box_shadow="0 6px 20px rgba(0,0,0,0.12)",
             _hover={
                 "borderColor": BORDER_BRIGHT,
-                "boxShadow": f"0 12px 28px {ACCENT_SOFT}",
+                "boxShadow": f"0 0 0 1px {ACCENT_GLOW}, 0 0 12px {ACCENT_SOFT}",
             },
             height="100%",
         ),
