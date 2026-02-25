@@ -7,7 +7,6 @@ from ..components.common import (
     page_layout,
     section,
     section_panel,
-    subsection,
 )
 from ..theme import (
     ACCENT,
@@ -15,7 +14,6 @@ from ..theme import (
     ACCENT_SOFT,
     BORDER_COLOR,
     SURFACE,
-    SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
@@ -157,23 +155,13 @@ pub struct Update<'info> {
 }
 """
 
-CLARITY_CONTRACT = """(define-data-var result uint u0)
-
-(define-public (add (a uint) (b uint))
-  (begin
-    (var-set result (+ a b))
-    (ok (var-get result))))
-
-(define-read-only (read-result)
-  (var-get result))
-"""
-
 CONTRACT_EXAMPLES = [
     {
         "label": "Xian",
         "value": "xian",
         "language": "python",
         "code": XIAN_CONTRACT,
+        "diagram_src": "/contracting_flows/xian_flow.svg",
         "deploy_flow": (
             "Deploy flow: submit the Python contract directly; execution stays Python-native "
             "throughout deployment and runtime."
@@ -184,6 +172,7 @@ CONTRACT_EXAMPLES = [
         "value": "algorand_python",
         "language": "python",
         "code": ALGORAND_CONTRACT,
+        "diagram_src": "/contracting_flows/algorand_python_flow.svg",
         "deploy_flow": (
             "Deploy flow: compile ARC-4 Python to AVM artifacts with AlgoKit, deploy the application, "
             "then call ABI methods."
@@ -194,6 +183,7 @@ CONTRACT_EXAMPLES = [
         "value": "solidity",
         "language": "solidity",
         "code": SOLIDITY_CONTRACT,
+        "diagram_src": "/contracting_flows/solidity_flow.svg",
         "deploy_flow": (
             "Deploy flow: compile to EVM bytecode, deploy the contract, and call the public read function "
             "to return the stored result."
@@ -204,6 +194,7 @@ CONTRACT_EXAMPLES = [
         "value": "vyper",
         "language": "python",
         "code": VYPER_CONTRACT,
+        "diagram_src": "/contracting_flows/vyper_flow.svg",
         "deploy_flow": (
             "Deploy flow: compile with the Vyper compiler, deploy to an EVM chain, and call the public "
             "getter to read the result."
@@ -214,6 +205,7 @@ CONTRACT_EXAMPLES = [
         "value": "move",
         "language": "rust",
         "code": MOVE_CONTRACT,
+        "diagram_src": "/contracting_flows/move_flow.svg",
         "deploy_flow": (
             "Deploy flow: publish the Move package, call entry functions to mutate state, and call "
             "a read function for the stored value."
@@ -224,6 +216,7 @@ CONTRACT_EXAMPLES = [
         "value": "ton_tact",
         "language": "solidity",
         "code": TACT_CONTRACT,
+        "diagram_src": "/contracting_flows/ton_tact_flow.svg",
         "deploy_flow": (
             "Deploy flow: compile Tact to TON VM artifacts, deploy the contract, send typed messages, "
             "and query the getter method."
@@ -234,19 +227,10 @@ CONTRACT_EXAMPLES = [
         "value": "rust_anchor",
         "language": "rust",
         "code": ANCHOR_CONTRACT,
+        "diagram_src": "/contracting_flows/rust_anchor_flow.svg",
         "deploy_flow": (
             "Deploy flow: build and deploy the Anchor program, send instructions to update the account, "
             "and read the stored result from account state."
-        ),
-    },
-    {
-        "label": "Clarity",
-        "value": "clarity",
-        "language": "lisp",
-        "code": CLARITY_CONTRACT,
-        "deploy_flow": (
-            "Deploy flow: publish the Clarity contract on Stacks, call the public function for state "
-            "updates, and call the read-only function to fetch the result."
         ),
     },
 ]
@@ -324,6 +308,76 @@ HIGHLIGHTS = [
     },
 ]
 
+WHY_IT_MATTERS = [
+    {
+        "title": "One Runtime, Fewer Moving Parts",
+        "icon": "layers",
+        "body": (
+            "No extra compiler is required in the core authoring path. If you already have Python, "
+            "you already have what you need to write and reason about contracts."
+        ),
+        "detail": (
+            "Reducing toolchain depth lowers setup friction and avoids avoidable build-step failures in local and CI workflows."
+        ),
+    },
+    {
+        "title": "Audit What Actually Runs",
+        "icon": "check",
+        "body": (
+            "The code developers review is expressed in the same language that executes. "
+            "There is no hidden source-to-bytecode language switch in between."
+        ),
+        "detail": (
+            "Fewer translation boundaries means fewer places for semantic mismatch, edge-case compiler behavior, "
+            "or opaque transformations to hide."
+        ),
+    },
+    {
+        "title": "Smaller Failure Surface",
+        "icon": "triangle_alert",
+        "body": (
+            "Every additional compiler, transpiler, or plugin introduces another component that can fail, "
+            "drift in version, or break compatibility."
+        ),
+        "detail": (
+            "A shorter execution pipeline reduces integration risk and shrinks the number of things operators must keep healthy."
+        ),
+    },
+    {
+        "title": "Faster Team Onboarding",
+        "icon": "book_open",
+        "body": (
+            "Python teams can become productive quickly without first mastering a specialized compilation stack "
+            "just to ship basic contract logic."
+        ),
+        "detail": (
+            "Less time is spent wiring tooling and more time is spent on domain logic, tests, and security review."
+        ),
+    },
+    {
+        "title": "Simpler Ops and Release Flow",
+        "icon": "gauge",
+        "body": (
+            "Fewer required toolchains simplify reproducibility across developer machines, CI pipelines, "
+            "and production release processes."
+        ),
+        "detail": (
+            "When the deployment path is shorter, upgrades and incident response become easier to operate and verify."
+        ),
+    },
+    {
+        "title": "Clearer Debugging and Triage",
+        "icon": "list_checks",
+        "body": (
+            "Debugging stays within one language model, which makes stack traces, contract behavior, "
+            "and review conversations easier to follow."
+        ),
+        "detail": (
+            "That clarity helps teams find issues faster and lowers the cognitive load during high-pressure fixes."
+        ),
+    },
+]
+
 SEARCH_SECTIONS = [
     {
         "title": "Pure Python Smart Contracts",
@@ -348,7 +402,7 @@ SEARCH_SECTIONS = [
         "title": "Compare Contracting Platforms",
         "subtitle": (
             "Side-by-side examples across Xian, Algorand Python, Solidity, Vyper, "
-            "Move, TON (Tact), Rust (Anchor), and Clarity."
+            "Move, TON (Tact), and Rust (Anchor)."
         ),
         "category": "Technology",
         "badge": "Comparison",
@@ -364,8 +418,15 @@ SEARCH_SECTIONS = [
             "Tact",
             "Rust",
             "Anchor",
-            "Clarity",
         ],
+    },
+    {
+        "title": "Why This Matters",
+        "subtitle": "Why the Xian direct-Python execution model reduces stack complexity and risk.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/contracting",
+        "keywords": ["No compiler", "Python runtime", "Simplicity", "Reliability", "Auditability"],
     },
 ]
 
@@ -385,21 +446,6 @@ def contracting_page() -> rx.Component:
             rx.text(detail, size="2", color=TEXT_MUTED, line_height="1.6"),
             icon=icon,
             padding="2rem",
-        )
-
-    def timeline_item(year: str, text: str) -> rx.Component:
-        return rx.hstack(
-            rx.box(
-                rx.text(year, size="2", weight="bold", color=ACCENT),
-                padding="0.2rem 0.6rem",
-                background=ACCENT_SOFT,
-                border=f"1px solid {ACCENT_GLOW}",
-                border_radius="6px",
-            ),
-            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.7"),
-            spacing="3",
-            align_items="center",
-            width="100%",
         )
 
     return page_layout(
@@ -544,6 +590,14 @@ def contracting_page() -> rx.Component:
                                 color=TEXT_MUTED,
                                 line_height="1.6",
                             ),
+                            rx.image(
+                                src=example["diagram_src"],
+                                alt=f"{example['label']} execution flow diagram",
+                                width="100%",
+                                border_radius="12px",
+                                border=f"1px solid {BORDER_COLOR}",
+                                background=SURFACE,
+                            ),
                             spacing="3",
                             align_items="start",
                             width="100%",
@@ -557,48 +611,35 @@ def contracting_page() -> rx.Component:
                 width="100%",
                 min_width="0",
             ),
-            rx.vstack(
-                linked_heading("Python Adoption", size="5", color=TEXT_PRIMARY, weight="bold"),
-                rx.text(
-                    "Both Ethereum and Algorand introduced Python-like workflows after developers struggled with the "
-                    "native contract languages. Algorand’s path shows a clear, incremental shift toward Python:",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
+            padding_top="0",
+        ),
+        section(
+            section_panel(
                 rx.vstack(
-                    timeline_item("2019", "Algorand launched with TEAL only, an assembly-like language."),
-                    timeline_item("2020", "PyTeal arrived as a Python wrapper/compiler to make TEAL development easier."),
-                    timeline_item("2025", "Algorand Python shipped as a next-generation, native Python experience."),
-                    spacing="2",
+                    linked_heading("Why This Matters", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.text(
+                        "This approach is valuable because it removes avoidable complexity from the contract path. "
+                        "When execution stays in Python end to end, teams spend less energy on compiler plumbing and "
+                        "more on contract correctness, testing, and security.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
                     align_items="start",
                     width="100%",
                 ),
-                rx.text(
-                    "Python support arrived about a year after launch, starting as a high-level abstraction over TEAL and "
-                    "evolving into a native experience over time.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
+                rx.grid(
+                    *[
+                        choice_card(item["title"], item["body"], item["detail"], item["icon"])
+                        for item in WHY_IT_MATTERS
+                    ],
+                    columns={"base": "repeat(1, minmax(0, 1fr))", "lg": "repeat(3, minmax(0, 1fr))"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
-                rx.text(
-                    "A side effect of pure Python contracts is that AI assistants can draft nearly correct smart contracts "
-                    "on the first try when guided by the ",
-                    rx.link(
-                        "AI Contracting Guide",
-                        href="/tooling#ai-guides",
-                        color=ACCENT,
-                        _hover={"color": ACCENT},
-                    ),
-                    ", which accelerates adoption and shortens development cycles.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                spacing="4",
-                align_items="start",
-                width="100%",
-                margin_top="3rem",
             ),
             padding_top="0",
         ),

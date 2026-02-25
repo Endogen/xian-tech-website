@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" modified="2026-02-25T00:22:56Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="xian" name="Flow">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Xian Python Contract Execution Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="860" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Translation layers before runtime: 0 (direct Python execution)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#D5F5E3;strokeColor=#2E7D32;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="66" width="920" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="Python contract source" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E8F1FB;strokeColor=#6C8EBF;fontSize=16;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="126" width="920" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="Deploy transaction submits source unchanged" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E8F5E9;strokeColor=#82B366;fontSize=16;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="244" width="920" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="Xian runtime executes Python directly&amp;#xa;inside the deterministic interpreter" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E3F2FD;strokeColor=#3C78D8;fontSize=16;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="362" width="920" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="Stamp-metered execution updates and reads state" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#F3E5F5;strokeColor=#9673A6;fontSize=16;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="480" width="920" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="200" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="201" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="202" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
