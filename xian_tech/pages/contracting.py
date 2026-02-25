@@ -19,29 +19,21 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
-ALG_CONTRACT = """import beaker as bk
-import pyteal as pt
+ALGORAND_CONTRACT = """import algopy
+from algopy import arc4
 
-class MyState:
-    result = bk.GlobalStateValue(pt.TealType.uint64)
+class Calculator(algopy.ARC4Contract):
+    def __init__(self) -> None:
+        self.result = algopy.UInt64(0)
 
-app = bk.Application("Calculator", state=MyState())
+    @arc4.abimethod
+    def add(self, a: arc4.UInt64, b: arc4.UInt64) -> arc4.UInt64:
+        self.result = a.native + b.native
+        return arc4.UInt64(self.result)
 
-@app.external
-def add(a: pt.abi.Uint64, b: pt.abi.Uint64, *, output: pt.abi.Uint64) -> pt.Expr:
-    add_result = a.get() + b.get()
-    return pt.Seq(
-        app.state.result.set(add_result),
-        output.set(add_result)
-    )
-
-@app.external(read_only=True)
-def read_result(*, output: pt.abi.Uint64) -> pt.Expr:
-    return output.set(app.state.result)
-
-if __name__ == "__main__":
-    spec = app.build()
-    spec.export("artifacts")
+    @arc4.abimethod
+    def read_result(self) -> arc4.UInt64:
+        return arc4.UInt64(self.result)
 """
 
 XIAN_CONTRACT = """result = Variable()
@@ -56,7 +48,7 @@ def read_result():
 """
 
 SOLIDITY_CONTRACT = """// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.34;
 
 contract Calculator {
     uint256 public result;
@@ -71,7 +63,7 @@ contract Calculator {
 }
 """
 
-VYPER_CONTRACT = """# @version ^0.3.10
+VYPER_CONTRACT = """#pragma version ~=0.4.0
 result: public(uint256)
 
 @external
@@ -83,6 +75,181 @@ def add(a: uint256, b: uint256):
 def read_result() -> uint256:
     return self.result
 """
+
+MOVE_CONTRACT = """module 0x42::calculator {
+    use std::signer;
+
+    struct Result has key {
+        value: u64,
+    }
+
+    public entry fun init(account: &signer) {
+        move_to(account, Result { value: 0 });
+    }
+
+    public entry fun add(account: &signer, a: u64, b: u64) acquires Result {
+        let addr = signer::address_of(account);
+        let result = borrow_global_mut<Result>(addr);
+        result.value = a + b;
+    }
+
+    public fun read_result(account: address): u64 acquires Result {
+        borrow_global<Result>(account).value
+    }
+}
+"""
+
+TACT_CONTRACT = """message Add {
+    a: Int as uint64;
+    b: Int as uint64;
+}
+
+contract Calculator {
+    result: Int as uint64 = 0;
+
+    receive(msg: Add) {
+        self.result = msg.a + msg.b;
+    }
+
+    get fun readResult(): Int {
+        return self.result;
+    }
+}
+"""
+
+ANCHOR_CONTRACT = """use anchor_lang::prelude::*;
+
+declare_id!("11111111111111111111111111111111");
+
+#[program]
+pub mod calculator {
+    use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        ctx.accounts.calculator.result = 0;
+        Ok(())
+    }
+
+    pub fn add(ctx: Context<Update>, a: u64, b: u64) -> Result<()> {
+        ctx.accounts.calculator.result = a.saturating_add(b);
+        Ok(())
+    }
+}
+
+#[account]
+pub struct CalculatorAccount {
+    pub result: u64,
+}
+
+#[derive(Accounts)]
+pub struct Initialize<'info> {
+    #[account(init, payer = signer, space = 8 + 8)]
+    pub calculator: Account<'info, CalculatorAccount>,
+    #[account(mut)]
+    pub signer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct Update<'info> {
+    #[account(mut)]
+    pub calculator: Account<'info, CalculatorAccount>,
+}
+"""
+
+CLARITY_CONTRACT = """(define-data-var result uint u0)
+
+(define-public (add (a uint) (b uint))
+  (begin
+    (var-set result (+ a b))
+    (ok (var-get result))))
+
+(define-read-only (read-result)
+  (var-get result))
+"""
+
+CONTRACT_EXAMPLES = [
+    {
+        "label": "Xian",
+        "value": "xian",
+        "language": "python",
+        "code": XIAN_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: submit the Python contract directly; execution stays Python-native "
+            "throughout deployment and runtime."
+        ),
+    },
+    {
+        "label": "Algorand Python",
+        "value": "algorand_python",
+        "language": "python",
+        "code": ALGORAND_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: compile ARC-4 Python to AVM artifacts with AlgoKit, deploy the application, "
+            "then call ABI methods."
+        ),
+    },
+    {
+        "label": "Solidity",
+        "value": "solidity",
+        "language": "solidity",
+        "code": SOLIDITY_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: compile to EVM bytecode, deploy the contract, and call the public read function "
+            "to return the stored result."
+        ),
+    },
+    {
+        "label": "Vyper",
+        "value": "vyper",
+        "language": "python",
+        "code": VYPER_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: compile with the Vyper compiler, deploy to an EVM chain, and call the public "
+            "getter to read the result."
+        ),
+    },
+    {
+        "label": "Move",
+        "value": "move",
+        "language": "rust",
+        "code": MOVE_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: publish the Move package, call entry functions to mutate state, and call "
+            "a read function for the stored value."
+        ),
+    },
+    {
+        "label": "TON (Tact)",
+        "value": "ton_tact",
+        "language": "solidity",
+        "code": TACT_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: compile Tact to TON VM artifacts, deploy the contract, send typed messages, "
+            "and query the getter method."
+        ),
+    },
+    {
+        "label": "Rust (Anchor)",
+        "value": "rust_anchor",
+        "language": "rust",
+        "code": ANCHOR_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: build and deploy the Anchor program, send instructions to update the account, "
+            "and read the stored result from account state."
+        ),
+    },
+    {
+        "label": "Clarity",
+        "value": "clarity",
+        "language": "lisp",
+        "code": CLARITY_CONTRACT,
+        "deploy_flow": (
+            "Deploy flow: publish the Clarity contract on Stacks, call the public function for state "
+            "updates, and call the read-only function to fetch the result."
+        ),
+    },
+]
 
 HIGHLIGHTS = [
     {
@@ -179,11 +346,26 @@ SEARCH_SECTIONS = [
     ],
     {
         "title": "Compare Contracting Platforms",
-        "subtitle": "Side-by-side examples across Xian, Algorand, Solidity, and Vyper.",
+        "subtitle": (
+            "Side-by-side examples across Xian, Algorand Python, Solidity, Vyper, "
+            "Move, TON (Tact), Rust (Anchor), and Clarity."
+        ),
         "category": "Technology",
         "badge": "Comparison",
         "href": "/contracting",
-        "keywords": ["Comparison", "Xian", "Algorand", "Solidity", "Vyper"],
+        "keywords": [
+            "Comparison",
+            "Xian",
+            "Algorand Python",
+            "Solidity",
+            "Vyper",
+            "Move",
+            "TON",
+            "Tact",
+            "Rust",
+            "Anchor",
+            "Clarity",
+        ],
     },
 ]
 
@@ -334,106 +516,44 @@ def contracting_page() -> rx.Component:
             ),
             rx.tabs.root(
                 rx.tabs.list(
-                    rx.tabs.trigger("Xian", value="xian", color_scheme="green"),
-                    rx.tabs.trigger("Algorand", value="algorand", color_scheme="green"),
-                    rx.tabs.trigger("Solidity", value="solidity", color_scheme="green"),
-                    rx.tabs.trigger("Vyper", value="vyper", color_scheme="green"),
+                    *[
+                        rx.tabs.trigger(
+                            example["label"],
+                            value=example["value"],
+                            color_scheme="green",
+                        )
+                        for example in CONTRACT_EXAMPLES
+                    ],
                     gap="0.75rem",
                     wrap="wrap",
                 ),
-                rx.tabs.content(
-                    rx.vstack(
-                        rx.code_block(
-                            XIAN_CONTRACT,
-                            language="python",
-                            show_line_numbers=True,
-                            wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
+                *[
+                    rx.tabs.content(
+                        rx.vstack(
+                            rx.code_block(
+                                example["code"],
+                                language=example["language"],
+                                show_line_numbers=True,
+                                wrap_long_lines=False,
+                                custom_style={"overflowX": "auto"},
+                                width="100%",
+                            ),
+                            rx.text(
+                                example["deploy_flow"],
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.6",
+                            ),
+                            spacing="3",
+                            align_items="start",
                             width="100%",
                         ),
-                        rx.text(
-                            "Deploy flow: send the Python contract itself; the submission contract deploys it, and execution stays Python-native throughout.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
+                        value=example["value"],
                         width="100%",
-                    ),
-                    value="xian",
-                    width="100%",
-                ),
-                rx.tabs.content(
-                    rx.vstack(
-                        rx.code_block(
-                            ALG_CONTRACT,
-                            language="python",
-                            show_line_numbers=True,
-                            wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
-                            width="100%",
-                        ),
-                        rx.text(
-                            "Deploy flow: run Python to generate TEAL + artifacts, pick the compiled output, and deploy via a UI that recompiles to AVM bytecode.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                        width="100%",
-                    ),
-                    value="algorand",
-                    width="100%",
-                ),
-                rx.tabs.content(
-                    rx.vstack(
-                        rx.code_block(
-                            SOLIDITY_CONTRACT,
-                            language="solidity",
-                            show_line_numbers=True,
-                            wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
-                            width="100%",
-                        ),
-                        rx.text(
-                            "Deploy flow: compile to EVM bytecode, deploy the contract, and call the public read function to return the stored result.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                        width="100%",
-                    ),
-                    value="solidity",
-                    width="100%",
-                ),
-                rx.tabs.content(
-                    rx.vstack(
-                        rx.code_block(
-                            VYPER_CONTRACT,
-                            language="python",
-                            show_line_numbers=True,
-                            wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
-                            width="100%",
-                        ),
-                        rx.text(
-                            "Deploy flow: compile with the Vyper compiler, deploy to an EVM chain, and call the public getter to read the result.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
-                        ),
-                        spacing="3",
-                        align_items="start",
-                        width="100%",
-                    ),
-                    value="vyper",
-                    width="100%",
-                ),
-                default_value="xian",
+                    )
+                    for example in CONTRACT_EXAMPLES
+                ],
+                default_value=CONTRACT_EXAMPLES[0]["value"],
                 width="100%",
                 min_width="0",
             ),
