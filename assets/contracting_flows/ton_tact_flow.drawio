@@ -1,46 +1,46 @@
-<mxfile host="app.diagrams.net" modified="2026-02-25T00:22:56Z" agent="Codex" version="24.7.17" type="device">
+<mxfile host="app.diagrams.net" modified="2026-02-25T01:02:28Z" agent="Codex" version="24.7.17" type="device">
   <diagram id="ton_tact" name="Flow">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="1080" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1178" pageHeight="300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="TON Tact Execution Flow (TVM)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="150" y="20" width="860" height="36" as="geometry" />
+        <mxCell id="2" value="TON Tact Execution Flow (TVM)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="12" width="1138" height="24" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="Translation layers before runtime: 2 (layers)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#FFF3CD;strokeColor=#B38600;fontSize=16;" vertex="1" parent="1">
-          <mxGeometry x="110" y="66" width="920" height="42" as="geometry" />
+        <mxCell id="3" value="Translation layers before runtime: 2" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FFE5CC;strokeColor=#C56D00;fontSize=11;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="28" y="44" width="1122" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="Tact source" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E8F1FB;strokeColor=#6C8EBF;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="126" width="920" height="86" as="geometry" />
+        <mxCell id="10" value="&lt;b&gt;SOURCE&lt;/b&gt;&lt;br&gt;Tact source" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#EAF3FF;strokeColor=#6C8EBF;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="28" y="161.0" width="172" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="Tact compiler lowers contract to FunC" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#FDEBD0;strokeColor=#D79B00;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="244" width="920" height="86" as="geometry" />
+        <mxCell id="11" value="&lt;b&gt;TRANSLATION&lt;/b&gt;&lt;br&gt;Tact compiler lowers contract to FunC" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FFF4DC;strokeColor=#D79B00;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="218" y="156.0" width="172" height="84" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="FunC toolchain emits TVM deployment artifacts" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#FDEBD0;strokeColor=#D79B00;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="362" width="920" height="86" as="geometry" />
+        <mxCell id="12" value="&lt;b&gt;TRANSLATION&lt;/b&gt;&lt;br&gt;FunC toolchain emits TVM deployment artifacts" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FFF4DC;strokeColor=#D79B00;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="408" y="149.0" width="172" height="98" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="Deploy artifacts to TON contract account" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E8F5E9;strokeColor=#82B366;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="480" width="920" height="86" as="geometry" />
+        <mxCell id="13" value="&lt;b&gt;DEPLOYMENT&lt;/b&gt;&lt;br&gt;Deploy artifacts to TON contract account" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#EAF8EC;strokeColor=#82B366;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="598" y="156.0" width="172" height="84" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="Internal Add message executes receive(msg) in TVM" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#E3F2FD;strokeColor=#3C78D8;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="598" width="920" height="86" as="geometry" />
+        <mxCell id="14" value="&lt;b&gt;RUNTIME&lt;/b&gt;&lt;br&gt;Internal Add message executes receive(msg) in TVM" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#EAF1FF;strokeColor=#3C78D8;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="788" y="149.0" width="172" height="98" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="Persistent state updates and get method returns value" style="rounded=1;whiteSpace=wrap;html=1;arcSize=10;fillColor=#F3E5F5;strokeColor=#9673A6;fontSize=16;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry x="110" y="716" width="920" height="86" as="geometry" />
+        <mxCell id="15" value="&lt;b&gt;STATE / OUTPUT&lt;/b&gt;&lt;br&gt;Persistent state updates and get method returns value" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#F5ECF8;strokeColor=#9673A6;fontSize=11;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="978" y="149.0" width="172" height="98" as="geometry" />
         </mxCell>
-        <mxCell id="200" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="4" target="5">
+        <mxCell id="200" style="endArrow=block;endFill=1;html=1;rounded=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="10" target="11">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="201" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="5" target="6">
+        <mxCell id="201" style="endArrow=block;endFill=1;html=1;rounded=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="11" target="12">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="202" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="6" target="7">
+        <mxCell id="202" style="endArrow=block;endFill=1;html=1;rounded=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="12" target="13">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="203" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="7" target="8">
+        <mxCell id="203" style="endArrow=block;endFill=1;html=1;rounded=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="13" target="14">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="204" style="endArrow=block;endFill=1;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;" edge="1" parent="1" source="8" target="9">
+        <mxCell id="204" style="endArrow=block;endFill=1;html=1;rounded=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="14" target="15">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
