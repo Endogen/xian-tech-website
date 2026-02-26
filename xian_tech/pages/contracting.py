@@ -520,7 +520,14 @@ def contracting_page() -> rx.Component:
                 subsection(
                     "Compare Contracting Platforms",
                     rx.text(
-                        "Let’s compare a simple add-and-read contract across stacks:",
+                        "Let’s compare a simple add-and-read contract across stacks: Algorand started from TEAL "
+                        "(assembly-like), then introduced PyTeal, and now offers Algorand Python workflows, but contracts "
+                        "still compile to AVM artifacts before runtime. On Ethereum, Solidity remains the dominant language "
+                        "while Vyper emerged as a Pythonic EVM alternative; both still compile to bytecode. Move, TON/Tact, "
+                        "and Rust/Anchor also rely on explicit compile-and-deploy pipelines and more specialized blockchain "
+                        "abstractions, which are often less straightforward for developers without direct blockchain experience. "
+                        "Xian’s core difference is a shorter path: contracts execute directly in the Python runtime (VM) "
+                        "without an additional source-language compiler stage.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
