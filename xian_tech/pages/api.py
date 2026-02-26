@@ -1,7 +1,6 @@
 import reflex as rx
 
 from ..components.common import (
-    hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
     page_layout,
@@ -217,17 +216,9 @@ def api_page() -> rx.Component:
     def rpc_card(item: dict[str, str]) -> rx.Component:
         href = f"{RPC_DOCS_BASE}/{item['tag']}/{item['operation_id']}"
         route = f"/{item['operation_id']}"
-        tag_icon = {
-            "Info": "circle_help",
-            "Tx": "send",
-            "ABCI": "database",
-            "Unsafe": "triangle_alert",
-        }
-        icon = tag_icon.get(item["tag"], "code")
         return rx.link(
             icon_watermark_hover_card(
                 rx.flex(
-                    hover_icon_chip(icon),
                     rx.text(
                         route,
                         size="4",
@@ -240,7 +231,8 @@ def api_page() -> rx.Component:
                     spacing="3",
                 ),
                 rx.text(item["description"], size="3", color=TEXT_MUTED, line_height="1.6"),
-                icon=icon,
+                icon="code",
+                show_watermark=False,
                 padding="1.5rem",
                 width="100%",
                 cursor="pointer",
