@@ -7,6 +7,7 @@ from ..components.common import (
     page_layout,
     section,
     section_panel,
+    subsection,
 )
 from ..theme import (
     ACCENT,
@@ -162,10 +163,6 @@ CONTRACT_EXAMPLES = [
         "language": "python",
         "code": XIAN_CONTRACT,
         "diagram_src": "/contracting_flows/xian_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: submit the Python contract directly; execution stays Python-native "
-            "throughout deployment and runtime."
-        ),
     },
     {
         "label": "Algorand Python",
@@ -173,10 +170,6 @@ CONTRACT_EXAMPLES = [
         "language": "python",
         "code": ALGORAND_CONTRACT,
         "diagram_src": "/contracting_flows/algorand_python_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: compile ARC-4 Python to AVM artifacts with AlgoKit, deploy the application, "
-            "then call ABI methods."
-        ),
     },
     {
         "label": "Solidity",
@@ -184,10 +177,6 @@ CONTRACT_EXAMPLES = [
         "language": "solidity",
         "code": SOLIDITY_CONTRACT,
         "diagram_src": "/contracting_flows/solidity_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: compile to EVM bytecode, deploy the contract, and call the public read function "
-            "to return the stored result."
-        ),
     },
     {
         "label": "Vyper",
@@ -195,10 +184,6 @@ CONTRACT_EXAMPLES = [
         "language": "python",
         "code": VYPER_CONTRACT,
         "diagram_src": "/contracting_flows/vyper_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: compile with the Vyper compiler, deploy to an EVM chain, and call the public "
-            "getter to read the result."
-        ),
     },
     {
         "label": "Move",
@@ -206,10 +191,6 @@ CONTRACT_EXAMPLES = [
         "language": "rust",
         "code": MOVE_CONTRACT,
         "diagram_src": "/contracting_flows/move_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: publish the Move package, call entry functions to mutate state, and call "
-            "a read function for the stored value."
-        ),
     },
     {
         "label": "TON (Tact)",
@@ -217,10 +198,6 @@ CONTRACT_EXAMPLES = [
         "language": "solidity",
         "code": TACT_CONTRACT,
         "diagram_src": "/contracting_flows/ton_tact_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: compile Tact to TON VM artifacts, deploy the contract, send typed messages, "
-            "and query the getter method."
-        ),
     },
     {
         "label": "Rust (Anchor)",
@@ -228,10 +205,6 @@ CONTRACT_EXAMPLES = [
         "language": "rust",
         "code": ANCHOR_CONTRACT,
         "diagram_src": "/contracting_flows/rust_anchor_flow.svg",
-        "deploy_flow": (
-            "Deploy flow: build and deploy the Anchor program, send instructions to update the account, "
-            "and read the stored result from account state."
-        ),
     },
 ]
 
@@ -421,7 +394,7 @@ SEARCH_SECTIONS = [
         ],
     },
     {
-        "title": "Why This Matters",
+        "title": "Benefits of the Xian Approach",
         "subtitle": "Why the Xian direct-Python execution model reduces stack complexity and risk.",
         "category": "Technology",
         "badge": "Section",
@@ -544,79 +517,68 @@ def contracting_page() -> rx.Component:
                     width="100%",
                     align="stretch",
                 ),
-            ),
-            padding_top="0",
-        ),
-        section(
-            rx.vstack(
-                linked_heading("Compare Contracting Platforms", size="6", color=TEXT_PRIMARY, weight="bold"),
-                rx.text(
-                    "Let’s compare a simple add-and-read contract across stacks:",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
+                subsection(
+                    "Compare Contracting Platforms",
+                    rx.text(
+                        "Let’s compare a simple add-and-read contract across stacks:",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                    ),
+                    spacing="2",
+                    heading_size="5",
+                    margin_top="2rem",
                 ),
-                spacing="2",
-                align_items="start",
-                width="100%",
-            ),
-            rx.tabs.root(
-                rx.tabs.list(
+                rx.tabs.root(
+                    rx.tabs.list(
+                        *[
+                            rx.tabs.trigger(
+                                example["label"],
+                                value=example["value"],
+                                color_scheme="green",
+                            )
+                            for example in CONTRACT_EXAMPLES
+                        ],
+                        gap="0.75rem",
+                        wrap="wrap",
+                    ),
                     *[
-                        rx.tabs.trigger(
-                            example["label"],
+                        rx.tabs.content(
+                            rx.vstack(
+                                rx.code_block(
+                                    example["code"],
+                                    language=example["language"],
+                                    show_line_numbers=True,
+                                    wrap_long_lines=False,
+                                    custom_style={"overflowX": "auto"},
+                                    width="100%",
+                                ),
+                                subsection(
+                                    "Execution Flow",
+                                    rx.image(
+                                        src=example["diagram_src"],
+                                        alt=f"{example['label']} execution flow diagram",
+                                        width="100%",
+                                    ),
+                                    heading_size="4",
+                                    spacing="3",
+                                    margin_top="1.25rem",
+                                ),
+                                spacing="3",
+                                align_items="start",
+                                width="100%",
+                            ),
                             value=example["value"],
-                            color_scheme="green",
+                            width="100%",
                         )
                         for example in CONTRACT_EXAMPLES
                     ],
-                    gap="0.75rem",
-                    wrap="wrap",
+                    default_value=CONTRACT_EXAMPLES[0]["value"],
+                    width="100%",
+                    min_width="0",
                 ),
-                *[
-                    rx.tabs.content(
-                        rx.vstack(
-                            rx.code_block(
-                                example["code"],
-                                language=example["language"],
-                                show_line_numbers=True,
-                                wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
-                            ),
-                            rx.text(
-                                example["deploy_flow"],
-                                size="3",
-                                color=TEXT_MUTED,
-                                line_height="1.6",
-                            ),
-                            rx.image(
-                                src=example["diagram_src"],
-                                alt=f"{example['label']} execution flow diagram",
-                                width="100%",
-                                border_radius="12px",
-                                border=f"1px solid {BORDER_COLOR}",
-                                background=SURFACE,
-                            ),
-                            spacing="3",
-                            align_items="start",
-                            width="100%",
-                        ),
-                        value=example["value"],
-                        width="100%",
-                    )
-                    for example in CONTRACT_EXAMPLES
-                ],
-                default_value=CONTRACT_EXAMPLES[0]["value"],
-                width="100%",
-                min_width="0",
-            ),
-            padding_top="0",
-        ),
-        section(
-            section_panel(
-                rx.vstack(
-                    linked_heading("Why This Matters", size="6", color=TEXT_PRIMARY, weight="bold"),
+                subsection(
+                    "Benefits of the Xian Approach",
                     rx.text(
                         "This approach is valuable because it removes avoidable complexity from the contract path. "
                         "When execution stays in Python end to end, teams spend less energy on compiler plumbing and "
@@ -624,11 +586,10 @@ def contracting_page() -> rx.Component:
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
-                        width="100%",
                     ),
                     spacing="3",
-                    align_items="start",
-                    width="100%",
+                    heading_size="5",
+                    margin_top="2rem",
                 ),
                 rx.grid(
                     *[
@@ -641,7 +602,7 @@ def contracting_page() -> rx.Component:
                     align="stretch",
                 ),
             ),
-            padding_top="0",
+            padding_top="1.5rem",
         ),
     )
 
