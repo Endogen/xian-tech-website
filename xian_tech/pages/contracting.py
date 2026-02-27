@@ -421,6 +421,14 @@ def contracting_page() -> rx.Component:
             padding="2rem",
         )
 
+    def guide_point(text: str) -> rx.Component:
+        return rx.hstack(
+            rx.icon(tag="check", size=16, color=ACCENT),
+            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.6"),
+            spacing="2",
+            align_items="center",
+        )
+
     return page_layout(
         section(
             rx.vstack(
@@ -638,12 +646,76 @@ def contracting_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.text(
-                    "The Contracting AI Guide is the practical reference for writing and reviewing Xian contracts with AI assistants. "
-                    "It consolidates the rules, constraints, and recommended patterns needed to produce valid, deterministic contract code.",
+                    "The Contracting AI Guide is the operational spec for AI-assisted Xian contract development. "
+                    "It converts platform constraints into explicit authoring and review rules so generated contracts stay valid, deterministic, and deployable.",
                     size="3",
                     color=TEXT_MUTED,
                     line_height="1.7",
                     width="100%",
+                ),
+                rx.text(
+                    "Used early during prompt design and again during review, it reduces invalid output, shortens iteration cycles, "
+                    "and gives teams a consistent quality bar across engineers and AI workflows.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+                rx.grid(
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("shield"),
+                            rx.text("Why this guide matters", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.text(
+                            "The guide reduces uncertainty in AI-generated contract code and makes review criteria explicit.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        rx.vstack(
+                            guide_point("Catches rule violations before deploy review."),
+                            guide_point("Keeps AI output deterministic and policy-aligned."),
+                            guide_point("Standardizes review criteria across teams."),
+                            guide_point("Reduces rework with a clear quality baseline."),
+                            guide_point("Improves predictability in CI and audits."),
+                            spacing="2",
+                            align_items="start",
+                        ),
+                        icon="shield",
+                        padding="1.75rem",
+                    ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("list_checks"),
+                            rx.text("How to use it in practice", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.text(
+                            "Treat the guide as both generation context and a review checklist in your contract workflow.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                        ),
+                        rx.vstack(
+                            guide_point("Load guide context before generating contract code."),
+                            guide_point("Require allowed decorators, state primitives, and imports."),
+                            guide_point("Validate signatures, state access, and auth logic."),
+                            guide_point("Run dry-runs/tests and reject rule-violating output."),
+                            guide_point("Reuse the same checklist in every PR review."),
+                            spacing="2",
+                            align_items="start",
+                        ),
+                        icon="list_checks",
+                        padding="1.75rem",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
             ),
             padding_top="1.5rem",
