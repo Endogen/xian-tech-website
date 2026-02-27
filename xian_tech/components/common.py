@@ -1243,6 +1243,72 @@ def command_palette() -> rx.Component:
     )
 
 
+def image_lightbox() -> rx.Component:
+    """Global image lightbox driven by shared app state."""
+    return rx.cond(
+        State.image_lightbox_open,
+        rx.center(
+            rx.box(
+                rx.box(
+                    rx.image(
+                        src=State.image_lightbox_src,
+                        alt=State.image_lightbox_alt,
+                        width="auto",
+                        max_width="94vw",
+                        max_height="86vh",
+                        object_fit="contain",
+                        display="block",
+                    ),
+                    rx.button(
+                        rx.icon(tag="x", size=20),
+                        id="image-lightbox-close",
+                        on_click=State.close_image_lightbox,
+                        variant="ghost",
+                        cursor="pointer",
+                        color=TEXT_PRIMARY,
+                        background=rx.color_mode_cond(
+                            light="rgba(255, 255, 255, 0.78)",
+                            dark="rgba(13, 17, 23, 0.78)",
+                        ),
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="999px",
+                        width="2.25rem",
+                        min_width="2.25rem",
+                        height="2.25rem",
+                        position="absolute",
+                        top="0.75rem",
+                        right="0.75rem",
+                        z_index="2",
+                        _hover={"color": ACCENT, "borderColor": ACCENT},
+                        aria_label="Close image preview",
+                    ),
+                    position="relative",
+                    display="inline-block",
+                    border_radius="12px",
+                    overflow="hidden",
+                ),
+                animation="lightbox-zoom-in 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+                will_change="transform, opacity",
+                on_click=rx.stop_propagation,
+            ),
+            id="image-lightbox-container",
+            position="fixed",
+            top="0",
+            left="0",
+            width="100%",
+            height="100vh",
+            z_index="1002",
+            background="rgba(6, 11, 17, 0.72)",
+            backdrop_filter="blur(6px)",
+            on_click=State.close_image_lightbox,
+            padding="2rem",
+            animation="lightbox-fade-in 180ms ease-out",
+            will_change="opacity",
+        ),
+        rx.box(),
+    )
+
+
 def terminal_prompt(command: str) -> rx.Component:
     """Terminal-style command prompt."""
     return rx.flex(
@@ -1408,6 +1474,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
     return rx.box(
         gradient_overlay,
         command_palette(),
+        image_lightbox(),
         rx.box(
             nav_bar(),
             rx.box(
@@ -1432,6 +1499,7 @@ __all__ = [
     "code_block",
     "feature_card",
     "hover_icon_chip",
+    "image_lightbox",
     "icon_watermark_hover_card",
     "nav_bar",
     "nav_link",
