@@ -582,12 +582,20 @@ def tooling_page() -> rx.Component:
                         color=TEXT_MUTED,
                         line_height="1.7",
                     ),
+                    rx.text(
+                        "An SDK gives you a higher-level, well-tested interface so you can build faster with less low-level node plumbing. "
+                        "In practice, xian-py helps teams ship safer automation and integrations by standardizing signing, transaction flow, "
+                        "and contract interaction patterns.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
                     spacing="3",
                     align_items="start",
                     width="100%",
                 ),
                 rx.grid(
-                    _sdk_install_card(),
                     icon_watermark_hover_card(
                         rx.hstack(
                             hover_icon_chip("list_checks"),
@@ -598,25 +606,41 @@ def tooling_page() -> rx.Component:
                         rx.vstack(
                             rx.hstack(
                                 rx.icon(tag="check", size=16, color=ACCENT),
-                                rx.text("Create wallets, manage keys, and sign transactions.", size="3", color=TEXT_MUTED),
+                                rx.text(
+                                    "Create wallets, manage keys, and sign transactions with predictable, reusable helpers.",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                ),
                                 spacing="2",
                                 align_items="center",
                             ),
                             rx.hstack(
                                 rx.icon(tag="check", size=16, color=ACCENT),
-                                rx.text("Deploy, call, and inspect Python smart contracts.", size="3", color=TEXT_MUTED),
+                                rx.text(
+                                    "Deploy, call, and inspect Python smart contracts from scripts, services, and CI jobs.",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                ),
                                 spacing="2",
                                 align_items="center",
                             ),
                             rx.hstack(
                                 rx.icon(tag="check", size=16, color=ACCENT),
-                                rx.text("Build and submit transactions with predictable outcomes.", size="3", color=TEXT_MUTED),
+                                rx.text(
+                                    "Build, simulate, and submit transactions with clearer feedback and predictable outcomes.",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                ),
                                 spacing="2",
                                 align_items="center",
                             ),
                             rx.hstack(
                                 rx.icon(tag="check", size=16, color=ACCENT),
-                                rx.text("Query node data, balances, and contract state.", size="3", color=TEXT_MUTED),
+                                rx.text(
+                                    "Query node data, balances, and contract state for backend automation and app integrations.",
+                                    size="3",
+                                    color=TEXT_MUTED,
+                                ),
                                 spacing="2",
                                 align_items="center",
                             ),
@@ -626,7 +650,8 @@ def tooling_page() -> rx.Component:
                         icon="list_checks",
                         padding="1.75rem",
                     ),
-                    columns={"base": "1", "lg": "2"},
+                    _sdk_install_card(),
+                    columns={"base": "1", "lg": "1"},
                     spacing="4",
                     width="100%",
                     align="stretch",
@@ -786,7 +811,7 @@ def tooling_page() -> rx.Component:
                 rx.grid(
                     icon_watermark_hover_card(
                         rx.hstack(
-                            hover_icon_chip("bot"),
+                            hover_icon_chip("list_checks"),
                             rx.text("Features", size="3", weight="bold", color=TEXT_PRIMARY),
                             spacing="3",
                             align_items="center",
@@ -800,7 +825,7 @@ def tooling_page() -> rx.Component:
                             spacing="2",
                             align_items="start",
                         ),
-                        icon="bot",
+                        icon="list_checks",
                         padding="1.75rem",
                     ),
                     icon_watermark_hover_card(
