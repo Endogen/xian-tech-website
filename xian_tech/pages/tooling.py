@@ -367,6 +367,13 @@ def tooling_page() -> rx.Component:
                     rx.text(
                         "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction into PostgreSQL and exposes that data via a GraphQL API powered by ",
                         rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
+                        ". The full BDS GraphQL schema can be found ",
+                        rx.link(
+                            "here",
+                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
+                            is_external=True,
+                            color=ACCENT,
+                        ),
                         ".",
                         size="4",
                         color=TEXT_MUTED,
@@ -404,8 +411,33 @@ def tooling_page() -> rx.Component:
                 ),
                 rx.vstack(
                     rx.text(
-                        "When GraphQL is enabled on a node, the GraphiQL UI is available at the node address under `/graphiql`. "
-                        "For API access, use `/graphql`.",
+                        "When GraphQL is enabled on a node, the GraphiQL UI is available at the node address under ",
+                        rx.el.code(
+                            "/graphiql",
+                            style={
+                                "fontFamily": "'SF Mono', 'Monaco', monospace",
+                                "fontSize": "0.9em",
+                                "background": CODE_BG,
+                                "border": f"1px solid {BORDER_COLOR}",
+                                "borderRadius": "6px",
+                                "padding": "0.08rem 0.35rem",
+                                "color": TEXT_PRIMARY,
+                            },
+                        ),
+                        ". For API access, use ",
+                        rx.el.code(
+                            "/graphql",
+                            style={
+                                "fontFamily": "'SF Mono', 'Monaco', monospace",
+                                "fontSize": "0.9em",
+                                "background": CODE_BG,
+                                "border": f"1px solid {BORDER_COLOR}",
+                                "borderRadius": "6px",
+                                "padding": "0.08rem 0.35rem",
+                                "color": TEXT_PRIMARY,
+                            },
+                        ),
+                        ".",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
@@ -803,45 +835,17 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-guides",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="book_open", size=18),
+                                rx.text("Docs", size="3"),
+                                spacing="2",
+                                align_items="center",
                             ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("DeepWiki", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-ai-guides",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -863,11 +867,46 @@ def tooling_page() -> rx.Component:
                 ),
                 rx.grid(
                     icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("book_open"),
-                            rx.text("Guide highlights", size="3", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                        rx.flex(
+                            rx.hstack(
+                                hover_icon_chip("book_open"),
+                                rx.text("Guide highlights", size="3", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.hstack(
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="github", size=18),
+                                        rx.text("Repo", size="3"),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-ai-guides",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="book_open", size=18),
+                                        rx.text("Docs", size="3"),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                spacing="4",
+                                align_items="center",
+                            ),
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
                         ),
                         rx.vstack(
                             _feature_item("Python 3.11 only with strict builtins and no standard imports."),
@@ -882,11 +921,46 @@ def tooling_page() -> rx.Component:
                         padding="1.75rem",
                     ),
                     icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("list_checks"),
-                            rx.text("How to use", size="3", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                        rx.flex(
+                            rx.hstack(
+                                hover_icon_chip("list_checks"),
+                                rx.text("How to use", size="3", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.hstack(
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="github", size=18),
+                                        rx.text("Repo", size="3"),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-ai-guides",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="book_open", size=18),
+                                        rx.text("Docs", size="3"),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.txt",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                spacing="4",
+                                align_items="center",
+                            ),
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
                         ),
                         rx.vstack(
                             _feature_item("Start from the contract template and keep state at top level."),
