@@ -611,6 +611,43 @@ def contracting_page() -> rx.Component:
             ),
             padding_top="1.5rem",
         ),
+        section(
+            section_panel(
+                rx.flex(
+                    linked_heading("Contracting AI Guide", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    rx.hstack(
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3"),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        spacing="4",
+                        align_items="center",
+                    ),
+                    direction={"base": "column", "md": "row"},
+                    align_items={"base": "start", "md": "center"},
+                    justify="between",
+                    gap="0.75rem",
+                    width="100%",
+                ),
+                rx.text(
+                    "The Contracting AI Guide is the practical reference for writing and reviewing Xian contracts with AI assistants. "
+                    "It consolidates the rules, constraints, and recommended patterns needed to produce valid, deterministic contract code.",
+                    size="3",
+                    color=TEXT_MUTED,
+                    line_height="1.7",
+                    width="100%",
+                ),
+            ),
+            padding_top="1.5rem",
+        ),
     )
 
 
