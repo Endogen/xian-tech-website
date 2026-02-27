@@ -224,6 +224,60 @@ def _feature_item(text: str) -> rx.Component:
     )
 
 
+def _photoswipe_lightbox_shell() -> rx.Component:
+    """PhotoSwipe container used by the tooling page screenshot lightbox."""
+    return rx.fragment(
+        rx.el.div(
+            rx.el.div(class_name="pswp__bg"),
+            rx.el.div(
+                rx.el.div(
+                    rx.el.div(class_name="pswp__item"),
+                    rx.el.div(class_name="pswp__item"),
+                    rx.el.div(class_name="pswp__item"),
+                    class_name="pswp__container",
+                ),
+                rx.el.div(
+                    rx.el.div(
+                        rx.el.div(class_name="pswp__counter"),
+                        rx.el.button(class_name="pswp__button pswp__button--close", title="Close (Esc)"),
+                        rx.el.button(class_name="pswp__button pswp__button--share", title="Share"),
+                        rx.el.button(class_name="pswp__button pswp__button--fs", title="Toggle fullscreen"),
+                        rx.el.button(class_name="pswp__button pswp__button--zoom", title="Zoom in/out"),
+                        rx.el.div(
+                            rx.el.div(
+                                rx.el.div(
+                                    rx.el.div(class_name="pswp__preloader__donut"),
+                                    class_name="pswp__preloader__cut",
+                                ),
+                                class_name="pswp__preloader__icn",
+                            ),
+                            class_name="pswp__preloader",
+                        ),
+                        class_name="pswp__top-bar",
+                    ),
+                    rx.el.div(
+                        rx.el.div(class_name="pswp__share-tooltip"),
+                        class_name="pswp__share-modal pswp__share-modal--hidden pswp__single-tap",
+                    ),
+                    rx.el.button(class_name="pswp__button pswp__button--arrow--left", title="Previous (arrow left)"),
+                    rx.el.button(class_name="pswp__button pswp__button--arrow--right", title="Next (arrow right)"),
+                    rx.el.div(
+                        rx.el.div(class_name="pswp__caption__center"),
+                        class_name="pswp__caption",
+                    ),
+                    class_name="pswp__ui pswp__ui--hidden",
+                ),
+                class_name="pswp__scroll-wrap",
+            ),
+            class_name="pswp",
+            tabindex="-1",
+            role="dialog",
+            aria_hidden="true",
+        ),
+        rx.script(src="/js/photoswipe-init.js"),
+    )
+
+
 def tooling_page() -> rx.Component:
     """Tooling and interfaces overview."""
     return page_layout(
@@ -367,6 +421,10 @@ def tooling_page() -> rx.Component:
                             box_shadow=f"0 0 18px {ACCENT_SOFT}",
                         ),
                         width="100%",
+                        class_name="trend-image",
+                        cursor="zoom-in",
+                        border_radius="12px",
+                        overflow="hidden",
                     ),
                     subsection(
                         "Examples",
@@ -957,7 +1015,8 @@ def tooling_page() -> rx.Component:
                     align="stretch",
                 ),
             )
-        )
+        ),
+        _photoswipe_lightbox_shell(),
     )
 
 
