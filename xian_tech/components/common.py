@@ -1384,7 +1384,10 @@ def footer() -> rx.Component:
             margin="0 auto",
             padding="4rem 2rem",
         ),
-        background_color=CODE_BG,
+        background=rx.color_mode_cond(
+            light="linear-gradient(180deg, rgba(246, 248, 250, 0) 0%, #f6f8fa 8%, #f6f8fa 100%)",
+            dark="linear-gradient(180deg, rgba(13, 17, 23, 0) 0%, #0d1117 8%, #0d1117 100%)",
+        ),
         width="100%",
         transition="background-color 0.3s ease",
     )
