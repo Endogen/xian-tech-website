@@ -855,43 +855,57 @@ def tooling_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.grid(
-                    icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("book_open"),
-                            rx.text("Contracting Guide", size="3", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                    rx.link(
+                        icon_watermark_hover_card(
+                            rx.hstack(
+                                hover_icon_chip("book_open"),
+                                rx.text("Contracting Guide", size="3", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.vstack(
+                                _feature_item("Use it as the rulebook for safe, allowed contract patterns."),
+                                _feature_item("Inject it into prompts before AI contract generation."),
+                                _feature_item("Check decorators, imports, state primitives, and auth logic."),
+                                _feature_item("Reuse one checklist across PRs for consistent reviews."),
+                                _feature_item("Gate deployments on deterministic, guide-compliant code."),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            icon="book_open",
+                            padding="1.75rem",
                         ),
-                        rx.vstack(
-                            _feature_item("Use it as the rulebook for safe, allowed contract patterns."),
-                            _feature_item("Inject it into prompts before AI contract generation."),
-                            _feature_item("Check decorators, imports, state primitives, and auth logic."),
-                            _feature_item("Reuse one checklist across PRs for consistent reviews."),
-                            _feature_item("Gate deployments on deterministic, guide-compliant code."),
-                            spacing="2",
-                            align_items="start",
-                        ),
-                        icon="book_open",
-                        padding="1.75rem",
+                        href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
+                        is_external=True,
+                        width="100%",
+                        display="block",
+                        _hover={"textDecoration": "none"},
                     ),
-                    icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("database"),
-                            rx.text("BDS GraphQL Schema", size="3", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                    rx.link(
+                        icon_watermark_hover_card(
+                            rx.hstack(
+                                hover_icon_chip("database"),
+                                rx.text("BDS GraphQL Schema", size="3", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.vstack(
+                                _feature_item("Look up exact types and fields before writing queries."),
+                                _feature_item("Provide it in prompts for schema-accurate GraphQL output."),
+                                _feature_item("Build dashboard and indexer queries from schema data."),
+                                _feature_item("Cut trial-and-error and runtime query failures."),
+                                _feature_item("Generate typed clients with schema-first planning."),
+                                spacing="2",
+                                align_items="start",
+                            ),
+                            icon="database",
+                            padding="1.75rem",
                         ),
-                        rx.vstack(
-                            _feature_item("Look up exact types and fields before writing queries."),
-                            _feature_item("Provide it in prompts for schema-accurate GraphQL output."),
-                            _feature_item("Build dashboard and indexer queries from schema data."),
-                            _feature_item("Cut trial-and-error and runtime query failures."),
-                            _feature_item("Generate typed clients with schema-first planning."),
-                            spacing="2",
-                            align_items="start",
-                        ),
-                        icon="database",
-                        padding="1.75rem",
+                        href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
+                        is_external=True,
+                        width="100%",
+                        display="block",
+                        _hover={"textDecoration": "none"},
                     ),
                     columns={"base": "1", "lg": "2"},
                     spacing="4",
@@ -910,30 +924,6 @@ def tooling_page() -> rx.Component:
                                 rx.hstack(
                                     rx.icon(tag="github", size=18),
                                     rx.text("Repo", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-skills",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("DeepWiki", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-ai-skills",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3"),
                                     spacing="2",
                                     align_items="center",
                                 ),
@@ -964,43 +954,57 @@ def tooling_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.grid(
-                    icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("code", size=24),
-                            rx.heading("xian-sdk-skill", size="5", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                    rx.link(
+                        icon_watermark_hover_card(
+                            rx.hstack(
+                                hover_icon_chip("code", size=24),
+                                rx.heading("xian-sdk-skill", size="5", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.text(
+                                "Guides agents through xian-py workflows: wallet creation (including HD/BIP39), "
+                                "token transfers, contract deployment and calls, state queries, and transaction "
+                                "simulation for reliable automation.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                            ),
+                            icon="code",
+                            padding="1.75rem",
+                            height="100%",
                         ),
-                        rx.text(
-                            "Guides agents through xian-py workflows: wallet creation (including HD/BIP39), "
-                            "token transfers, contract deployment and calls, state queries, and transaction "
-                            "simulation for reliable automation.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        icon="code",
-                        padding="1.75rem",
-                        height="100%",
+                        href="https://github.com/xian-technology/xian-ai-skills/tree/main/xian-sdk-skill",
+                        is_external=True,
+                        width="100%",
+                        display="block",
+                        _hover={"textDecoration": "none"},
                     ),
-                    icon_watermark_hover_card(
-                        rx.hstack(
-                            hover_icon_chip("server", size=24),
-                            rx.heading("xian-node-skill", size="5", weight="bold", color=TEXT_PRIMARY),
-                            spacing="3",
-                            align_items="center",
+                    rx.link(
+                        icon_watermark_hover_card(
+                            rx.hstack(
+                                hover_icon_chip("server", size=24),
+                                rx.heading("xian-node-skill", size="5", weight="bold", color=TEXT_PRIMARY),
+                                spacing="3",
+                                align_items="center",
+                            ),
+                            rx.text(
+                                "Covers node operations via xian-stack: joining mainnet/testnet, creating networks, "
+                                "validator and service node setup, monitoring, CometBFT configuration, and Docker "
+                                "deployment basics.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                            ),
+                            icon="server",
+                            padding="1.75rem",
+                            height="100%",
                         ),
-                        rx.text(
-                            "Covers node operations via xian-stack: joining mainnet/testnet, creating networks, "
-                            "validator and service node setup, monitoring, CometBFT configuration, and Docker "
-                            "deployment basics.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.7",
-                        ),
-                        icon="server",
-                        padding="1.75rem",
-                        height="100%",
+                        href="https://github.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
+                        is_external=True,
+                        width="100%",
+                        display="block",
+                        _hover={"textDecoration": "none"},
                     ),
                     columns={"base": "1", "lg": "2"},
                     spacing="4",
