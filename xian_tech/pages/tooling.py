@@ -380,6 +380,15 @@ def tooling_page() -> rx.Component:
                         line_height="1.7",
                         width="100%",
                     ),
+                    rx.text(
+                        "GraphQL is a query language and API runtime that lets clients request exactly the fields they need in a single call. "
+                        "For BDS, this improves performance and developer experience by reducing over-fetching, simplifying data access patterns, "
+                        "and making it easier to build dashboards, explorers, and backend services on top of chain data.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
                     spacing="3",
                     align_items="start",
                     width="100%",
@@ -748,6 +757,15 @@ def tooling_page() -> rx.Component:
                         line_height="1.7",
                         width="100%",
                     ),
+                    rx.text(
+                        "MCP is an open standard for connecting AI assistants to external tools through a consistent interface. "
+                        "Using it here means you can expose Xian capabilities once and reuse them across different assistants, "
+                        "reducing custom integration work while improving reliability and portability.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
                     spacing="3",
                     align_items="start",
                     width="100%",
@@ -774,11 +792,11 @@ def tooling_page() -> rx.Component:
                             align_items="center",
                         ),
                         rx.vstack(
-                            _feature_item("Create or import standard and HD wallets."),
-                            _feature_item("Check balances, send tokens, and simulate transactions."),
-                            _feature_item("Query contract state, source, and token metadata."),
-                            _feature_item("DEX helpers for buy/sell plus real-time pricing."),
-                            _feature_item("Crypto utilities for signing and encryption."),
+                            _feature_item("Create or import standard and HD wallets, including BIP39 mnemonic-based flows."),
+                            _feature_item("Check balances, send tokens, and simulate transactions before submitting on-chain."),
+                            _feature_item("Query contract state, contract source, and token metadata for integrations and audits."),
+                            _feature_item("Use DEX helpers for buy and sell workflows with real-time price lookups."),
+                            _feature_item("Access crypto utilities for signing, verification, and encryption tasks."),
                             spacing="2",
                             align_items="start",
                         ),
@@ -823,7 +841,7 @@ def tooling_page() -> rx.Component:
                         icon="terminal",
                         padding="1.75rem",
                     ),
-                    columns={"base": "1", "lg": "2"},
+                    columns={"base": "1", "lg": "1"},
                     spacing="4",
                     width="100%",
                     align="stretch",
