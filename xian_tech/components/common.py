@@ -618,71 +618,142 @@ def nav_dropdown(link: dict[str, Any]) -> rx.Component:
     )
 
 
+def _mobile_nav_item(link: dict[str, Any]) -> rx.Component:
+    """Polished mobile nav row with optional child links."""
+    children = link.get("children", [])
+    has_children = bool(children)
+    return rx.box(
+        rx.link(
+            rx.hstack(
+                rx.text(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
+                rx.cond(
+                    has_children,
+                    rx.text(
+                        "Section",
+                        size="1",
+                        color=ACCENT,
+                        letter_spacing="0.08em",
+                        text_transform="uppercase",
+                    ),
+                    rx.icon(tag="arrow_up_right", size=14, color=TEXT_MUTED),
+                ),
+                justify="between",
+                align_items="center",
+                width="100%",
+            ),
+            href=link["href"],
+            display="block",
+            width="100%",
+            _hover={"textDecoration": "none", "color": ACCENT},
+            on_click=State.close_mobile_nav,
+            **_interactive_link_style(radius="10px"),
+        ),
+        rx.cond(
+            has_children,
+            rx.vstack(
+                *[
+                    rx.link(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text(child["label"], size="2", weight="medium", color=TEXT_PRIMARY),
+                                rx.icon(tag="arrow_up_right", size=14, color=TEXT_MUTED),
+                                justify="between",
+                                align_items="center",
+                                width="100%",
+                            ),
+                            rx.text(
+                                child["description"],
+                                size="1",
+                                color=TEXT_MUTED,
+                                line_height="1.45",
+                            ),
+                            spacing="1",
+                            align_items="start",
+                            width="100%",
+                        ),
+                        href=child["href"],
+                        width="100%",
+                        display="block",
+                        padding="0.62rem 0.72rem",
+                        border=f"1px solid {BORDER_COLOR}",
+                        border_radius="10px",
+                        background=rx.color_mode_cond(
+                            light="rgba(255, 255, 255, 0.82)",
+                            dark="rgba(25, 35, 48, 0.42)",
+                        ),
+                        _hover={
+                            "textDecoration": "none",
+                            "color": ACCENT,
+                            "borderColor": ACCENT,
+                            "background": SURFACE_BRIGHT,
+                        },
+                        transition="all 0.2s ease",
+                        on_click=State.close_mobile_nav,
+                        **_interactive_link_style(radius="10px"),
+                    )
+                    for child in children
+                ],
+                spacing="2",
+                align_items="start",
+                width="100%",
+                margin_top="0.65rem",
+            ),
+            rx.box(),
+        ),
+        padding="0.85rem",
+        border=f"1px solid {BORDER_COLOR}",
+        border_radius="14px",
+        background=rx.color_mode_cond(
+            light="rgba(255, 255, 255, 0.72)",
+            dark="rgba(12, 18, 26, 0.45)",
+        ),
+        width="100%",
+    )
+
+
 def mobile_nav_panel() -> rx.Component:
-    """Slide-down mobile navigation with nested links."""
+    """Slide-down mobile navigation with polished grouped cards."""
     return rx.cond(
         State.mobile_nav_open,
         rx.box(
             rx.vstack(
-                *[
-                    rx.box(
-                        rx.link(
-                            rx.hstack(
-                                rx.text(link["label"], size="4", weight="bold", color=TEXT_PRIMARY),
-                                rx.cond(
-                                    link.get("children"),
-                                    rx.text("▾", size="3", color=TEXT_MUTED),
-                                    rx.box(),
-                                ),
-                                align_items="center",
-                                gap="0.5rem",
-                            ),
-                            href=link["href"],
-                            _hover={"textDecoration": "none", "color": ACCENT},
-                            on_click=State.close_mobile_nav,
-                            **_interactive_link_style(radius="8px"),
-                        ),
-                        rx.cond(
-                            link.get("children"),
-                            rx.vstack(
-                                *[
-                                    rx.link(
-                                        rx.text(
-                                            f"• {child['label']}",
-                                            size="3",
-                                            color=TEXT_MUTED,
-                                        ),
-                                        href=child["href"],
-                                        padding_left="1.5rem",
-                                        _hover={"textDecoration": "none", "color": ACCENT},
-                                        on_click=State.close_mobile_nav,
-                                        **_interactive_link_style(radius="8px"),
-                                    )
-                                    for child in link.get("children", [])
-                                ],
-                                spacing="2",
-                                align_items="start",
-                                margin_top="0.5rem",
-                            ),
-                            rx.box(),
-                        ),
-                        padding="0.5rem 0",
-                        border_bottom=f"1px solid {BORDER_COLOR}",
-                    )
-                    for link in NAV_LINKS
-                ],
-                spacing="2",
+                rx.hstack(
+                    rx.text(
+                        "Explore",
+                        size="1",
+                        weight="medium",
+                        color=TEXT_MUTED,
+                        letter_spacing="0.08em",
+                        text_transform="uppercase",
+                    ),
+                    rx.box(height="1px", flex="1", background=BORDER_COLOR),
+                    align_items="center",
+                    width="100%",
+                    gap="0.65rem",
+                ),
+                *[_mobile_nav_item(link) for link in NAV_LINKS],
+                spacing="3",
                 align_items="start",
+                width="100%",
             ),
-            background=SURFACE,
+            background=rx.color_mode_cond(
+                light="rgba(248, 249, 250, 0.98)",
+                dark="rgba(15, 20, 28, 0.98)",
+            ),
             position="absolute",
             top="100%",
             left="0",
             right="0",
             z_index="90",
-            border_bottom="none",
-            padding="1rem 1.5rem 1.5rem",
-            box_shadow="none",
+            border=f"1px solid {BORDER_COLOR}",
+            border_top="none",
+            border_radius="0 0 16px 16px",
+            padding="0.9rem 1rem 1.1rem",
+            box_shadow=rx.color_mode_cond(
+                light="0 18px 34px rgba(15, 23, 42, 0.12)",
+                dark="0 22px 36px rgba(0, 0, 0, 0.42)",
+            ),
+            backdrop_filter="blur(10px)",
             max_height="70vh",
             overflow_y="auto",
             display=rx.breakpoints(initial="block", lg="none"),
