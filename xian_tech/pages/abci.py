@@ -118,63 +118,68 @@ def abci_page() -> rx.Component:
         ),
         section(
             section_panel(
-                rx.flex(
-                    linked_heading("ABCI", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
+                rx.vstack(
+                        rx.flex(
+                            linked_heading("ABCI", size="6", color=TEXT_PRIMARY, weight="bold"),
                             rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="github", size=18),
+                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-abci",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="brain", size=18),
+                                        rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://deepwiki.com/xian-technology/xian-abci",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="book_open", size=18),
+                                        rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://docs.xian.technology/",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                spacing="4",
                                 align_items="center",
                             ),
-                            href="https://github.com/xian-technology/xian-abci",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
                         ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="brain", size=18),
-                                rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://deepwiki.com/xian-technology/xian-abci",
-                            is_external=True,
+                        rx.text(
+                            "CometBFT calls into the ABCI app to validate transactions, execute blocks, and persist state. "
+                            "That ABCI app is the chain’s logic program, and in Xian it bridges consensus hooks to Python "
+                            "contract execution and state transitions.",
+                            size="3",
                             color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            line_height="1.7",
+                            width="100%",
                         ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://docs.xian.technology/",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        spacing="4",
-                        align_items="center",
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "CometBFT calls into the ABCI app to validate transactions, execute blocks, and persist state. "
-                    "That ABCI app is the chain’s logic program, and in Xian it bridges consensus hooks to Python "
-                    "contract execution and state transitions.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
                 rx.grid(
                     choice_card(
                         "Mempool validation (CheckTx)",

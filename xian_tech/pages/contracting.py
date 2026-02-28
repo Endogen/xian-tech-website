@@ -459,62 +459,67 @@ def contracting_page() -> rx.Component:
         ),
         section(
             section_panel(
-                rx.flex(
-                    linked_heading("Contracting Engine", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
+                rx.vstack(
+                        rx.flex(
+                            linked_heading("Contracting Engine", size="6", color=TEXT_PRIMARY, weight="bold"),
                             rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="github", size=18),
+                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-contracting",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="brain", size=18),
+                                        rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://deepwiki.com/xian-technology/xian-contracting",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="book_open", size=18),
+                                        rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://docs.xian.technology",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                spacing="4",
                                 align_items="center",
                             ),
-                            href="https://github.com/xian-technology/xian-contracting",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
                         ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="brain", size=18),
-                                rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://deepwiki.com/xian-technology/xian-contracting",
-                            is_external=True,
+                        rx.text(
+                            "The contracting engine executes pure Python contracts with deterministic rules and a stamp-metered "
+                            "budget. It keeps developer ergonomics high without compromising on predictable execution.",
+                            size="3",
                             color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            line_height="1.7",
+                            width="100%",
                         ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://docs.xian.technology",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        spacing="4",
-                        align_items="center",
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "The contracting engine executes pure Python contracts with deterministic rules and a stamp-metered "
-                    "budget. It keeps developer ergonomics high without compromising on predictable execution.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
                 rx.grid(
                     *[
                         choice_card(item["title"], item["body"], item["detail"], item["icon"])
@@ -620,46 +625,51 @@ def contracting_page() -> rx.Component:
         ),
         section(
             section_panel(
-                rx.flex(
-                    linked_heading("Contracting AI Guide", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
+                rx.vstack(
+                        rx.flex(
+                            linked_heading("Contracting AI Guide", size="6", color=TEXT_PRIMARY, weight="bold"),
                             rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
+                                rx.link(
+                                    rx.hstack(
+                                        rx.icon(tag="github", size=18),
+                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                        spacing="2",
+                                        align_items="center",
+                                    ),
+                                    href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
+                                    is_external=True,
+                                    color=TEXT_MUTED,
+                                    _hover={"color": ACCENT},
+                                ),
+                                spacing="4",
                                 align_items="center",
                             ),
-                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
                         ),
-                        spacing="4",
-                        align_items="center",
+                        rx.text(
+                            "The Contracting AI Guide is the operational spec for AI-assisted Xian contract development. "
+                            "It converts platform constraints into explicit authoring and review rules so generated contracts stay valid, deterministic, and deployable.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.7",
+                            width="100%",
+                        ),
+                        rx.text(
+                            "Used early during prompt design and again during review, it reduces invalid output, shortens iteration cycles, "
+                            "and gives teams a consistent quality bar across engineers and AI workflows.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.7",
+                            width="100%",
+                        ),
+                        spacing="3",
+                        align_items="start",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "The Contracting AI Guide is the operational spec for AI-assisted Xian contract development. "
-                    "It converts platform constraints into explicit authoring and review rules so generated contracts stay valid, deterministic, and deployable.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
-                rx.text(
-                    "Used early during prompt design and again during review, it reduces invalid output, shortens iteration cycles, "
-                    "and gives teams a consistent quality bar across engineers and AI workflows.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                    width="100%",
-                ),
                 rx.grid(
                     icon_watermark_hover_card(
                         rx.hstack(

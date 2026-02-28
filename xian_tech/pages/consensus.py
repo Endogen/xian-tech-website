@@ -117,62 +117,67 @@ def consensus_page() -> rx.Component:
         ),
         section(
             section_panel(
-                rx.flex(
-                    linked_heading("CometBFT", size="6", color=TEXT_PRIMARY, weight="bold"),
-                    rx.hstack(
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
+                rx.vstack(
+                    rx.flex(
+                        linked_heading("CometBFT", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/cometbft/cometbft",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/cometbft/cometbft",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="brain", size=18),
-                                rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="brain", size=18),
+                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/cometbft/cometbft",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://deepwiki.com/cometbft/cometbft",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://docs.cometbft.com/v0.38",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://docs.cometbft.com/v0.38",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            spacing="4",
+                            align_items="center",
                         ),
-                        spacing="4",
-                        align_items="center",
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
                     ),
-                    direction={"base": "column", "md": "row"},
-                    align_items={"base": "start", "md": "center"},
-                    justify="between",
-                    gap="0.75rem",
-                    width="100%",
-                ),
-                rx.text(
-                    "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
-                    "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
-                    "so Xian can use its Python contracting engine while relying on a proven consensus core. "
-                    "CometBFT itself is implemented in Go for performance, while Xian keeps the user-facing stack in Python.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
+                    rx.text(
+                        "CometBFT provides Byzantine fault-tolerant state machine replication and delivers the same ordered "
+                        "transaction log to every non-faulty node. It separates consensus from the application state via ABCI, "
+                        "so Xian can use its Python contracting engine while relying on a proven consensus core. "
+                        "CometBFT itself is implemented in Go for performance, while Xian keeps the user-facing stack in Python.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
                 rx.grid(
