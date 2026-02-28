@@ -1,8 +1,8 @@
 import reflex as rx
 
 from ..components.common import hover_icon_chip, icon_watermark_hover_card, page_layout, section
+from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, BORDER_COLOR, BORDER_BRIGHT, TEXT_MUTED, TEXT_PRIMARY
 from ..data import _slugify
-from ..theme import ACCENT, ACCENT_GLOW, ACCENT_SOFT, BORDER_COLOR, BORDER_BRIGHT, SURFACE, TEXT_MUTED, TEXT_PRIMARY
 
 
 DEV_LINKS = [

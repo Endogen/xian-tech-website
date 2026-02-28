@@ -5,7 +5,6 @@ import pkgutil
 from typing import Any, Iterable
 
 from .data import (
-    COMMUNITY_STREAMS,
     CORE_COMPONENTS,
     ECOSYSTEM_INITIATIVES,
     TECHNOLOGY_TRACKS,

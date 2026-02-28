@@ -8,15 +8,11 @@ from ..components.common import (
     page_layout,
     section,
     section_panel,
-    subsection,
 )
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
-    BORDER_COLOR,
-    SURFACE,
-    SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )

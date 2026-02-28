@@ -13,10 +13,6 @@ from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
-    BORDER_COLOR,
-    PRIMARY_BG,
-    SURFACE,
-    SURFACE_HOVER,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )

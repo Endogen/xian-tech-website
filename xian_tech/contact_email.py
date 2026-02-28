@@ -1,9 +1,9 @@
 from __future__ import annotations
+from email.message import EmailMessage
 
 import os
 import smtplib
 import ssl
-from email.message import EmailMessage
 
 
 def _coerce_bool(value: str | None, default: bool = False) -> bool:
