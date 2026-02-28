@@ -63,6 +63,19 @@ def _nav_has_dropdown(label_var: rx.Var) -> rx.Var:
     return active
 
 
+def _interactive_link_style(*, radius: str = "10px") -> dict[str, Any]:
+    """Shared tap/focus behavior for anchor-like controls."""
+    return {
+        "style": {"WebkitTapHighlightColor": "transparent"},
+        "_focus": {"outline": "none"},
+        "_focus_visible": {
+            "outline": "none",
+            "backgroundColor": ACCENT_SOFT,
+            "borderRadius": radius,
+        },
+    }
+
+
 def section(*children: rx.Component, **kwargs) -> rx.Component:
     """Wrap content in a centered section with generous spacing."""
     identifier = kwargs.pop("id", None)
@@ -320,6 +333,7 @@ def nav_link(link: dict[str, str], extra: Optional[rx.Component] = None) -> rx.C
             "textDecoration": "none",
             "color": ACCENT,
         },
+        **_interactive_link_style(radius="8px"),
     )
 
 
@@ -626,6 +640,7 @@ def mobile_nav_panel() -> rx.Component:
                             href=link["href"],
                             _hover={"textDecoration": "none", "color": ACCENT},
                             on_click=State.close_mobile_nav,
+                            **_interactive_link_style(radius="8px"),
                         ),
                         rx.cond(
                             link.get("children"),
@@ -641,6 +656,7 @@ def mobile_nav_panel() -> rx.Component:
                                         padding_left="1.5rem",
                                         _hover={"textDecoration": "none", "color": ACCENT},
                                         on_click=State.close_mobile_nav,
+                                        **_interactive_link_style(radius="8px"),
                                     )
                                     for child in link.get("children", [])
                                 ],
@@ -734,6 +750,7 @@ def nav_bar() -> rx.Component:
                         ),
                         href="/",
                         _hover={"textDecoration": "none"},
+                        **_interactive_link_style(radius="12px"),
                     ),
                     rx.flex(
                         *[nav_item(link) for link in NAV_LINKS],
