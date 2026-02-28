@@ -1451,8 +1451,8 @@ def footer() -> rx.Component:
             padding="4rem 2rem",
         ),
         background=rx.color_mode_cond(
-            light="linear-gradient(180deg, rgba(246, 248, 250, 0) 0%, #f6f8fa 8%, #f6f8fa 100%)",
-            dark="linear-gradient(180deg, rgba(13, 17, 23, 0) 0%, #0d1117 8%, #0d1117 100%)",
+            light="linear-gradient(180deg, rgba(238, 243, 248, 0) 0%, #eef3f8 2%, #eef3f8 100%)",
+            dark="linear-gradient(180deg, rgba(16, 26, 38, 0) 0%, #101a26 2%, #101a26 100%)",
         ),
         width="100%",
         transition="background-color 0.3s ease",

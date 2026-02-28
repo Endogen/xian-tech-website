@@ -216,7 +216,8 @@ def roadmap_page() -> rx.Component:
                     ),
                     rx.text(
                         "Development roadmap for the Foundation’s work to advance the Xian technology stack—"
-                        "showing what’s in progress, what’s next, and what’s ready to ship.",
+                        "showing what’s in progress, what’s next, and what’s ready to ship. "
+                        "This board shows live task data.",
                         size="4",
                         color=TEXT_MUTED,
                         line_height="1.7",
