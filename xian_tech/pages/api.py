@@ -311,7 +311,7 @@ def api_page() -> rx.Component:
                             rx.link(
                                 rx.hstack(
                                     rx.icon(tag="book_open", size=18),
-                                    rx.text("RPC Docs", size="3"),
+                                    rx.text("RPC Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
                                     spacing="2",
                                     align_items="center",
                                 ),
@@ -323,7 +323,7 @@ def api_page() -> rx.Component:
                             rx.link(
                                 rx.hstack(
                                     rx.icon(tag="scroll_text", size=18),
-                                    rx.text("JSON-RPC Spec", size="3"),
+                                    rx.text("JSON-RPC Spec", size="3", display=rx.breakpoints(initial="none", md="inline")),
                                     spacing="2",
                                     align_items="center",
                                 ),
