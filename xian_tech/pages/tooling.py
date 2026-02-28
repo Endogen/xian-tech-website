@@ -8,6 +8,7 @@ from ..components.common import (
     section,
     section_panel,
     subsection,
+    text_with_inline_code,
 )
 from ..data import BDS_COMPONENTS
 from ..state import State
@@ -108,6 +109,22 @@ SEARCH_SECTIONS = [
         "badge": "Section",
         "href": "/tooling",
         "keywords": ["xian-py", "SDK", "Wallets", "Transactions"],
+    },
+    {
+        "title": "Xian Linter",
+        "subtitle": "Contract linting in inline mode or as a standalone API service.",
+        "category": "Technology",
+        "badge": "Section",
+        "href": "/tooling",
+        "keywords": [
+            "xian-linter",
+            "Linting",
+            "Inline mode",
+            "Standalone mode",
+            "lint_base64",
+            "lint_gzip",
+            "whitelist_patterns",
+        ],
     },
     {
         "title": "Blockchain Data Service (BDS)",
@@ -219,6 +236,20 @@ def _feature_item(text: str) -> rx.Component:
         rx.text(text, size="3", color=TEXT_MUTED),
         spacing="2",
         align_items="center",
+    )
+
+
+def _feature_item_with_code(text: str) -> rx.Component:
+    return rx.hstack(
+        rx.icon(tag="check", size=16, color=ACCENT),
+        text_with_inline_code(
+            text,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.6",
+        ),
+        spacing="2",
+        align_items="start",
     )
 
 
@@ -664,6 +695,96 @@ def tooling_page() -> rx.Component:
                         min_width="0",
                     ),
                     id="sdk-examples",
+                ),
+            )
+        ),
+        section(
+            section_panel(
+                rx.vstack(
+                    rx.flex(
+                        linked_heading("Xian Linter", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        rx.link(
+                            rx.hstack(
+                                rx.icon(tag="github", size=18),
+                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                spacing="2",
+                                align_items="center",
+                            ),
+                            href="https://github.com/xian-technology/xian-linter",
+                            is_external=True,
+                            color=TEXT_MUTED,
+                            _hover={"color": ACCENT},
+                        ),
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
+                        justify="between",
+                        gap="0.75rem",
+                        width="100%",
+                    ),
+                    rx.text(
+                        "xian-linter combines PyFlakes with Xian Contracting checks so you can catch Python issues "
+                        "and contract-specific violations before deployment.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    rx.text(
+                        "Use inline mode for local scripts and CI pipelines, or run the standalone FastAPI mode "
+                        "when editors, agents, or backend services need remote linting over HTTP.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.grid(
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("code", size=24),
+                            rx.text("Inline / Programmatic", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.vstack(
+                            _feature_item_with_code("Install with `pip install xian-linter`."),
+                            _feature_item_with_code("Run linting directly via `lint_code_inline(contract_code)`."),
+                            _feature_item_with_code("Ideal for pre-commit checks, CI gates, and deploy scripts."),
+                            _feature_item_with_code("Pass custom `whitelist_patterns` for expected symbols."),
+                            spacing="2",
+                            align_items="start",
+                        ),
+                        icon="code",
+                        padding="1.75rem",
+                        height="100%",
+                    ),
+                    icon_watermark_hover_card(
+                        rx.hstack(
+                            hover_icon_chip("server", size=24),
+                            rx.text("Standalone Server", size="3", weight="bold", color=TEXT_PRIMARY),
+                            spacing="3",
+                            align_items="center",
+                        ),
+                        rx.vstack(
+                            _feature_item_with_code("Install API extras via `pip install xian-linter[server]`."),
+                            _feature_item_with_code("Run with `xian-linter` or `python -m xian_linter`."),
+                            _feature_item_with_code("Expose `POST /lint_base64` and `POST /lint_gzip`."),
+                            _feature_item_with_code("Use `whitelist_patterns` query param for ignored patterns."),
+                            _feature_item_with_code("Returns unified JSON errors with line and column metadata."),
+                            spacing="2",
+                            align_items="start",
+                        ),
+                        icon="server",
+                        padding="1.75rem",
+                        height="100%",
+                    ),
+                    columns={"base": "1", "lg": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
                 ),
             )
         ),
