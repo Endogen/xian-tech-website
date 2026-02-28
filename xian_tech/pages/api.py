@@ -32,6 +32,10 @@ RPC_DOCS_BASE = "https://docs.cometbft.com/main/rpc/#"
 RPC_SECTIONS = [
     {
         "title": "Info Routes",
+        "description": (
+            "Read-only endpoints for node health, block/validator data, mempool visibility, and chain state introspection. "
+            "Use these for dashboards, monitoring, and explorers."
+        ),
         "items": [
             {"name": "Health", "operation_id": "health", "tag": "Info", "description": "Node heartbeat."},
             {"name": "Status", "operation_id": "status", "tag": "Info", "description": "Node status."},
@@ -144,6 +148,10 @@ RPC_SECTIONS = [
     },
     {
         "title": "Transaction Routes",
+        "description": (
+            "Submission endpoints for broadcasting signed transactions and validating them before inclusion. "
+            "Choose async/sync/commit behavior based on how much confirmation you need."
+        ),
         "items": [
             {
                 "name": "BroadcastTxSync",
@@ -173,6 +181,10 @@ RPC_SECTIONS = [
     },
     {
         "title": "ABCI Routes",
+        "description": (
+            "Application-level endpoints exposed through ABCI. These are useful when you need direct access to "
+            "application metadata or state queries beyond generic node status calls."
+        ),
         "items": [
             {
                 "name": "ABCIInfo",
@@ -190,6 +202,10 @@ RPC_SECTIONS = [
     },
     {
         "title": "Unsafe Routes",
+        "description": (
+            "Administrative peer-management endpoints that can change network connectivity at runtime. "
+            "They are marked unsafe because exposing them publicly can be abused to manipulate node peering."
+        ),
         "items": [
             {
                 "name": "DialSeeds",
@@ -338,6 +354,13 @@ def api_page() -> rx.Component:
                     *[
                         subsection(
                             group["title"],
+                            rx.text(
+                                group["description"],
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                                width="100%",
+                            ),
                             rx.grid(
                                 *[rpc_card(item) for item in group["items"]],
                                 columns={"base": "1fr", "md": "repeat(2, minmax(0, 1fr))"},
