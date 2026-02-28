@@ -279,7 +279,7 @@ def api_page() -> rx.Component:
                 ),
                 spacing="6",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -351,7 +351,7 @@ def api_page() -> rx.Component:
                     spacing="5",
                     width="100%",
                 ),
-            )
+            ),
         ),
     )
 

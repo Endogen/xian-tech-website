@@ -71,8 +71,8 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     kwargs.setdefault("margin", "0 auto")
     kwargs.setdefault("padding_left", "2rem")
     kwargs.setdefault("padding_right", "2rem")
-    kwargs.setdefault("padding_top", "5rem")
-    kwargs.setdefault("padding_bottom", "5rem")
+    kwargs.setdefault("padding_top", "2rem")
+    kwargs.setdefault("padding_bottom", "2rem")
     return rx.box(*children, id=identifier, **kwargs)
 
 
@@ -157,6 +157,36 @@ def subsection(title: str, *children: rx.Component, **kwargs) -> rx.Component:
         margin_top=margin_top,
         **kwargs,
     )
+
+
+def inline_code(text: str) -> rx.Component:
+    """Inline code token with shared theme styling."""
+    return rx.el.code(
+        text,
+        style={
+            "fontFamily": "'SF Mono', 'Monaco', monospace",
+            "fontSize": "0.9em",
+            "background": CODE_BG,
+            "border": f"1px solid {BORDER_COLOR}",
+            "borderRadius": "6px",
+            "padding": "0.08rem 0.35rem",
+            "color": TEXT_PRIMARY,
+        },
+    )
+
+
+def text_with_inline_code(text: str, **text_kwargs: Any) -> rx.Component:
+    """Render `backticked` segments inside text as inline code."""
+    tokens = re.split(r"(`[^`]+`)", text)
+    parts: list[Any] = []
+    for token in tokens:
+        if not token:
+            continue
+        if token.startswith("`") and token.endswith("`"):
+            parts.append(inline_code(token[1:-1]))
+        else:
+            parts.append(token)
+    return rx.text(*parts, **text_kwargs)
 
 
 def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx.Component:
@@ -1500,6 +1530,7 @@ __all__ = [
     "feature_card",
     "hover_icon_chip",
     "image_lightbox",
+    "inline_code",
     "icon_watermark_hover_card",
     "nav_bar",
     "nav_link",
@@ -1508,5 +1539,6 @@ __all__ = [
     "section_panel",
     "subsection",
     "terminal_prompt",
+    "text_with_inline_code",
     "theme_toggle",
 ]

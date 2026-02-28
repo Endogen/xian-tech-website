@@ -149,7 +149,6 @@ def developers_page() -> rx.Component:
                 template_columns={"base": "repeat(1,  minmax(0, 1fr))", "md": "repeat(2, minmax(0, 1fr))"},
                 gap="1.5rem",
             ),
-            padding_top="0",
         ),
     )
 

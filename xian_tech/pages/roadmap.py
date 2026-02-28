@@ -225,7 +225,7 @@ def roadmap_page() -> rx.Component:
                     ),
                 spacing="6",
                 align_items="start",
-            )
+            ),
         ),
         section(
             rx.box(
@@ -256,7 +256,6 @@ def roadmap_page() -> rx.Component:
                     ),
                 ),
             ),
-            padding_top="0",
         ),
     )
 

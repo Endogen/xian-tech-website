@@ -113,7 +113,7 @@ def consensus_page() -> rx.Component:
                 ),
                 spacing="6",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -288,7 +288,7 @@ def consensus_page() -> rx.Component:
                         align_self="center",
                     ),
                 ),
-            )
+            ),
         ),
     )
 

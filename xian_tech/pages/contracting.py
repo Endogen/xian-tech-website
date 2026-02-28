@@ -455,7 +455,7 @@ def contracting_page() -> rx.Component:
                 ),
                 spacing="5",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -617,7 +617,6 @@ def contracting_page() -> rx.Component:
                     align="stretch",
                 ),
             ),
-            padding_top="1.5rem",
         ),
         section(
             section_panel(
@@ -718,7 +717,6 @@ def contracting_page() -> rx.Component:
                     align="stretch",
                 ),
             ),
-            padding_top="1.5rem",
         ),
     )
 

@@ -8,6 +8,7 @@ from ..components.common import (
     section,
     section_panel,
     subsection,
+    text_with_inline_code,
 )
 from ..theme import (
     ACCENT,
@@ -17,60 +18,12 @@ from ..theme import (
     TEXT_PRIMARY,
 )
 
-QUICKSTART_COMMANDS = """git clone https://github.com/xian-technology/xian-node.git
+SETUP_FLOW_COMMANDS = """git clone https://github.com/xian-technology/xian-node.git
 cd xian-node
-make setup"""
-
-CONFIG_SETUP_COMMANDS = """./scripts/setup.sh
-./scripts/copy_config.sh
-docker compose up -d
-docker compose logs -f"""
-
-CORE_NODE_COMMANDS = """make core-build
-make core-up
-make init
-make configure CONFIGURE_ARGS="--moniker node-001 --service-node xian-testnet-04 --copy-genesis true"
-make core-shell
-make up
-pm2 logs --lines 1000
-make core-down"""
-
-CORE_BDS_COMMANDS = """make core-bds-build
-make core-bds-up
-make init
-make configure CONFIGURE_ARGS="--moniker node-001 --service-node xian-testnet-04 --copy-genesis true"
-make core-bds-shell
-make up-bds
-pm2 logs --lines 1000
-make core-bds-down"""
-
-CORE_DEV_COMMANDS = """make core-dev-build
-make core-dev-up
-make init
-make configure CONFIGURE_ARGS="--moniker node-001 --service-node xian-testnet-04 --copy-genesis true"
-make core-dev-shell
-make up
-pm2 logs --lines 1000
-make core-dev-down"""
-
-CONTRACTING_DEV_COMMANDS = """git clone https://github.com/xian-technology/contracting.git
-make contracting-dev-build
-make contracting-dev-up
-pytest contracting/
-exit"""
-
-CORE_TEST_COMMANDS = """make core-dev-shell
-pytest xian-core/tests/
-exit"""
-
-FIREWALL_COMMANDS = """sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw allow 26656
-sudo ufw allow 26657
-sudo ufw enable
-sudo ufw status"""
-
-COMPOSE_COMBINE_COMMAND = """docker compose -f docker-compose.core.yaml -f docker-compose.xian-chain-dev.yml up -d"""
+make setup
+make <profile>-build
+make <profile>-up
+make init"""
 
 SEARCH_SECTIONS = [
     {
@@ -83,43 +36,27 @@ SEARCH_SECTIONS = [
     },
     {
         "title": "Quickstart",
-        "subtitle": "Clone, configure, and boot the xian-node stack.",
+        "subtitle": "Minimal bootstrap flow to get a node profile running.",
         "category": "Technology",
         "badge": "Section",
         "href": "/node-network",
         "keywords": ["Quickstart", "Docker", "Compose", "Setup"],
     },
     {
-        "title": "Run a Core Node",
-        "subtitle": "Makefile-driven flow for building and running core.",
+        "title": "Node Profiles",
+        "subtitle": "Core node, Core + BDS, and Core dev mode at a glance.",
         "category": "Technology",
         "badge": "Section",
         "href": "/node-network",
-        "keywords": ["Core node", "Makefile", "pm2", "Logs"],
+        "keywords": ["Core node", "BDS", "Dev mode", "Makefile"],
     },
     {
-        "title": "Core + BDS",
-        "subtitle": "Start the core node with the BDS services enabled.",
+        "title": "Operations Checklist",
+        "subtitle": "Key health, logging, and networking checks after startup.",
         "category": "Technology",
         "badge": "Section",
         "href": "/node-network",
-        "keywords": ["BDS", "Core node", "Docker compose"],
-    },
-    {
-        "title": "Dev Mode",
-        "subtitle": "Resettable chain profile for local iteration.",
-        "category": "Technology",
-        "badge": "Section",
-        "href": "/node-network",
-        "keywords": ["Dev mode", "Local chain", "Reset"],
-    },
-    {
-        "title": "Operations & Security",
-        "subtitle": "Firewall, troubleshooting, and reference commands.",
-        "category": "Technology",
-        "badge": "Section",
-        "href": "/node-network",
-        "keywords": ["Firewall", "Troubleshooting", "Reference"],
+        "keywords": ["Logs", "Troubleshooting", "Ports", "Operations"],
     },
 ]
 
@@ -139,7 +76,7 @@ def node_network_page() -> rx.Component:
     def bullet(text: str) -> rx.Component:
         return rx.hstack(
             rx.icon(tag="check", size=18, color=ACCENT),
-            rx.text(text, size="3", color=TEXT_MUTED, line_height="1.7"),
+            text_with_inline_code(text, size="3", color=TEXT_MUTED, line_height="1.7"),
             spacing="3",
             align_items="start",
         )
@@ -187,12 +124,12 @@ def node_network_page() -> rx.Component:
                 ),
                 spacing="6",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
                 rx.flex(
-                    linked_heading("xian-node", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    linked_heading("Node Setup", size="6", color=TEXT_PRIMARY, weight="bold"),
                     rx.hstack(
                         rx.link(
                             rx.hstack(
@@ -263,7 +200,7 @@ def node_network_page() -> rx.Component:
                     ),
                     stack_card(
                         "Core dev mode",
-                        "Run a resettable chain for fast local iteration and testing.",
+                        "Run a resettable chain for fast local iteration, repeatable testing, and safe config experimentation.",
                         "make core-dev-build\nmake core-dev-up\nmake init",
                         "flask_conical",
                     ),
@@ -273,113 +210,41 @@ def node_network_page() -> rx.Component:
                     align="stretch",
                 ),
                 subsection(
-                    "Quickstart",
+                    "Setup Flow",
                     rx.text(
-                        "Clone the repo, bootstrap the stack, then bring up the containers.",
+                        "Use this high-level flow to bootstrap the repository and start one profile. "
+                        "Pick the profile command from the cards above based on your target environment.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
                     ),
                     rx.vstack(
                         bullet("Install Docker and Docker Compose."),
-                        bullet("Copy `.env.example` to `.env` if you need to adjust credentials."),
-                        bullet("Run the setup and config scripts before starting containers."),
+                        bullet("Clone `xian-node`, then run `make setup` once."),
+                        bullet("Start one profile (`core`, `core-bds`, or `core-dev`) and initialize it."),
                         spacing="2",
                         align_items="start",
                     ),
-                    rx.text("Fast path:", size="3", color=TEXT_PRIMARY, weight="bold"),
-                    command_block(QUICKSTART_COMMANDS),
-                    rx.text("Manual setup steps:", size="3", color=TEXT_PRIMARY, weight="bold"),
-                    command_block(CONFIG_SETUP_COMMANDS),
+                    rx.text("Command template:", size="3", color=TEXT_PRIMARY, weight="bold"),
+                    command_block(SETUP_FLOW_COMMANDS),
                 ),
                 subsection(
-                    "Run a core node (Makefile)",
+                    "Operations Checklist",
                     rx.text(
-                        "Use the Makefile targets to build, configure, and operate the core node.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(CORE_NODE_COMMANDS),
-                ),
-                subsection(
-                    "Run core + BDS",
-                    rx.text(
-                        "Enable the BDS stack by using the core + BDS targets.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(CORE_BDS_COMMANDS),
-                ),
-                subsection(
-                    "Dev mode",
-                    rx.text(
-                        "The dev profile resets on reboot, making it ideal for local experimentation.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(CORE_DEV_COMMANDS),
-                ),
-                subsection(
-                    "Contracting dev loop",
-                    rx.text(
-                        "Clone the contracting repo and run the dev containers to iterate on contracts locally.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(CONTRACTING_DEV_COMMANDS),
-                ),
-                subsection(
-                    "Run core tests",
-                    rx.text(
-                        "Drop into the core dev shell and run the xian-core test suite.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(CORE_TEST_COMMANDS),
-                ),
-                subsection(
-                    "Firewall (UFW)",
-                    rx.text(
-                        "Allow the standard ports for HTTP(S), P2P, and RPC access.",
-                        size="3",
-                        color=TEXT_MUTED,
-                        line_height="1.7",
-                    ),
-                    command_block(FIREWALL_COMMANDS),
-                ),
-                subsection(
-                    "Troubleshooting",
-                    rx.vstack(
-                        bullet("If containers are stuck, run `docker compose down` and restart the stack."),
-                        bullet("Prune unused networks with `docker network prune` if stale networks linger."),
-                        bullet("Use `docker ps` and `docker logs <container_name>` to inspect running services."),
-                        bullet("Resolve port conflicts by stopping whatever else is bound to the required ports."),
-                        spacing="2",
-                        align_items="start",
-                    ),
-                ),
-                subsection(
-                    "Reference",
-                    rx.text(
-                        "Common Docker networks and compose combinations used by the stack.",
+                        "After startup, focus on observability and basic networking hygiene. "
+                        "Use the full repo docs for advanced tuning and environment-specific hardening.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
                     ),
                     rx.vstack(
-                        bullet("Docker networks: `xian-net`, `xian-db`."),
-                        bullet("Compose files: `docker-compose.core.yaml`, `docker-compose.core.bds.yaml`, `docker-compose.core.dev.yaml`, `docker-compose.xian-chain-dev.yml`."),
-                        bullet("Combine compose files with `-f` for custom stacks."),
+                        bullet("Confirm containers are healthy with `docker ps` and container logs."),
+                        bullet("Track chain process output using `pm2 logs --lines 1000`."),
+                        bullet("Keep required RPC and P2P ports open (`26656`, `26657`)."),
+                        bullet("If startup fails, restart the profile and clear stale Docker resources."),
                         spacing="2",
                         align_items="start",
                     ),
-                    rx.text("Example compose override:", size="3", color=TEXT_PRIMARY, weight="bold"),
-                    command_block(COMPOSE_COMBINE_COMMAND),
                 ),
             ),
         )
@@ -387,7 +252,7 @@ def node_network_page() -> rx.Component:
         section(
             section_panel(
                 rx.flex(
-                    linked_heading("xian-node-skill", size="6", color=TEXT_PRIMARY, weight="bold"),
+                    linked_heading("Agent Node Skill", size="6", color=TEXT_PRIMARY, weight="bold"),
                     rx.hstack(
                         rx.link(
                             rx.hstack(
@@ -397,30 +262,6 @@ def node_network_page() -> rx.Component:
                                 align_items="center",
                             ),
                             href="https://github.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("DeepWiki", size="3"),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://deepwiki.com/xian-technology/xian-ai-skills/tree/main/xian-node-skill",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
-                        ),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="book_open", size=18),
-                                rx.text("Docs", size="3"),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://docs.xian.technology/",
                             is_external=True,
                             color=TEXT_MUTED,
                             _hover={"color": ACCENT},
@@ -435,7 +276,7 @@ def node_network_page() -> rx.Component:
                     width="100%",
                 ),
                 rx.text(
-                    "Agents can now run and manage Xian nodes end-to-end. The xian-node-skill packages the exact "
+                    "Agents can now run and manage Xian nodes end-to-end. The Agent Node Skill packages the exact "
                     "steps for provisioning, configuration, and operations so assistants can safely help bootstrap "
                     "mainnet/testnet nodes and keep them healthy.",
                     size="3",
@@ -457,7 +298,6 @@ def node_network_page() -> rx.Component:
                     width="100%",
                 ),
             ),
-            padding_top="0",
         ),
     )
 

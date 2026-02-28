@@ -114,7 +114,7 @@ def abci_page() -> rx.Component:
                 ),
                 spacing="5",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -236,7 +236,7 @@ def abci_page() -> rx.Component:
                         align_self="center",
                     ),
                 ),
-            )
+            ),
         ),
     )
 

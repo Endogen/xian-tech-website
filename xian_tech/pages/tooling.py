@@ -126,7 +126,7 @@ SEARCH_SECTIONS = [
         "keywords": ["MCP", "AI assistants", "Wallets", "DEX"],
     },
     {
-        "title": "AI Skills",
+        "title": "Agent Skills",
         "subtitle": "Agent-ready skills for Xian SDK usage and node operations.",
         "category": "Technology",
         "badge": "Section",
@@ -250,7 +250,7 @@ def tooling_page() -> rx.Component:
                 ),
                 spacing="5",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -466,7 +466,7 @@ def tooling_page() -> rx.Component:
                     width="100%",
                     min_width="0",
                 ),
-            )
+            ),
         ),
         section(
             section_panel(
@@ -916,7 +916,7 @@ def tooling_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     rx.flex(
-                        linked_heading("AI Skills", size="6", color=TEXT_PRIMARY, weight="bold"),
+                        linked_heading("Agent Skills", size="6", color=TEXT_PRIMARY, weight="bold"),
                         rx.hstack(
                             rx.link(
                                 rx.hstack(

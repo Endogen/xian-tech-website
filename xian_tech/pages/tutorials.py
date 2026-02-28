@@ -143,7 +143,7 @@ def tutorials_page() -> rx.Component:
                 ),
                 spacing="6",
                 align_items="start",
-            )
+            ),
         ),
         section(
             section_panel(
@@ -275,7 +275,7 @@ def tutorials_page() -> rx.Component:
                     gap="1.5rem",
                     width="100%",
                 ),
-            )
+            ),
         ),
         section(
             section_panel(

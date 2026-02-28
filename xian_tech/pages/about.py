@@ -372,7 +372,6 @@ def team_section() -> rx.Component:
             align_items="start",
             width="100%",
         ),
-        padding_top="0",
     )
 
 
@@ -412,7 +411,6 @@ def history_section() -> rx.Component:
             align_items="start",
             width="100%",
         ),
-        padding_top="3rem",
     )
 
 
@@ -672,7 +670,6 @@ def about_page() -> rx.Component:
                 ),
                 align_items="start",
             ),
-            padding_top="0",
         ),
         team_section(),
         history_section(),
