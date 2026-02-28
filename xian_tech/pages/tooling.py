@@ -342,13 +342,6 @@ def tooling_page() -> rx.Component:
                     rx.text(
                         "BDS is an optional component of the Python ABCI app. When enabled, it records every transaction into PostgreSQL and exposes that data via a GraphQL API powered by ",
                         rx.link("PostGraphile", href="https://www.graphile.org/postgraphile", is_external=True, color=ACCENT),
-                        ". The full BDS GraphQL schema can be found ",
-                        rx.link(
-                            "here",
-                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
-                            is_external=True,
-                            color=ACCENT,
-                        ),
                         ".",
                         size="4",
                         color=TEXT_MUTED,
@@ -356,9 +349,8 @@ def tooling_page() -> rx.Component:
                         width="100%",
                     ),
                     rx.text(
-                        "GraphQL is a query language and API runtime that lets clients request exactly the fields they need in a single call. "
-                        "For BDS, this improves performance and developer experience by reducing over-fetching, simplifying data access patterns, "
-                        "and making it easier to build dashboards, explorers, and backend services on top of chain data.",
+                        "The Schema Guide below summarizes why GraphQL works well for BDS integrations and links directly "
+                        "to the machine-readable schema used for query generation and client tooling.",
                         size="3",
                         color=TEXT_MUTED,
                         line_height="1.7",
@@ -494,7 +486,53 @@ def tooling_page() -> rx.Component:
                     ),
                     subsection(
                         "Schema Guide",
-                        rx.link(
+                        rx.flex(
+                            rx.text(
+                                "Use these references to understand GraphQL tradeoffs and build schema-accurate BDS queries.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.7",
+                                width="100%",
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            direction={"base": "column", "md": "row"},
+                            align_items={"base": "start", "md": "center"},
+                            justify="between",
+                            gap="0.75rem",
+                            width="100%",
+                        ),
+                        rx.grid(
+                            icon_watermark_hover_card(
+                                rx.hstack(
+                                    hover_icon_chip("layers"),
+                                    rx.text("Why GraphQL for BDS", size="3", weight="bold", color=TEXT_PRIMARY),
+                                    spacing="3",
+                                    align_items="center",
+                                ),
+                                rx.vstack(
+                                    _feature_item("Request only needed fields to trim payloads."),
+                                    _feature_item("Fetch related state and events in a single query shape."),
+                                    _feature_item("Use schema introspection to generate safer typed clients."),
+                                    _feature_item("Prototype queries in GraphiQL before wiring app code."),
+                                    _feature_item("Reuse stable query patterns across apps and services."),
+                                    spacing="2",
+                                    align_items="start",
+                                ),
+                                icon="layers",
+                                padding="1.75rem",
+                                height="100%",
+                            ),
                             icon_watermark_hover_card(
                                 rx.hstack(
                                     hover_icon_chip("database"),
@@ -513,12 +551,12 @@ def tooling_page() -> rx.Component:
                                 ),
                                 icon="database",
                                 padding="1.75rem",
+                                height="100%",
                             ),
-                            href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
-                            is_external=True,
+                            columns={"base": "1", "lg": "2"},
+                            spacing="4",
                             width="100%",
-                            display="block",
-                            _hover={"textDecoration": "none"},
+                            align="stretch",
                         ),
                         id="bds-schema-guide",
                     ),
@@ -733,17 +771,45 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("Xian Linter", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
+                        rx.hstack(
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="github", size=18),
+                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://github.com/xian-technology/xian-linter",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
                             ),
-                            href="https://github.com/xian-technology/xian-linter",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="brain", size=18),
+                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://deepwiki.com/xian-technology/xian-linter",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=18),
+                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://pypi.org/project/xian-linter/",
+                                is_external=True,
+                                color=TEXT_MUTED,
+                                _hover={"color": ACCENT},
+                            ),
+                            spacing="4",
+                            align_items="center",
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
