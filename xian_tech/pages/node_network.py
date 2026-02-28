@@ -145,7 +145,7 @@ def node_network_page() -> rx.Component:
                         ),
                         rx.link(
                             rx.hstack(
-                                rx.icon(tag="book_open", size=18),
+                                rx.icon(tag="brain", size=18),
                                 rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
                                 spacing="2",
                                 align_items="center",
