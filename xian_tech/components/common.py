@@ -1575,10 +1575,11 @@ def footer() -> rx.Component:
                     ),
                     columns={
                         "initial": "1fr",
-                        "md": "repeat(2, minmax(0, 1fr))",
+                        "sm": "repeat(2, minmax(0, 1fr))",
+                        "md": "repeat(3, minmax(0, 1fr))",
                         "lg": "repeat(5, minmax(0, 1fr))",
                     },
-                    gap="3rem",
+                    gap=rx.breakpoints(initial="1.75rem", md="2.25rem", lg="3rem"),
                     width="100%",
                     align_items="start",
                 ),
