@@ -135,6 +135,7 @@ def hero_section() -> rx.Component:
             width="100%",
         ),
         padding_top="8rem",
+        padding_bottom="8rem",
     )
 
 
@@ -181,6 +182,8 @@ def stack_overview() -> rx.Component:
             spacing="6",
             align_items="center",
         ),
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -246,6 +249,8 @@ def mission_section() -> rx.Component:
             spacing="6",
             align_items="start",
         ),
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -295,6 +300,8 @@ def why_another_blockchain() -> rx.Component:
             ),
             margin_top="0.5rem",
         ),
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -357,6 +364,8 @@ def why_another_blockchain() -> rx.Component:
             template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
             gap="2rem",
         ),
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -487,6 +496,8 @@ def why_python() -> rx.Component:
             template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
             gap="2rem",
         ),
+        padding_top="3rem",
+        padding_bottom="3rem",
     )
 
 
@@ -594,6 +605,8 @@ def noteworthy_quotes() -> rx.Component:
             spacing="4",
             align_items="start",
         ),
+        padding_top="0rem",
+        padding_bottom="3rem",
     )
 
 
