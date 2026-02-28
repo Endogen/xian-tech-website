@@ -69,8 +69,8 @@ def section(*children: rx.Component, **kwargs) -> rx.Component:
     kwargs.setdefault("width", "100%")
     kwargs.setdefault("max_width", MAX_CONTENT_WIDTH)
     kwargs.setdefault("margin", "0 auto")
-    kwargs.setdefault("padding_left", "2rem")
-    kwargs.setdefault("padding_right", "2rem")
+    kwargs.setdefault("padding_left", rx.breakpoints(initial="0.9rem", md="1.5rem", lg="2rem"))
+    kwargs.setdefault("padding_right", rx.breakpoints(initial="0.9rem", md="1.5rem", lg="2rem"))
     kwargs.setdefault("padding_top", "2rem")
     kwargs.setdefault("padding_bottom", "2rem")
     return rx.box(*children, id=identifier, **kwargs)
@@ -191,8 +191,22 @@ def text_with_inline_code(text: str, **text_kwargs: Any) -> rx.Component:
 
 def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx.Component:
     """Highlight a page section with a header band and consistent spacing."""
-    header_padding = kwargs.pop("header_padding", "2.5rem 2.5rem 1.75rem 2.5rem")
-    body_padding = kwargs.pop("body_padding", "2rem 2.5rem 2.5rem 2.5rem")
+    header_padding = kwargs.pop(
+        "header_padding",
+        rx.breakpoints(
+            initial="1rem 1rem 0.9rem 1rem",
+            md="1.75rem 1.75rem 1.25rem 1.75rem",
+            lg="2.5rem 2.5rem 1.75rem 2.5rem",
+        ),
+    )
+    body_padding = kwargs.pop(
+        "body_padding",
+        rx.breakpoints(
+            initial="1rem",
+            md="1.35rem 1.75rem 1.75rem 1.75rem",
+            lg="2rem 2.5rem 2.5rem 2.5rem",
+        ),
+    )
     body_spacing = kwargs.pop("body_spacing", "4")
     header_background = rx.color_mode_cond(
         light="linear-gradient(180deg, rgba(80, 177, 101, 0.18) 0%, rgba(248, 249, 250, 0) 100%)",
@@ -822,7 +836,7 @@ def code_block(code: str) -> rx.Component:
         background=CODE_BG,
         border=f"1px solid {BORDER_COLOR}",
         border_radius="10px",
-        padding="1.5rem",
+        padding=rx.breakpoints(initial="1rem", md="1.25rem", lg="1.5rem"),
         overflow_x="auto",
         width="100%",
         transition="all 0.3s ease",
@@ -883,7 +897,27 @@ def icon_watermark_hover_card(
     custom_hover = kwargs.pop("_hover", {})
     custom_style = kwargs.pop("style", {})
 
-    kwargs.setdefault("padding", "2rem")
+    padding_value = kwargs.pop("padding", None)
+    if padding_value is None:
+        resolved_padding = rx.breakpoints(initial="1rem", md="1.5rem", lg="2rem")
+    elif isinstance(padding_value, str) and padding_value in {"0", "0rem", "0px"}:
+        resolved_padding = padding_value
+    elif isinstance(padding_value, str) and padding_value.endswith("rem") and " " not in padding_value:
+        try:
+            rem_value = float(padding_value[:-3])
+            mobile_padding = max(0.85, round(rem_value * 0.62, 2))
+            tablet_padding = max(1.0, round(rem_value * 0.8, 2))
+            resolved_padding = rx.breakpoints(
+                initial=f"{mobile_padding}rem",
+                md=f"{tablet_padding}rem",
+                lg=padding_value,
+            )
+        except ValueError:
+            resolved_padding = padding_value
+    else:
+        resolved_padding = padding_value
+
+    kwargs["padding"] = resolved_padding
     kwargs.setdefault("background", SURFACE)
     kwargs.setdefault("border", f"1px solid {BORDER_COLOR}")
     kwargs.setdefault("border_radius", "14px")
@@ -1510,6 +1544,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
             rx.box(
                 *children,
                 min_height="calc(100vh - 200px)",
+                padding_bottom="2rem",
             ),
             footer(),
             position="relative",
