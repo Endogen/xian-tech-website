@@ -12,7 +12,7 @@ from ..components.common import (
     text_with_inline_code,
 )
 from ..data import BDS_COMPONENTS
-from ..state import State
+from ..state import State, ToolingState
 from ..theme import (
     ACCENT,
     ACCENT_GLOW,
@@ -22,7 +22,6 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
-from .tooling_state import ToolingState
 
 SDK_INSTALL_COMMAND = "pip install xian-py"
 SDK_WALLET_EXAMPLE = """from xian_py import Wallet

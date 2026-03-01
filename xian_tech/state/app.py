@@ -7,7 +7,7 @@ from typing import Any, TypedDict
 import reflex as rx
 from dotenv import load_dotenv
 
-from .contact_email import send_contact_email
+from ..contact_email import send_contact_email
 load_dotenv()
 
 EMAIL_PATTERN = re.compile(
@@ -203,7 +203,7 @@ class State(rx.State):
         yield
 
         def fetch_board() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-            from .fizzy_api import get_board_cards, get_board_columns
+            from ..fizzy_api import get_board_cards, get_board_columns
 
             token = os.getenv("FIZZY_TOKEN", "").strip()
             account_slug = (
@@ -565,7 +565,7 @@ class State(rx.State):
     @rx.var(cache=True, auto_deps=False, deps=["command_query"])
     def command_palette_actions(self) -> list[CommandAction]:
         """Return filtered actions for the command palette."""
-        from .search import SEARCH_ENTRIES
+        from ..search import SEARCH_ENTRIES
 
         query = self.command_query.strip().lower()
         if not query:

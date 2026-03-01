@@ -3,6 +3,7 @@ assets/external/
 .states
 .web
 .tmp
+test-results/
 .idea
 *.db
 __pycache__/

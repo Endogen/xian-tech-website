@@ -18,7 +18,7 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
-from .samples_state import SamplesState
+from ..state import SamplesState
 
 SEARCH_SECTIONS = [
     {
