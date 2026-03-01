@@ -251,7 +251,7 @@ def _feature_item_with_code(text: str) -> rx.Component:
             line_height="1.6",
         ),
         spacing="2",
-        align_items="start",
+        align_items="center",
     )
 
 

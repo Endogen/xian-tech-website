@@ -423,7 +423,7 @@ def _bullet_item(text: str) -> rx.Component:
             line_height="1.6",
         ),
         spacing="2",
-        align_items="start",
+        align_items="center",
     )
 
 
@@ -447,7 +447,7 @@ def _ordered_step_item(step: int, text: str) -> rx.Component:
             line_height="1.6",
         ),
         spacing="2",
-        align_items="start",
+        align_items="center",
     )
 
 

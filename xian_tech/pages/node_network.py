@@ -78,7 +78,7 @@ def node_network_page() -> rx.Component:
             rx.icon(tag="check", size=18, color=ACCENT),
             text_with_inline_code(text, size="3", color=TEXT_MUTED, line_height="1.7"),
             spacing="3",
-            align_items="start",
+            align_items="center",
         )
 
     def stack_card(title: str, body: str, command: str, icon: str) -> rx.Component:

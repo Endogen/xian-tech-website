@@ -83,7 +83,7 @@ def abci_page() -> rx.Component:
             rx.icon(tag="check", size=18, color=ACCENT),
             rx.text(text, size="3", color=TEXT_MUTED, line_height="1.7"),
             spacing="3",
-            align_items="start",
+            align_items="center",
         )
 
     return page_layout(

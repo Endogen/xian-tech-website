@@ -488,7 +488,7 @@ def _bullet_item(text: str) -> rx.Component:
             line_height="1.6",
         ),
         spacing="2",
-        align_items="start",
+        align_items="center",
     )
 
 
@@ -670,7 +670,7 @@ def tutorials_page() -> rx.Component:
                             width="100%",
                         ),
                         spacing="2",
-                        align_items="start",
+                        align_items="center",
                         width="100%",
                     ),
                     padding="1rem 1.25rem",

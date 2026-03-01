@@ -194,7 +194,7 @@ def mission_section() -> rx.Component:
             rx.text("→", color=ACCENT, size="3"),
             rx.text(text, size="3", color=TEXT_MUTED, line_height="1.6"),
             gap="0.65rem",
-            align_items="flex-start",
+            align_items="center",
         )
 
     return section(
