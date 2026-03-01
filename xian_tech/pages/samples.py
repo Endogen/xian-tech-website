@@ -41,12 +41,12 @@ SEARCH_SECTIONS = [
     },
     {
         "id": "samples-scenario-contract-call-guardrails",
-        "title": "Scenario: Simulate, Submit, Verify",
-        "subtitle": "Protect contract writes with simulation and post-state validation.",
+        "title": "Scenario: Simulate, Stamp, Submit",
+        "subtitle": "Preview state deltas, validate expected output, then submit with simulated stamps.",
         "category": "Developers",
         "badge": "Scenario",
         "href": "/samples#scenario-contract-call-guardrails",
-        "keywords": ["simulate", "send_tx", "state", "verification", "contracts"],
+        "keywords": ["simulate", "send_tx", "state", "stamps", "dex", "slippage"],
     },
     {
         "id": "samples-scenario-bds-retrieval",
@@ -62,6 +62,7 @@ SEARCH_SECTIONS = [
 SCENARIO_TRANSFER_SYNC = '''from time import monotonic, sleep
 from xian_py import Wallet, Xian
 
+# Node RPC endpoint.
 NODE_URL = "http://node-ip:26657"
 
 
@@ -70,59 +71,72 @@ def wait_for_tx(xian: Xian, tx_hash: str, timeout_seconds: int = 45) -> dict:
     deadline = monotonic() + timeout_seconds
 
     while monotonic() < deadline:
+        # Check latest tx status from the node.
         tx = xian.get_tx(tx_hash)
 
         if tx.get("success") is True:
             return tx
 
+        # "Not found" usually means tx is still propagating/indexing.
         message = str(tx.get("message", "")).lower()
         if "not found" in message:
             sleep(2)
             continue
 
+        # Any other response is treated as terminal failure.
         raise RuntimeError(f"Transaction failed: {tx}")
 
     raise TimeoutError(f"Timed out waiting for tx {tx_hash}")
 
 
 def send_and_confirm(recipient: str, amount: float) -> dict:
+    # Build wallet + sync client for this workflow.
     wallet = Wallet()
     xian = Xian(NODE_URL, wallet=wallet)
 
+    # Submit transfer transaction.
     submit = xian.send(amount=amount, to_address=recipient)
     if not submit.get("success"):
         raise RuntimeError(submit.get("message", "submit failed"))
 
+    # If no hash is returned, forward submit response as-is.
     tx_hash = submit.get("tx_hash")
     if not tx_hash:
         return submit
 
+    # Otherwise wait for final tx resolution.
     return wait_for_tx(xian, tx_hash)
 
 
+# Example usage.
 result = send_and_confirm("recipient_address", 5)
 print(result)'''
 
 SCENARIO_TRANSFER_ASYNC = '''import asyncio
 from xian_py import Wallet, XianAsync
 
+# Node RPC endpoint.
 NODE_URL = "http://node-ip:26657"
 
 
 async def wait_for_tx(client: XianAsync, tx_hash: str, timeout_seconds: int = 45) -> dict:
+    # Use loop time to avoid wall-clock drift issues.
     deadline = asyncio.get_running_loop().time() + timeout_seconds
 
     while asyncio.get_running_loop().time() < deadline:
+        # Fetch the latest transaction state.
         tx = await client.get_tx(tx_hash)
 
         if tx.get("success") is True:
             return tx
 
+        # Keep polling while tx is still not indexed.
         message = str(tx.get("message", "")).lower()
         if "not found" in message:
             await asyncio.sleep(2)
             continue
 
+        # Stop immediately on terminal failure.
         raise RuntimeError(f"Transaction failed: {tx}")
 
     raise TimeoutError(f"Timed out waiting for tx {tx_hash}")
@@ -131,18 +145,23 @@ async def wait_for_tx(client: XianAsync, tx_hash: str, timeout_seconds: int = 45
 async def transfer_with_confirmation(recipient: str, amount: float) -> dict:
     wallet = Wallet()
 
+    # Reuse a single async client session for submit + polling.
     async with XianAsync(NODE_URL, wallet=wallet) as client:
+        # Broadcast transfer.
         submit = await client.send(amount=amount, to_address=recipient)
         if not submit.get("success"):
             raise RuntimeError(submit.get("message", "submit failed"))
 
+        # Return immediate response if hash is unavailable.
         tx_hash = submit.get("tx_hash")
         if not tx_hash:
             return submit
 
+        # Otherwise wait for a final success/fail result.
         return await wait_for_tx(client, tx_hash)
 
 
+# Example usage.
 print(asyncio.run(transfer_with_confirmation("recipient_address", 5)))'''
 
 SCENARIO_TRANSFER_WS_TRACKING = '''import asyncio
@@ -152,11 +171,13 @@ import websockets
 from xian_py import Wallet, XianAsync
 from xian_py.encoding import decode_str
 
+# HTTP and websocket endpoints for the same node.
 NODE_HTTP = "http://node-ip:26657"
 NODE_WS = NODE_HTTP.replace("http://", "ws://").replace("https://", "wss://") + "/websocket"
 
 
 def _hashes_from_event(events: dict) -> list[str]:
+    # Normalize tx hash values to a consistent list format.
     raw_hashes = events.get("tx.hash", [])
     hashes = raw_hashes if isinstance(raw_hashes, list) else [raw_hashes]
     return [item.upper() for item in hashes if item]
@@ -165,6 +186,7 @@ def _hashes_from_event(events: dict) -> list[str]:
 async def wait_for_tx_event(tx_hash: str, timeout_seconds: int = 45) -> tuple[bool, str]:
     tx_hash = tx_hash.upper()
 
+    # Subscribe to chain tx events over websocket.
     async with websockets.connect(NODE_WS, ping_interval=20, ping_timeout=30) as ws:
         await ws.send(
             json.dumps(
@@ -178,21 +200,26 @@ async def wait_for_tx_event(tx_hash: str, timeout_seconds: int = 45) -> tuple[bo
         )
 
         while True:
+            # Wait for the next event frame and decode payload.
             raw = await asyncio.wait_for(ws.recv(), timeout=timeout_seconds)
             message = json.loads(raw)
             result = message.get("result", {})
             events = result.get("events", {})
 
+            # Ignore events from other transactions.
             if tx_hash not in _hashes_from_event(events):
                 continue
 
+            # Parse tx execution result.
             tx_result = result.get("data", {}).get("value", {}).get("TxResult", {}).get("result", {})
             encoded = tx_result.get("data")
 
+            # Some responses only expose code/log.
             if not encoded:
                 success = tx_result.get("code", 1) == 0
                 return (success, tx_result.get("log", "no tx detail"))
 
+            # Decode structured tx result payload.
             decoded = json.loads(decode_str(encoded))
             success = decoded.get("status") == 0
             detail = decoded.get("result", "")
@@ -202,62 +229,99 @@ async def wait_for_tx_event(tx_hash: str, timeout_seconds: int = 45) -> tuple[bo
 async def send_and_confirm_ws(recipient: str, amount: float) -> tuple[bool, str]:
     wallet = Wallet()
 
+    # Submit via HTTP RPC and confirm via websocket events.
     async with XianAsync(NODE_HTTP, wallet=wallet) as client:
         submit = await client.send(amount=amount, to_address=recipient)
         if not submit.get("success"):
             raise RuntimeError(submit.get("message", "submit failed"))
 
+        # If no hash is available, treat submission as accepted.
         tx_hash = submit.get("tx_hash")
         if not tx_hash:
             return (True, "submitted without tx hash")
 
+        # Block until we receive this tx event.
         return await wait_for_tx_event(tx_hash)
 
 
+# Example usage.
 print(asyncio.run(send_and_confirm_ws("recipient_address", 5)))'''
 
 SCENARIO_CONTRACT_GUARDRAILS = '''from xian_py import Wallet, Xian
 
 NODE_URL = "http://node-ip:26657"
 
+# Wallet + client setup.
 wallet = Wallet()
 xian = Xian(NODE_URL, wallet=wallet)
 
-contract = "con_treasury"
-function = "set_limit"
-kwargs = {"value": 25}
+# Swap simulation target + acceptance threshold.
+DEX_CONTRACT = "con_dex"
+BUY_FUNCTION = "buy"
+TOKEN_OUT = "con_token_b"
+EXPECTED_MIN_OUT = 24.5
 
-# 1) Dry-run the call first.
-simulation = xian.simulate(contract, function, kwargs)
-if simulation.get("error"):
+kwargs = {
+    "token_in": "con_token_a",
+    "token_out": TOKEN_OUT,
+    "amount_in": 10,
+    "min_amount_out": EXPECTED_MIN_OUT,
+}
+
+
+def _state_value(changes: list[dict], key: str):
+    # Extract a single key from simulation state diff.
+    for change in changes:
+        if change.get("key") == key:
+            return change.get("value")
+    return None
+
+
+# 1) Simulate the exact tx to get projected state changes and stamp usage.
+simulation = xian.simulate(DEX_CONTRACT, BUY_FUNCTION, kwargs)
+if simulation.get("status") != 0:
     raise RuntimeError(f"Simulation failed: {simulation}")
 
-# 2) Capture state before write.
-before = xian.get_state(contract, "limit")
+# 2) Read predicted token-out amount from simulated state changes.
+out_key = f"{TOKEN_OUT}.balances:{wallet.public_key}"
+before_out = float(xian.get_state(TOKEN_OUT, "balances", wallet.public_key) or 0)
+after_out = _state_value(simulation.get("state", []), out_key)
+if after_out is None:
+    raise RuntimeError(f"Simulation did not include expected key: {out_key}")
 
-# 3) Submit the state-changing transaction.
-submit = xian.send_tx(contract, function, kwargs, synchronous=True)
+simulated_tokens_out = float(after_out) - before_out
+if simulated_tokens_out < EXPECTED_MIN_OUT:
+    raise RuntimeError(
+        f"Expected at least {EXPECTED_MIN_OUT}, simulation returned {simulated_tokens_out}"
+    )
+
+# 3) Use simulated stamp usage as tx stamp budget for the real call.
+stamps = int(simulation["stamps_used"])
+submit = xian.send_tx(
+    DEX_CONTRACT,
+    BUY_FUNCTION,
+    kwargs,
+    stamps=stamps,
+    synchronous=True,
+)
 if not submit.get("success"):
     raise RuntimeError(submit.get("message", "submit failed"))
 
-# 4) Verify receipt and final state.
-tx_hash = submit.get("tx_hash")
-if tx_hash:
-    receipt = xian.get_tx(tx_hash)
-    if not receipt.get("success"):
-        raise RuntimeError(f"Receipt failed: {receipt}")
-
-after = xian.get_state(contract, "limit")
-if after != kwargs["value"]:
-    raise RuntimeError(f"State mismatch: expected {kwargs['value']}, got {after}")
-
-print({"before": before, "after": after, "tx_hash": tx_hash})'''
+print(
+    {
+        "simulated_tokens_out": simulated_tokens_out,
+        "stamps": stamps,
+        "tx_hash": submit.get("tx_hash"),
+    }
+)'''
 
 SCENARIO_BDS_RETRIEVAL = '''import requests
 from typing import Any
 
+# GraphQL endpoint exposed by BDS.
 BDS_GRAPHQL_URL = "http://node-ip:26657/graphql"
 
+# Query transfer events to a target address with cursor pagination.
 TRANSFER_EVENTS_QUERY = """
 query TransfersForAddress($to: String!, $after: Cursor) {
   allEvents(
@@ -283,6 +347,7 @@ query TransfersForAddress($to: String!, $after: Cursor) {
 }
 """
 
+# Query one state key snapshot (e.g., current balance).
 BALANCE_QUERY = """
 query BalanceByKey($key: String!) {
   allStates(condition: {key: $key}) {
@@ -298,6 +363,7 @@ query BalanceByKey($key: String!) {
 
 
 def run_query(query: str, variables: dict[str, Any]) -> dict[str, Any]:
+    # Execute one GraphQL request.
     response = requests.post(
         BDS_GRAPHQL_URL,
         json={"query": query, "variables": variables},
@@ -305,6 +371,7 @@ def run_query(query: str, variables: dict[str, Any]) -> dict[str, Any]:
     )
     response.raise_for_status()
 
+    # Surface GraphQL-layer errors explicitly.
     payload = response.json()
     if payload.get("errors"):
         raise RuntimeError(payload["errors"])
@@ -313,6 +380,7 @@ def run_query(query: str, variables: dict[str, Any]) -> dict[str, Any]:
 
 
 def fetch_transfers(address: str) -> list[dict[str, Any]]:
+    # Walk all pages and flatten event nodes.
     cursor = None
     rows: list[dict[str, Any]] = []
 
@@ -330,12 +398,14 @@ def fetch_transfers(address: str) -> list[dict[str, Any]]:
 
 
 def fetch_balance(address: str) -> str | None:
+    # Read current balance value from state table projection.
     key = f"currency.balances:{address}"
     data = run_query(BALANCE_QUERY, {"key": key})
     edges = data["allStates"]["edges"]
     return edges[0]["node"]["value"] if edges else None
 
 
+# Example usage.
 address = "some_address"
 transfer_history = fetch_transfers(address)
 latest_balance = fetch_balance(address)
@@ -415,7 +485,7 @@ def _scenario_jump_card(
     )
 
 
-def _code_example(code: str, *, copy_id: str, language: str = "python") -> rx.Component:
+def _code_example(code: str, *, copy_id: str, language: str = "python", tabbed: bool = False) -> rx.Component:
     return copyable_code_block(
         code,
         copied=SamplesState.code_copied_id == copy_id,
@@ -423,6 +493,7 @@ def _code_example(code: str, *, copy_id: str, language: str = "python") -> rx.Co
         language=language,
         show_line_numbers=True,
         wrap_long_lines=False,
+        block_margin_top="0.45rem" if tabbed else "0",
     )
 
 
@@ -485,14 +556,14 @@ def samples_page() -> rx.Component:
                         ],
                     ),
                     _scenario_jump_card(
-                        title="Simulate, Submit, Verify",
-                        description="Protect state-changing contract calls with dry-runs and post-write validation.",
+                        title="Simulate, Stamp, Submit",
+                        description="Preview simulated state deltas and only submit when expected output passes checks.",
                         target="scenario-contract-call-guardrails",
                         icon="code",
                         bullets=[
-                            "Simulate before writes",
-                            "Submit only on valid preview",
-                            "Verify state after inclusion",
+                            "Inspect simulation state diff",
+                            "Validate expected output first",
+                            "Reuse simulated stamp budget",
                         ],
                     ),
                     _scenario_jump_card(
@@ -589,9 +660,21 @@ def samples_page() -> rx.Component:
                             gap="0.75rem",
                             wrap="wrap",
                         ),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_SYNC, copy_id="scenario-transfer-sync"), value="sync", width="100%"),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_ASYNC, copy_id="scenario-transfer-async"), value="async", width="100%"),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_WS_TRACKING, copy_id="scenario-transfer-ws"), value="ws", width="100%"),
+                        rx.tabs.content(
+                            _code_example(SCENARIO_TRANSFER_SYNC, copy_id="scenario-transfer-sync", tabbed=True),
+                            value="sync",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            _code_example(SCENARIO_TRANSFER_ASYNC, copy_id="scenario-transfer-async", tabbed=True),
+                            value="async",
+                            width="100%",
+                        ),
+                        rx.tabs.content(
+                            _code_example(SCENARIO_TRANSFER_WS_TRACKING, copy_id="scenario-transfer-ws", tabbed=True),
+                            value="ws",
+                            width="100%",
+                        ),
                         default_value="sync",
                         width="100%",
                         min_width="0",
@@ -618,15 +701,15 @@ def samples_page() -> rx.Component:
             section_panel(
                 rx.vstack(
                     linked_heading(
-                        "Scenario 2: Simulate, Submit, Verify",
+                        "Scenario 2: Simulate, Stamp, Submit",
                         anchor_id="scenario-contract-call-guardrails",
                         size="6",
                         color=TEXT_PRIMARY,
                         weight="bold",
                     ),
                     rx.text(
-                        "For state-changing contract calls, use a guarded pipeline: dry-run first, execute once valid, "
-                        "then verify state after inclusion.",
+                        "For state-changing calls like a DEX buy, simulate first, read the predicted state change, "
+                        "and submit the real tx only when the simulated output matches your expectation.",
                         size="4",
                         color=TEXT_MUTED,
                         line_height="1.7",
@@ -645,11 +728,11 @@ def samples_page() -> rx.Component:
                             align_items="center",
                         ),
                         rx.vstack(
-                            _ordered_step_item(1, "Simulate the call with exact contract/function/kwargs."),
-                            _ordered_step_item(2, "Read pre-state to define expected delta."),
-                            _ordered_step_item(3, "Submit with `send_tx` and `synchronous=True`."),
-                            _ordered_step_item(4, "Check receipt if a hash is returned."),
-                            _ordered_step_item(5, "Assert post-state matches expected value."),
+                            _ordered_step_item(1, "Simulate the exact tx payload."),
+                            _ordered_step_item(2, "Read the predicted token-out delta from simulated state."),
+                            _ordered_step_item(3, "Abort when simulated output is below expectation."),
+                            _ordered_step_item(4, "Set `stamps` from simulation `stamps_used`."),
+                            _ordered_step_item(5, "Submit the real `send_tx` call with that stamp budget."),
                             spacing="2",
                             align_items="start",
                         ),
@@ -658,21 +741,21 @@ def samples_page() -> rx.Component:
                     ),
                     icon_watermark_hover_card(
                         rx.hstack(
-                            hover_icon_chip("triangle_alert", size=24),
-                            rx.text("Failure controls", size="3", weight="bold", color=TEXT_PRIMARY),
+                            hover_icon_chip("shield", size=24),
+                            rx.text("Guardrails", size="3", weight="bold", color=TEXT_PRIMARY),
                             spacing="3",
                             align_items="center",
                         ),
                         rx.vstack(
-                            _bullet_item("Abort immediately when simulation returns errors."),
-                            _bullet_item("Treat unsuccessful submit response as terminal failure."),
-                            _bullet_item("Validate receipt before reading post-state."),
-                            _bullet_item("Fail if resulting state does not equal intended value."),
-                            _bullet_item("Log before/after values for deterministic debugging."),
+                            _bullet_item("Treat non-zero simulation status as a hard stop."),
+                            _bullet_item("Fail when expected state keys are missing in simulation output."),
+                            _bullet_item("Enforce minimum output thresholds before broadcasting."),
+                            _bullet_item("Use simulated stamps to avoid underfunded tx attempts."),
+                            _bullet_item("Handle unsuccessful submit responses as terminal failures."),
                             spacing="2",
                             align_items="start",
                         ),
-                        icon="triangle_alert",
+                        icon="shield",
                         padding="1.75rem",
                     ),
                     columns={"base": "1", "lg": "2"},
@@ -684,6 +767,27 @@ def samples_page() -> rx.Component:
                     "Code",
                     _code_example(SCENARIO_CONTRACT_GUARDRAILS, copy_id="scenario-contract-guardrails"),
                     id="scenario-contract-call-guardrails-code",
+                ),
+                rx.box(
+                    rx.text(
+                        "Important: this simulation preview is not a guarantee of final execution state. "
+                        "If another transaction front-runs and changes state before your tx executes, your real result can differ.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    rx.text(
+                        "If you need strict guarantees, run the action from your own contract and assert the final conditions there. "
+                        "When the result is outside your bounds, raise an error so the transaction reverts.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
                 ),
             )
         ),

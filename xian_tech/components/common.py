@@ -1003,6 +1003,7 @@ def copyable_code_block(
     wrap_long_lines: bool = False,
     copy_button_top: str = "0.8rem",
     copy_button_right: str = "0.95rem",
+    block_margin_top: str = "0",
     copy_icon_size: int = 20,
     copy_button_padding: str = "0.4rem",
 ) -> rx.Component:
@@ -1091,6 +1092,7 @@ def copyable_code_block(
             },
         },
         position="relative",
+        margin_top=block_margin_top,
         width="100%",
     )
 

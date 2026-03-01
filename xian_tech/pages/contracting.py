@@ -547,6 +547,7 @@ def contracting_page() -> rx.Component:
                                     language=example["language"],
                                     show_line_numbers=True,
                                     wrap_long_lines=False,
+                                    block_margin_top="0.45rem",
                                 ),
                                 subsection(
                                     "Execution Flow",
