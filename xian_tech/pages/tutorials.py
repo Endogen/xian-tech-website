@@ -645,30 +645,34 @@ def tutorials_page() -> rx.Component:
                 rx.box(
                     rx.hstack(
                         rx.icon(tag="triangle_alert", size=18, color=ACCENT),
-                        rx.text(
-                            "Before diving into these tutorials, make sure you understand the basics of Xian contracting.",
-                            size="3",
-                            color=TEXT_MUTED,
-                            line_height="1.6",
+                        rx.hstack(
+                            rx.text(
+                                "Before diving into these tutorials, make sure you understand the basics of Xian contracting.",
+                                size="3",
+                                color=TEXT_MUTED,
+                                line_height="1.6",
+                            ),
+                            rx.link(
+                                rx.hstack(
+                                    rx.icon(tag="book_open", size=16),
+                                    rx.text("Read the contracting docs", size="3"),
+                                    spacing="2",
+                                    align_items="center",
+                                ),
+                                href="https://docs.xian.technology",
+                                is_external=True,
+                                color=ACCENT,
+                                _hover={"textDecoration": "underline"},
+                            ),
+                            spacing="2",
+                            align_items="center",
+                            wrap="wrap",
                             width="100%",
                         ),
                         spacing="2",
                         align_items="start",
                         width="100%",
                     ),
-                    rx.link(
-                        rx.hstack(
-                            rx.icon(tag="book_open", size=16),
-                            rx.text("Read the contracting docs", size="3"),
-                            spacing="2",
-                            align_items="center",
-                        ),
-                        href="https://docs.xian.technology",
-                        is_external=True,
-                        color=ACCENT,
-                        _hover={"textDecoration": "underline"},
-                    ),
-                    spacing="2",
                     padding="1rem 1.25rem",
                     background=ACCENT_SOFT,
                     border=f"1px solid {ACCENT_GLOW}",
