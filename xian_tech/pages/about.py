@@ -55,9 +55,8 @@ TEAM_MEMBERS = [
         "bio": "Supports builders, partners, and operators shipping production applications on Xian.",
         "image": "/crosschainer.png",
         "socials": [
-            {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
-            {"icon": "github", "href": "https://github.com", "label": "GitHub"},
-            {"icon": "send", "href": "https://t.me/xian_technology", "label": "Telegram"},
+            {"icon": "github", "href": "https://github.com/crosschainer", "label": "GitHub"},
+            {"icon": "send", "href": "https://t.me/crosschainer", "label": "Telegram"},
             {"icon": "x", "href": "https://x.com", "label": "X"},
         ],
     },
