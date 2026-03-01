@@ -7,7 +7,10 @@ from ..components.common import (
     linked_heading,
     page_layout,
     section,
+    section_action_links,
     section_panel,
+    subsection,
+    text_with_inline_code,
 )
 from ..theme import (
     ACCENT,
@@ -19,110 +22,576 @@ from ..theme import (
 
 SEARCH_SECTIONS = [
     {
-        "title": "Tutorials & First Steps",
-        "subtitle": "Step-by-step guides for building on the Xian stack.",
+        "id": "tutorials-page",
+        "title": "Contract Tutorials",
+        "subtitle": "Scenario-based guides for writing contracts on Xian.",
         "category": "Developers",
         "badge": "Page",
         "href": "/tutorials",
-        "keywords": ["Tutorials", "Getting Started", "Guides", "Developers"],
-    }
+        "keywords": ["Tutorials", "Contracts", "Guides", "Developers"],
+    },
+    {
+        "id": "tutorials-store-data",
+        "title": "Scenario: Store Data On Chain",
+        "subtitle": "Initialize state, save values, and read them back.",
+        "category": "Developers",
+        "badge": "Scenario",
+        "href": "/tutorials#scenario-store-data",
+        "keywords": ["Variable", "Hash", "save", "read", "seed"],
+    },
+    {
+        "id": "tutorials-token",
+        "title": "Scenario: Token From Scratch",
+        "subtitle": "Derive a minimal token implementation from XSC0001.",
+        "category": "Developers",
+        "badge": "Scenario",
+        "href": "/tutorials#scenario-token-from-scratch",
+        "keywords": ["token", "XSC0001", "transfer", "approve", "transfer_from"],
+    },
+    {
+        "id": "tutorials-multisig",
+        "title": "Scenario: Multisig Contract",
+        "subtitle": "Propose, approve, and execute treasury transfers with threshold control.",
+        "category": "Developers",
+        "badge": "Scenario",
+        "href": "/tutorials#scenario-multisig",
+        "keywords": ["multisig", "treasury", "owners", "threshold", "approvals"],
+    },
+    {
+        "id": "tutorials-upgradable",
+        "title": "Scenario: Upgradable Router",
+        "subtitle": "Call one implementation contract and switch targets safely.",
+        "category": "Developers",
+        "badge": "Scenario",
+        "href": "/tutorials#scenario-upgradable-contracts",
+        "keywords": ["upgrade", "router", "importlib", "proxy", "implementation"],
+    },
 ]
 
-TOKEN_STEP_1 = """balances = Hash(default_value=0)
-allowances = Hash(default_value=0)
-metadata = Hash()
-operator = Variable()"""
+# Scenario 1: store data on chain.
+STORE_DATA_STEP_1 = '''owner = Variable()
+records = Hash(default_value='')'''
 
-TOKEN_STEP_2 = """@construct
+STORE_DATA_STEP_2 = '''@construct
 def seed():
-    metadata['token_name'] = 'Sample Token'
-    metadata['token_symbol'] = 'SMP'
+    owner.set(ctx.caller)'''
+
+STORE_DATA_STEP_3 = '''@export
+def save(key: str, value: str):
+    assert len(key) > 0, 'key required'
+    records[key] = value'''
+
+STORE_DATA_STEP_4 = '''@export
+def read(key: str):
+    return records[key]'''
+
+STORE_DATA_FULL = '''owner = Variable()
+records = Hash(default_value='')
+
+
+@construct
+def seed():
+    owner.set(ctx.caller)
+
+
+@export
+def save(key: str, value: str):
+    assert len(key) > 0, 'key required'
+    records[key] = value
+
+
+@export
+def read(key: str):
+    return records[key]'''
+
+# Scenario 2: token from scratch (XSC0001 derived).
+TOKEN_STEP_1 = '''balances = Hash(default_value=0)
+approvals = Hash(default_value=0)
+metadata = Hash()'''
+
+TOKEN_STEP_2 = '''@construct
+def seed():
+    metadata['token_name'] = 'Tutorial Token'
+    metadata['token_symbol'] = 'TUT'
     metadata['token_logo_url'] = ''
     metadata['token_website'] = ''
     metadata['operator'] = ctx.caller
-    balances[ctx.caller] = 1_000_000"""
+    balances[ctx.caller] = 1_000_000'''
 
-TOKEN_STEP_3 = """@export
+TOKEN_STEP_3 = '''@export
+def balance_of(account: str):
+    return balances[account]
+
+
+@export
 def transfer(amount: float, to: str):
+    assert amount > 0, 'amount must be positive'
     assert balances[ctx.caller] >= amount, 'insufficient funds'
     balances[ctx.caller] -= amount
-    balances[to] += amount"""
+    balances[to] += amount'''
 
-TOKEN_STEP_4 = """@export
+TOKEN_STEP_4 = '''@export
 def approve(amount: float, to: str):
-    allowances[ctx.caller, to] = amount
+    assert amount >= 0, 'amount must be non-negative'
+    approvals[ctx.caller, to] = amount
+
 
 @export
 def transfer_from(amount: float, to: str, main_account: str):
-    assert allowances[main_account, ctx.caller] >= amount, 'not approved'
+    assert amount > 0, 'amount must be positive'
+    assert approvals[main_account, ctx.caller] >= amount, 'not approved'
     assert balances[main_account] >= amount, 'insufficient funds'
-    allowances[main_account, ctx.caller] -= amount
+    approvals[main_account, ctx.caller] -= amount
     balances[main_account] -= amount
-    balances[to] += amount"""
+    balances[to] += amount'''
 
-TOKEN_STEP_5 = """@export
+TOKEN_STEP_5 = '''@export
 def change_metadata(key: str, value):
     assert ctx.caller == metadata['operator'], 'operator only'
-    metadata[key] = value"""
+    metadata[key] = value'''
+
+TOKEN_FULL = '''balances = Hash(default_value=0)
+approvals = Hash(default_value=0)
+metadata = Hash()
 
 
-def tutorials_page() -> rx.Component:
-    """Tutorials page."""
-    def concept_card(title: str, body: str, points: list[str], icon: str) -> rx.Component:
-        return icon_watermark_hover_card(
-            rx.flex(
-                hover_icon_chip(icon),
-                rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
-                direction={"base": "row", "lg": "column"},
-                align={"base": "center", "lg": "start"},
-                spacing="3",
-            ),
-            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-            rx.vstack(
-                *[rx.text(f"• {item}", size="3", color=TEXT_MUTED, line_height="1.7") for item in points],
-                spacing="1",
-                align_items="start",
-                width="100%",
-            ),
-            icon=icon,
-            padding="2rem",
-        )
+@construct
+def seed():
+    metadata['token_name'] = 'Tutorial Token'
+    metadata['token_symbol'] = 'TUT'
+    metadata['token_logo_url'] = ''
+    metadata['token_website'] = ''
+    metadata['operator'] = ctx.caller
+    balances[ctx.caller] = 1_000_000
 
-    def step_block(step: str, title: str, body: str, snippet: str | None = None) -> rx.Component:
-        children = [
+
+@export
+def balance_of(account: str):
+    return balances[account]
+
+
+@export
+def transfer(amount: float, to: str):
+    assert amount > 0, 'amount must be positive'
+    assert balances[ctx.caller] >= amount, 'insufficient funds'
+    balances[ctx.caller] -= amount
+    balances[to] += amount
+
+
+@export
+def approve(amount: float, to: str):
+    assert amount >= 0, 'amount must be non-negative'
+    approvals[ctx.caller, to] = amount
+
+
+@export
+def transfer_from(amount: float, to: str, main_account: str):
+    assert amount > 0, 'amount must be positive'
+    assert approvals[main_account, ctx.caller] >= amount, 'not approved'
+    assert balances[main_account] >= amount, 'insufficient funds'
+    approvals[main_account, ctx.caller] -= amount
+    balances[main_account] -= amount
+    balances[to] += amount
+
+
+@export
+def change_metadata(key: str, value):
+    assert ctx.caller == metadata['operator'], 'operator only'
+    metadata[key] = value'''
+
+# Scenario 3: multisig.
+MULTISIG_STEP_1 = '''import importlib
+
+owners = Hash(default_value=False)
+required_approvals = Variable()
+proposal_count = Variable()
+proposals = Hash(default_value=None)
+approvals = Hash(default_value=False)
+approval_totals = Hash(default_value=0)'''
+
+MULTISIG_STEP_2 = '''@construct
+def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
+    assert required >= 2, 'required must be >= 2'
+    owners[owner_a] = True
+    owners[owner_b] = True
+    owners[owner_c] = True
+    required_approvals.set(required)
+    proposal_count.set(0)'''
+
+MULTISIG_STEP_3 = '''@export
+def propose_transfer(token_contract: str, to: str, amount: float):
+    _assert_owner()
+    assert amount > 0, 'amount must be positive'
+
+    proposal_id = proposal_count.get()
+    proposal_count.set(proposal_id + 1)
+
+    proposals[proposal_id] = {
+        'token_contract': token_contract,
+        'to': to,
+        'amount': amount,
+        'executed': False,
+    }
+
+    approvals[proposal_id, ctx.caller] = True
+    approval_totals[proposal_id] = 1
+    return proposal_id'''
+
+MULTISIG_STEP_4 = '''@export
+def approve_transfer(proposal_id: int):
+    _assert_owner()
+    proposal = proposals[proposal_id]
+    assert proposal is not None, 'unknown proposal'
+    assert proposal['executed'] is False, 'already executed'
+    assert approvals[proposal_id, ctx.caller] is False, 'already approved'
+
+    approvals[proposal_id, ctx.caller] = True
+    approval_totals[proposal_id] += 1
+
+    if approval_totals[proposal_id] >= required_approvals.get():
+        _execute_transfer(proposal_id)'''
+
+MULTISIG_STEP_5 = '''def _execute_transfer(proposal_id: int):
+    proposal = proposals[proposal_id]
+    token = importlib.import_module(proposal['token_contract'])
+    token.transfer(amount=proposal['amount'], to=proposal['to'])
+
+    proposal['executed'] = True
+    proposals[proposal_id] = proposal'''
+
+MULTISIG_FULL = '''import importlib
+
+owners = Hash(default_value=False)
+required_approvals = Variable()
+proposal_count = Variable()
+proposals = Hash(default_value=None)
+approvals = Hash(default_value=False)
+approval_totals = Hash(default_value=0)
+
+
+def _assert_owner():
+    assert owners[ctx.caller], 'owner only'
+
+
+@construct
+def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
+    assert required >= 2, 'required must be >= 2'
+    owners[owner_a] = True
+    owners[owner_b] = True
+    owners[owner_c] = True
+    required_approvals.set(required)
+    proposal_count.set(0)
+
+
+@export
+def propose_transfer(token_contract: str, to: str, amount: float):
+    _assert_owner()
+    assert amount > 0, 'amount must be positive'
+
+    proposal_id = proposal_count.get()
+    proposal_count.set(proposal_id + 1)
+
+    proposals[proposal_id] = {
+        'token_contract': token_contract,
+        'to': to,
+        'amount': amount,
+        'executed': False,
+    }
+
+    approvals[proposal_id, ctx.caller] = True
+    approval_totals[proposal_id] = 1
+    return proposal_id
+
+
+@export
+def approve_transfer(proposal_id: int):
+    _assert_owner()
+    proposal = proposals[proposal_id]
+    assert proposal is not None, 'unknown proposal'
+    assert proposal['executed'] is False, 'already executed'
+    assert approvals[proposal_id, ctx.caller] is False, 'already approved'
+
+    approvals[proposal_id, ctx.caller] = True
+    approval_totals[proposal_id] += 1
+
+    if approval_totals[proposal_id] >= required_approvals.get():
+        _execute_transfer(proposal_id)
+
+
+def _execute_transfer(proposal_id: int):
+    proposal = proposals[proposal_id]
+    token = importlib.import_module(proposal['token_contract'])
+    token.transfer(amount=proposal['amount'], to=proposal['to'])
+
+    proposal['executed'] = True
+    proposals[proposal_id] = proposal
+
+
+@export
+def get_proposal(proposal_id: int):
+    return proposals[proposal_id]'''
+
+# Scenario 4: upgradable router.
+UPGRADE_V1 = '''count = Variable()
+
+
+@construct
+def seed():
+    count.set(0)
+
+
+@export
+def increment(step: int = 1):
+    count.set(count.get() + step)
+    return count.get()
+
+
+@export
+def current():
+    return count.get()'''
+
+UPGRADE_V2 = '''count = Variable()
+
+
+@construct
+def seed():
+    count.set(0)
+
+
+@export
+def increment(step: int = 1):
+    count.set(count.get() + (step * 2))
+    return count.get()
+
+
+@export
+def current():
+    return count.get()'''
+
+UPGRADE_ROUTER_STEP_1 = '''import importlib
+
+admin = Variable()
+active_contract = Variable()'''
+
+UPGRADE_ROUTER_STEP_2 = '''@construct
+def seed(initial_contract: str = 'con_counter_v1'):
+    admin.set(ctx.caller)
+    active_contract.set(initial_contract)'''
+
+UPGRADE_ROUTER_STEP_3 = '''@export
+def increment(step: int = 1):
+    target = importlib.import_module(active_contract.get())
+    return target.increment(step=step)
+
+
+@export
+def current():
+    target = importlib.import_module(active_contract.get())
+    return target.current()'''
+
+UPGRADE_ROUTER_STEP_4 = '''@export
+def set_active_contract(contract: str):
+    assert ctx.caller == admin.get(), 'admin only'
+    active_contract.set(contract)'''
+
+UPGRADE_ROUTER_STEP_5 = '''@export
+def get_active_contract():
+    return active_contract.get()'''
+
+UPGRADE_ROUTER_FULL = '''import importlib
+
+admin = Variable()
+active_contract = Variable()
+
+
+@construct
+def seed(initial_contract: str = 'con_counter_v1'):
+    admin.set(ctx.caller)
+    active_contract.set(initial_contract)
+
+
+@export
+def increment(step: int = 1):
+    target = importlib.import_module(active_contract.get())
+    return target.increment(step=step)
+
+
+@export
+def current():
+    target = importlib.import_module(active_contract.get())
+    return target.current()
+
+
+@export
+def set_active_contract(contract: str):
+    assert ctx.caller == admin.get(), 'admin only'
+    active_contract.set(contract)
+
+
+@export
+def get_active_contract():
+    return active_contract.get()'''
+
+UPGRADE_CALL_FLOW = '''# 1) Deploy contracts:
+#    - con_counter_v1
+#    - con_counter_v2
+#    - con_counter_router (seed with initial_contract='con_counter_v1')
+
+# 2) Calls initially route to v1 logic.
+xian.send_tx('con_counter_router', 'increment', {'step': 1})
+xian.send_tx('con_counter_router', 'current', {})
+
+# 3) Switch router target to v2.
+xian.send_tx(
+    'con_counter_router',
+    'set_active_contract',
+    {'contract': 'con_counter_v2'},
+)
+
+# 4) Calls now route to v2 logic without changing router address.
+xian.send_tx('con_counter_router', 'increment', {'step': 1})
+xian.send_tx('con_counter_router', 'current', {})'''
+
+
+def _bullet_item(text: str) -> rx.Component:
+    return rx.hstack(
+        rx.icon(tag="check", size=16, color=ACCENT),
+        text_with_inline_code(
+            text,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.6",
+        ),
+        spacing="2",
+        align_items="start",
+    )
+
+
+def _scenario_jump_card(
+    *,
+    title: str,
+    description: str,
+    target: str,
+    icon: str,
+    bullets: list[str],
+) -> rx.Component:
+    return rx.link(
+        icon_watermark_hover_card(
             rx.hstack(
-                rx.box(
-                    rx.text(step, size="2", weight="bold", color=ACCENT),
-                    padding="0.25rem 0.6rem",
-                    background=ACCENT_SOFT,
-                    border=f"1px solid {ACCENT_GLOW}",
-                    border_radius="6px",
-                ),
+                hover_icon_chip(icon, size=24),
                 rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
                 spacing="3",
                 align_items="center",
             ),
-            rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
-        ]
-        if snippet:
-            children.append(
-                copyable_code_block(
-                    snippet,
-                    language="python",
-                    show_line_numbers=False,
-                    wrap_long_lines=False,
-                )
-            )
-        return rx.box(
+            rx.text(
+                description,
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                width="100%",
+            ),
             rx.vstack(
-                *children,
-                spacing="3",
+                *[_bullet_item(item) for item in bullets],
+                spacing="2",
                 align_items="start",
                 width="100%",
             ),
+            icon=icon,
+            padding="1.75rem",
+            height="100%",
+        ),
+        href=f"#{target}",
+        width="100%",
+        display="block",
+        _hover={"textDecoration": "none"},
+    )
+
+
+def _tutorial_step(
+    step: int,
+    title: str,
+    *,
+    why: str,
+    how: str,
+    snippet: str | None = None,
+    language: str = "python",
+) -> rx.Component:
+    blocks = [
+        rx.hstack(
+            rx.box(
+                rx.text(str(step), size="2", weight="bold", color=ACCENT),
+                min_width="1.5rem",
+                height="1.5rem",
+                display="inline-flex",
+                align_items="center",
+                justify_content="center",
+                background=ACCENT_SOFT,
+                border=f"1px solid {ACCENT_GLOW}",
+                border_radius="999px",
+            ),
+            rx.heading(title, size="5", weight="bold", color=TEXT_PRIMARY),
+            spacing="3",
+            align_items="center",
             width="100%",
+        ),
+        rx.vstack(
+            rx.text("Why", size="2", weight="bold", color=ACCENT),
+            text_with_inline_code(
+                why,
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                width="100%",
+            ),
+            spacing="1",
+            align_items="start",
+            width="100%",
+        ),
+        rx.vstack(
+            rx.text("How", size="2", weight="bold", color=ACCENT),
+            text_with_inline_code(
+                how,
+                size="3",
+                color=TEXT_MUTED,
+                line_height="1.7",
+                width="100%",
+            ),
+            spacing="1",
+            align_items="start",
+            width="100%",
+        ),
+    ]
+
+    if snippet:
+        blocks.append(
+            copyable_code_block(
+                snippet,
+                language=language,
+                show_line_numbers=False,
+                wrap_long_lines=False,
+            )
         )
 
+    return rx.box(
+        rx.vstack(
+            *blocks,
+            spacing="3",
+            align_items="start",
+            width="100%",
+        ),
+        width="100%",
+        border=f"1px solid {ACCENT_GLOW}",
+        border_radius="12px",
+        background=rx.color_mode_cond(
+            light="rgba(22, 163, 74, 0.035)",
+            dark="rgba(34, 197, 94, 0.06)",
+        ),
+        padding=rx.breakpoints(initial="1rem", md="1.15rem", lg="1.25rem"),
+    )
+
+
+def tutorials_page() -> rx.Component:
+    """Scenario-first tutorials for common Xian contract patterns."""
     return page_layout(
         section(
             rx.vstack(
@@ -134,249 +603,456 @@ def tutorials_page() -> rx.Component:
                     border_radius="8px",
                 ),
                 rx.heading(
-                    "Tutorials & First Steps",
+                    "Contract Tutorials",
                     size="8",
                     color=TEXT_PRIMARY,
                     weight="bold",
                     line_height="1.2",
                 ),
                 rx.text(
-                    "Learn the core ideas behind Xian contracting and follow a step-by-step walkthrough to build a "
-                    "standards-compliant token contract.",
+                    "Learn by building four practical patterns: data storage, token design from standard requirements, "
+                    "multisig treasury controls, and an upgradable router flow for contract-to-contract calls.",
                     size="4",
                     color=TEXT_MUTED,
                     line_height="1.7",
                     width="100%",
                 ),
+                section_action_links(
+                    [
+                        {
+                            "label": "Contracting Source",
+                            "icon": "github",
+                            "href": "https://github.com/xian-technology/xian-contracting/tree/Endogen-patch-1/src/contracting",
+                        }
+                    ],
+                ),
                 spacing="6",
                 align_items="start",
-            ),
+            )
         ),
         section(
             section_panel(
                 rx.vstack(
-                    rx.flex(
-                        linked_heading(
-                            "Contracting Fundamentals",
-                            size="6",
-                            color=TEXT_PRIMARY,
-                            weight="bold",
-                        ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Cheat Sheet", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/contracts/cheat-sheet",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="scroll_text", size=18),
-                                    rx.text("Functions", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/contracts/functions",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="layers", size=18),
-                                    rx.text("Context", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/contracts/context",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="gauge", size=18),
-                                    rx.text("Stamps", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/contracts/concepts/stamps",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
-                            wrap="wrap",
-                        ),
-                        direction={"base": "column", "lg": "row"},
-                        align_items={"base": "start", "lg": "center"},
-                        justify="between",
-                        gap="0.75rem",
-                        width="100%",
-                    ),
+                    linked_heading("Scenario Navigator", size="6", color=TEXT_PRIMARY, weight="bold"),
                     rx.text(
-                        "These are the concepts you need before shipping production contracts.",
+                        "Pick a scenario and jump to the full step-by-step guide below.",
                         size="3",
                         color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
                     ),
                     spacing="2",
                     align_items="start",
                     width="100%",
                 ),
                 rx.grid(
-                    concept_card(
-                        "Contract structure",
-                        "Every contract is a module with a clear public API.",
-                        [
-                            "Names must start with con_, be lowercase, and match ^con_[a-z][a-z0-9_]*$.",
-                            "Use @export for public functions, @construct for one-time initialization.",
+                    _scenario_jump_card(
+                        title="Store Data On Chain",
+                        description="Start with the smallest useful contract: seed state, save a value, read it back.",
+                        target="scenario-store-data",
+                        icon="database",
+                        bullets=[
+                            "Initialize persistent storage",
+                            "Write with one `save` function",
+                            "Read back with one `read` function",
                         ],
-                        "code",
                     ),
-                    concept_card(
-                        "State & storage",
-                        "Persist contract state with deterministic storage primitives.",
-                        [
-                            "Variable stores a single value (total = Variable()).",
-                            "Hash stores key-value state (balances = Hash(default_value=0)).",
-                            "Use .set() / .get() for Variables, and indexing for Hash (total.set(100), balances[ctx.caller] = 10).",
-                            "ForeignHash and ForeignVariable read state from other contracts.",
+                    _scenario_jump_card(
+                        title="Token From Scratch",
+                        description="Build an XSC0001-style token and see how each required function maps to behavior.",
+                        target="scenario-token-from-scratch",
+                        icon="list_checks",
+                        bullets=[
+                            "State + metadata shape",
+                            "Transfer + delegated transfer flow",
+                            "Operator-controlled metadata updates",
                         ],
-                        "database",
                     ),
-                    concept_card(
-                        "Execution context",
-                        "Context tells you who is calling and which contract is running.",
-                        [
-                            "ctx.caller changes with each contract hop; ctx.signer stays constant.",
-                            "ctx.this is the current contract identity; ctx.owner can gate calls.",
+                    _scenario_jump_card(
+                        title="Multisig Treasury",
+                        description="Require multiple owner approvals before contract funds are moved.",
+                        target="scenario-multisig",
+                        icon="shield",
+                        bullets=[
+                            "Owners and threshold setup",
+                            "Proposal + approval lifecycle",
+                            "Automatic execution on threshold",
                         ],
-                        "user",
                     ),
-                    concept_card(
-                        "Deterministic Python",
-                        "Contracts run in a restricted Python subset for safety.",
-                        [
-                            "Classes are not allowed; use dictionaries for structured data.",
-                            "Many built-ins are removed and exceptions are heavily restricted.",
+                    _scenario_jump_card(
+                        title="Upgradable Router",
+                        description="Route calls to an implementation contract and switch targets without changing entrypoint.",
+                        target="scenario-upgradable-contracts",
+                        icon="layers",
+                        bullets=[
+                            "Contract-to-contract forwarding",
+                            "Admin-controlled target switching",
+                            "Simple upgrade call flow",
                         ],
-                        "shield",
                     ),
-                    concept_card(
-                        "Stamps & limits",
-                        "Execution is metered to keep contracts safe and predictable.",
-                        [
-                            "Reads are free; writes cost stamps based on bytes written.",
-                            "If stamps run out, execution reverts. Limits apply to memory and calls.",
-                        ],
-                        "gauge",
+                    columns={"base": "1", "md": "2"},
+                    spacing="4",
+                    width="100%",
+                    align="stretch",
+                ),
+            )
+        ),
+        section(
+            section_panel(
+                rx.vstack(
+                    linked_heading(
+                        "Scenario 1: Store Data On Chain",
+                        anchor_id="scenario-store-data",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
                     ),
-                    columns={"base": "1fr", "lg": "repeat(2, minmax(0, 1fr))"},
-                    gap="1.5rem",
+                    rx.text(
+                        "This is the smallest complete storage contract pattern: one initializer, one write method, and one read method.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
                     width="100%",
                 ),
-            ),
+                rx.vstack(
+                    _tutorial_step(
+                        1,
+                        "Declare persistent state",
+                        why="Contract state must be declared up front so values persist between transactions.",
+                        how="Use a `Variable` for single values and a `Hash` for key-value records.",
+                        snippet=STORE_DATA_STEP_1,
+                    ),
+                    _tutorial_step(
+                        2,
+                        "Initialize with @construct",
+                        why="Initialization runs once at submission time and sets the starting ownership/context values.",
+                        how="Set owner (or config) in `seed` so later writes can be constrained if needed.",
+                        snippet=STORE_DATA_STEP_2,
+                    ),
+                    _tutorial_step(
+                        3,
+                        "Implement the write path",
+                        why="All on-chain mutations should validate input before writing, because writes consume stamps.",
+                        how="Create a `save(key, value)` export and store into `records[key]`.",
+                        snippet=STORE_DATA_STEP_3,
+                    ),
+                    _tutorial_step(
+                        4,
+                        "Implement the read path",
+                        why="Read functions provide deterministic state access and are the public API for consumers.",
+                        how="Create `read(key)` that returns `records[key]`.",
+                        snippet=STORE_DATA_STEP_4,
+                    ),
+                    spacing="4",
+                    align_items="start",
+                    width="100%",
+                ),
+                subsection(
+                    "Full Contract",
+                    copyable_code_block(
+                        STORE_DATA_FULL,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="store-data-full-contract",
+                ),
+            )
         ),
         section(
             section_panel(
                 rx.vstack(
                     rx.flex(
                         linked_heading(
-                            "Token Contract Walkthrough (XSC0001)",
+                            "Scenario 2: Write a Token From Scratch",
+                            anchor_id="scenario-token-from-scratch",
                             size="6",
                             color=TEXT_PRIMARY,
                             weight="bold",
                         ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Token Standard", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/contracts/standards/xsc0001",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="list_checks", size=18),
-                                    rx.text("Creating a Token", size="3"),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.org/tutorials/creating-a-token",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
-                            wrap="wrap",
+                        section_action_links(
+                            [
+                                {
+                                    "label": "XSC0001",
+                                    "icon": "book_open",
+                                    "href": "https://docs.xian.org/contracts/standards/xsc0001",
+                                }
+                            ],
                         ),
-                        direction={"base": "column", "lg": "row"},
-                        align_items={"base": "start", "lg": "center"},
+                        direction={"base": "column", "md": "row"},
+                        align_items={"base": "start", "md": "center"},
                         justify="between",
                         gap="0.75rem",
                         width="100%",
                     ),
                     rx.text(
-                        "Start simple, then layer in the behaviors required by the token standard.",
-                        size="3",
+                        "This walkthrough derives a minimal token from XSC0001 interface expectations so each method has a clear reason to exist.",
+                        size="4",
                         color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
                     ),
-                    spacing="2",
+                    spacing="3",
                     align_items="start",
                     width="100%",
                 ),
                 rx.vstack(
-                    step_block(
-                        "Step 1",
-                        "Define the core state",
-                        "Set up balances, approvals, metadata, and operator storage. Use defaults so reads are safe.",
-                        TOKEN_STEP_1,
+                    _tutorial_step(
+                        1,
+                        "Define required storage",
+                        why="A token needs balances, delegated spending records, and metadata to be discoverable.",
+                        how="Use `balances`, `approvals`, and `metadata` hashes as the base storage model.",
+                        snippet=TOKEN_STEP_1,
                     ),
-                    step_block(
-                        "Step 2",
-                        "Seed initial supply and metadata",
-                        "The @construct function runs once on submission. Initialize metadata and mint supply to the creator.",
-                        TOKEN_STEP_2,
+                    _tutorial_step(
+                        2,
+                        "Seed metadata and initial supply",
+                        why="A token needs immutable-looking defaults at deployment: name, symbol, operator, and initial distribution.",
+                        how="In `seed`, set metadata fields and mint initial supply to deployer.",
+                        snippet=TOKEN_STEP_2,
                     ),
-                    step_block(
-                        "Step 3",
-                        "Add transfers",
-                        "Implement transfer with basic balance checks. This is the heart of the token flow.",
-                        TOKEN_STEP_3,
+                    _tutorial_step(
+                        3,
+                        "Implement holder balance and direct transfer",
+                        why="`balance_of` and `transfer` are the core user actions for wallets and apps.",
+                        how="Return balances by account and update sender/receiver values with guard assertions.",
+                        snippet=TOKEN_STEP_3,
                     ),
-                    step_block(
-                        "Step 4",
-                        "Implement approvals and transfer_from",
-                        "Add allowances so third parties can move funds on behalf of owners.",
-                        TOKEN_STEP_4,
+                    _tutorial_step(
+                        4,
+                        "Add delegated transfer behavior",
+                        why="Integrations like DEXes need allowance-based movement on behalf of a user.",
+                        how="Use `approve` to set allowance and `transfer_from` to consume it safely.",
+                        snippet=TOKEN_STEP_4,
                     ),
-                    step_block(
-                        "Step 5",
-                        "Allow metadata updates",
-                        "Only the operator should be able to change token metadata.",
-                        TOKEN_STEP_5,
+                    _tutorial_step(
+                        5,
+                        "Gate metadata updates by operator",
+                        why="Only trusted governance/operator addresses should mutate token metadata.",
+                        how="Add `change_metadata` with an `operator` check.",
+                        snippet=TOKEN_STEP_5,
                     ),
-                    step_block(
-                        "Step 6",
-                        "Layer on production guardrails",
-                        "Add event logging, metadata validation, supply caps, and test coverage to match your launch needs.",
-                    ),
-                    spacing="6",
+                    spacing="4",
                     align_items="start",
                     width="100%",
+                ),
+                subsection(
+                    "Full Contract",
+                    copyable_code_block(
+                        TOKEN_FULL,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="token-from-scratch-full-contract",
+                ),
+            )
+        ),
+        section(
+            section_panel(
+                rx.vstack(
+                    linked_heading(
+                        "Scenario 3: Multisig Contract",
+                        anchor_id="scenario-multisig",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
+                    ),
+                    rx.text(
+                        "This pattern protects treasury actions by requiring multiple owner approvals before execution.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.vstack(
+                    _tutorial_step(
+                        1,
+                        "Create owner + proposal state",
+                        why="Multisig needs explicit owner membership, per-proposal approvals, and threshold counters.",
+                        how="Use owner flags and proposal/approval hashes with numeric counters.",
+                        snippet=MULTISIG_STEP_1,
+                    ),
+                    _tutorial_step(
+                        2,
+                        "Initialize owner set and threshold",
+                        why="Threshold is the main safety property, so it must be configured during deployment.",
+                        how="In `seed`, register owners and set `required_approvals`.",
+                        snippet=MULTISIG_STEP_2,
+                    ),
+                    _tutorial_step(
+                        3,
+                        "Propose a transfer",
+                        why="Execution should start as a proposal so other owners can review before funds move.",
+                        how="Store proposal details and auto-approve by proposer.",
+                        snippet=MULTISIG_STEP_3,
+                    ),
+                    _tutorial_step(
+                        4,
+                        "Collect approvals",
+                        why="Each owner should only approve once; threshold crossing should trigger execution.",
+                        how="Track unique approvals per proposal and execute when count reaches requirement.",
+                        snippet=MULTISIG_STEP_4,
+                    ),
+                    _tutorial_step(
+                        5,
+                        "Execute by calling token contract",
+                        why="Treasury transfer occurs via contract-to-contract call once governance condition passes.",
+                        how="Import token via `importlib.import_module` and call `transfer`.",
+                        snippet=MULTISIG_STEP_5,
+                    ),
+                    spacing="4",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.box(
+                    rx.text(
+                        "Operational note: this contract must hold token balance first (for example by direct transfer to `ctx.this`) "
+                        "before proposals can execute outgoing transfers.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
+                ),
+                subsection(
+                    "Full Contract",
+                    copyable_code_block(
+                        MULTISIG_FULL,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="multisig-full-contract",
+                ),
+            )
+        ),
+        section(
+            section_panel(
+                rx.vstack(
+                    linked_heading(
+                        "Scenario 4: Upgradable Contracts",
+                        anchor_id="scenario-upgradable-contracts",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
+                    ),
+                    rx.text(
+                        "Use a router contract as stable entrypoint, forward calls to an implementation contract, and switch the target later.",
+                        size="4",
+                        color=TEXT_MUTED,
+                        line_height="1.7",
+                        width="100%",
+                    ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.vstack(
+                    _tutorial_step(
+                        1,
+                        "Write implementation v1",
+                        why="Implementations should expose a stable interface that the router can call.",
+                        how="Start with a simple counter contract that defines `increment` and `current`.",
+                        snippet=UPGRADE_V1,
+                    ),
+                    _tutorial_step(
+                        2,
+                        "Write implementation v2 with same interface",
+                        why="Upgrades are safe when old and new implementations share function names and argument shapes.",
+                        how="Keep function signatures identical, but change internal logic in v2.",
+                        snippet=UPGRADE_V2,
+                    ),
+                    _tutorial_step(
+                        3,
+                        "Declare router state",
+                        why="Router needs an admin and one pointer to current implementation.",
+                        how="Store `admin` and `active_contract` in Variables.",
+                        snippet=UPGRADE_ROUTER_STEP_1 + "\n\n" + UPGRADE_ROUTER_STEP_2,
+                    ),
+                    _tutorial_step(
+                        4,
+                        "Forward calls from router to implementation",
+                        why="This is the contract-to-contract call pattern that keeps a stable external contract address.",
+                        how="Import selected contract with `importlib.import_module` and call exported methods.",
+                        snippet=UPGRADE_ROUTER_STEP_3,
+                    ),
+                    _tutorial_step(
+                        5,
+                        "Add controlled upgrade switch",
+                        why="Only one authority should decide when implementation changes.",
+                        how="Protect `set_active_contract` with an admin check and expose `get_active_contract` for observability.",
+                        snippet=UPGRADE_ROUTER_STEP_4 + "\n\n" + UPGRADE_ROUTER_STEP_5,
+                    ),
+                    spacing="4",
+                    align_items="start",
+                    width="100%",
+                ),
+                rx.box(
+                    rx.text(
+                        "Design note: this router pattern upgrades behavior. If each implementation keeps its own state, state may differ per implementation. "
+                        "For production upgrades with shared state, keep storage in a dedicated contract or proxy storage layer.",
+                        size="3",
+                        color=TEXT_MUTED,
+                        line_height="1.6",
+                    ),
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
+                ),
+                subsection(
+                    "Router Contract",
+                    copyable_code_block(
+                        UPGRADE_ROUTER_FULL,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="upgradable-router-contract",
+                ),
+                subsection(
+                    "Upgrade Call Flow",
+                    copyable_code_block(
+                        UPGRADE_CALL_FLOW,
+                        language="python",
+                        show_line_numbers=False,
+                        wrap_long_lines=False,
+                    ),
+                    id="upgradable-call-flow",
+                ),
+                subsection(
+                    "Implementation v1",
+                    copyable_code_block(
+                        UPGRADE_V1,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="upgradable-implementation-v1",
+                ),
+                subsection(
+                    "Implementation v2",
+                    copyable_code_block(
+                        UPGRADE_V2,
+                        language="python",
+                        show_line_numbers=True,
+                        wrap_long_lines=False,
+                    ),
+                    id="upgradable-implementation-v2",
                 ),
             )
         ),
