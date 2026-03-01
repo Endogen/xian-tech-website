@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import (
+    copyable_code_block,
     hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
@@ -411,27 +412,23 @@ def tooling_page() -> rx.Component:
                                 gap="0.75rem",
                                 wrap="wrap",
                             ),
-                            rx.tabs.content(
-                                rx.code_block(
+                        rx.tabs.content(
+                                copyable_code_block(
                                     SDK_BDS_STATE_QUERY,
                                     language="graphql",
                                     show_line_numbers=True,
                                     wrap_long_lines=False,
-                                    custom_style={"overflowX": "auto"},
-                                    width="100%",
                                 ),
                                 value="state",
                                 width="100%",
                             ),
                             rx.tabs.content(
                                 rx.vstack(
-                                    rx.code_block(
+                                    copyable_code_block(
                                         SDK_BDS_EVENTS_QUERY,
                                         language="graphql",
                                         show_line_numbers=True,
                                         wrap_long_lines=False,
-                                        custom_style={"overflowX": "auto"},
-                                        width="100%",
                                     ),
                                     rx.text(
                                         "The filter is optional if you want all Transfer events.",
@@ -643,49 +640,41 @@ def tooling_page() -> rx.Component:
                             wrap="wrap",
                         ),
                         rx.tabs.content(
-                            rx.code_block(
+                            copyable_code_block(
                                 SDK_WALLET_EXAMPLE,
                                 language="python",
                                 show_line_numbers=True,
                                 wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
                             ),
                             value="wallet",
                             width="100%",
                         ),
                         rx.tabs.content(
-                            rx.code_block(
+                            copyable_code_block(
                                 SDK_BALANCE_EXAMPLE,
                                 language="python",
                                 show_line_numbers=True,
                                 wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
                             ),
                             value="balance",
                             width="100%",
                         ),
                         rx.tabs.content(
-                            rx.code_block(
+                            copyable_code_block(
                                 SDK_SEND_EXAMPLE,
                                 language="python",
                                 show_line_numbers=True,
                                 wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
                             ),
                             value="send",
                             width="100%",
                         ),
                         rx.tabs.content(
-                            rx.code_block(
+                            copyable_code_block(
                                 SDK_CONTRACT_EXAMPLE,
                                 language="python",
                                 show_line_numbers=True,
                                 wrap_long_lines=False,
-                                custom_style={"overflowX": "auto"},
-                                width="100%",
                             ),
                             value="contract",
                             width="100%",
@@ -868,13 +857,11 @@ def tooling_page() -> rx.Component:
                             color=TEXT_MUTED,
                             line_height="1.6",
                         ),
-                        rx.code_block(
+                        copyable_code_block(
                             MCP_QUICKSTART,
                             language="bash",
                             show_line_numbers=False,
                             wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
-                            width="100%",
                         ),
                         rx.text(
                             "Then register the server in your MCP config (Claude Desktop or LM Studio):",
@@ -882,13 +869,11 @@ def tooling_page() -> rx.Component:
                             color=TEXT_MUTED,
                             line_height="1.6",
                         ),
-                        rx.code_block(
+                        copyable_code_block(
                             MCP_CONFIG_SNIPPET,
                             language="json",
                             show_line_numbers=False,
                             wrap_long_lines=False,
-                            custom_style={"overflowX": "auto"},
-                            width="100%",
                         ),
                         icon="terminal",
                         padding="1.75rem",

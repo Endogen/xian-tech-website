@@ -1,4 +1,5 @@
 import re
+from hashlib import md5
 from typing import Any, Optional, TypedDict
 
 import reflex as rx
@@ -994,8 +995,9 @@ def code_block(code: str) -> rx.Component:
 def copyable_code_block(
     code: str,
     *,
-    copied: rx.Var | bool = False,
+    copied: rx.Var | bool | None = None,
     on_copy: Any = None,
+    copy_key: str | None = None,
     language: str = "python",
     show_line_numbers: bool = True,
     wrap_long_lines: bool = False,
@@ -1005,7 +1007,16 @@ def copyable_code_block(
     copy_button_padding: str = "0.4rem",
 ) -> rx.Component:
     """Code block with a persistent top-right copy control and copy feedback state."""
-    on_copy_event = on_copy if on_copy is not None else rx.set_clipboard(code)
+    resolved_copy_key = copy_key
+    if resolved_copy_key is None:
+        digest = md5(f"{language}:{code}".encode("utf-8"), usedforsecurity=False).hexdigest()[:16]
+        resolved_copy_key = f"code-{digest}"
+
+    resolved_copied = copied
+    if resolved_copied is None:
+        resolved_copied = State.copied_code_key == resolved_copy_key
+
+    on_copy_event = on_copy if on_copy is not None else State.copy_code_with_feedback(code, resolved_copy_key)
     icon_size_px = f"{copy_icon_size}px"
 
     return rx.box(
@@ -1024,8 +1035,8 @@ def copyable_code_block(
                     tag="clipboard_copy",
                     size=copy_icon_size,
                     color="currentColor",
-                    opacity=rx.cond(copied, "0", "1"),
-                    transform=rx.cond(copied, "scale(0.85)", "scale(1)"),
+                    opacity=rx.cond(resolved_copied, "0", "1"),
+                    transform=rx.cond(resolved_copied, "scale(0.85)", "scale(1)"),
                     transition="opacity 0.2s ease, transform 0.2s ease",
                     position="absolute",
                     top="0",
@@ -1035,8 +1046,8 @@ def copyable_code_block(
                     tag="check",
                     size=copy_icon_size,
                     color="currentColor",
-                    opacity=rx.cond(copied, "1", "0"),
-                    transform=rx.cond(copied, "scale(1)", "scale(0.85)"),
+                    opacity=rx.cond(resolved_copied, "1", "0"),
+                    transform=rx.cond(resolved_copied, "scale(1)", "scale(0.85)"),
                     transition="opacity 0.2s ease, transform 0.2s ease",
                     position="absolute",
                     top="0",
@@ -1052,7 +1063,7 @@ def copyable_code_block(
             cursor="pointer",
             padding=copy_button_padding,
             min_width="unset",
-            color=rx.cond(copied, ACCENT, TEXT_MUTED),
+            color=rx.cond(resolved_copied, ACCENT, TEXT_MUTED),
             background=rx.color_mode_cond(
                 light="rgba(248, 249, 250, 0.92)",
                 dark="rgba(15, 20, 28, 0.88)",

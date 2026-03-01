@@ -82,6 +82,7 @@ class State(rx.State):
     image_lightbox_open: bool = False
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
+    copied_code_key: str = ""
     roadmap_loading: bool = False
     roadmap_error: str = ""
     roadmap_columns: list[RoadmapColumn] = []
@@ -186,6 +187,16 @@ class State(rx.State):
         self.image_lightbox_open = False
         self.image_lightbox_src = ""
         self.image_lightbox_alt = ""
+
+    async def copy_code_with_feedback(self, code: str, key: str):
+        """Copy code and briefly show copied feedback for the selected key."""
+        self.copied_code_key = ""
+        yield
+        self.copied_code_key = key
+        yield rx.set_clipboard(code)
+        await asyncio.sleep(1.2)
+        if self.copied_code_key == key:
+            self.copied_code_key = ""
 
     async def load_roadmap(self):
         """Load the Fizzy roadmap board into state."""

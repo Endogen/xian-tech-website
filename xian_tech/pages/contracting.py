@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import (
+    copyable_code_block,
     hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
@@ -541,13 +542,11 @@ def contracting_page() -> rx.Component:
                     *[
                         rx.tabs.content(
                             rx.vstack(
-                                rx.code_block(
+                                copyable_code_block(
                                     example["code"],
                                     language=example["language"],
                                     show_line_numbers=True,
                                     wrap_long_lines=False,
-                                    custom_style={"overflowX": "auto"},
-                                    width="100%",
                                 ),
                                 subsection(
                                     "Execution Flow",

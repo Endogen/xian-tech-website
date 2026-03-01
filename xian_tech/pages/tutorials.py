@@ -1,7 +1,7 @@
 import reflex as rx
 
 from ..components.common import (
-    code_block,
+    copyable_code_block,
     hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
@@ -105,7 +105,14 @@ def tutorials_page() -> rx.Component:
             rx.text(body, size="3", color=TEXT_MUTED, line_height="1.7"),
         ]
         if snippet:
-            children.append(code_block(snippet))
+            children.append(
+                copyable_code_block(
+                    snippet,
+                    language="python",
+                    show_line_numbers=False,
+                    wrap_long_lines=False,
+                )
+            )
         return rx.box(
             rx.vstack(
                 *children,

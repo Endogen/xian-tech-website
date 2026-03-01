@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import (
+    copyable_code_block,
     hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
@@ -65,13 +66,11 @@ SEARCH_SECTIONS = [
 def node_network_page() -> rx.Component:
     """Node & network page."""
     def command_block(code: str) -> rx.Component:
-        return rx.code_block(
+        return copyable_code_block(
             code,
             language="bash",
             show_line_numbers=False,
             wrap_long_lines=False,
-            custom_style={"overflowX": "auto"},
-            width="100%",
         )
 
     def bullet(text: str) -> rx.Component:
