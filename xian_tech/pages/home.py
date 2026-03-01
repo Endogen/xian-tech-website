@@ -134,8 +134,8 @@ def hero_section() -> rx.Component:
             align_items="center",
             width="100%",
         ),
-        padding_top="8rem",
-        padding_bottom="8rem",
+        padding_top="2.67rem",
+        padding_bottom="3rem",
     )
 
 
@@ -299,70 +299,6 @@ def why_another_blockchain() -> rx.Component:
                 line_height="1.7",
             ),
             margin_top="0.5rem",
-        ),
-        padding_top="3rem",
-        padding_bottom="3rem",
-    )
-
-
-    return section(
-        rx.grid(
-            rx.vstack(
-                linked_heading(
-                    "Why Python?",
-                    size="7",
-                    color=TEXT_PRIMARY,
-                    weight="bold",
-                    anchor_id="why-python-overview",
-                ),
-                rx.text(
-                    "Python is one of the most used programming languages worldwide but is barely used in the blockchain world. At Xian, everything user-facing—including smart contracts—is Python-based, while we also ship JS tooling for web integrations. Python is slower than specialized smart-contract languages, but Xian still delivers strong performance, and the trade-off buys us the clarity, safety, and adoption of Python.",
-                    size="4",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                rx.text(
-                    "Take a look at current programming language trends and see how Python dominates.",
-                    size="3",
-                    color=TEXT_MUTED,
-                    line_height="1.7",
-                ),
-                spacing="4",
-                align_items="start",
-            ),
-            rx.box(
-                rx.box(
-                    rx.image(
-                        src="/github.png",
-                        alt="Programming languages",
-                        width="100%",
-                        border_radius="12px",
-                        object_fit="cover",
-                        box_shadow=f"0 0 18px {ACCENT_SOFT}",
-                    ),
-                    rx.link(
-                        rx.badge(
-                            "Source",
-                            variant="soft",
-                            color_scheme="green",
-                            radius="medium",
-                            size="2",
-                        ),
-                        href="https://github.blog/news-insights/octoverse/octoverse-2024",
-                        is_external=True,
-                        position="absolute",
-                        bottom="0.33rem",
-                        right="0.33rem",
-                        _hover={"textDecoration": "none"},
-                    ),
-                    position="relative",
-                    width="100%",
-                ),
-                display="flex",
-                justify_content="center",
-            ),
-            template_columns={"base": "1fr", "md": "repeat(2, 1fr)"},
-            gap="2rem",
         ),
         padding_top="3rem",
         padding_bottom="3rem",
