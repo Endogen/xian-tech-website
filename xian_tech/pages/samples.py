@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..components.common import (
+    copyable_code_block,
     hover_icon_chip,
     icon_watermark_hover_card,
     linked_heading,
@@ -14,11 +15,10 @@ from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
-    BORDER_COLOR,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
-from ..state import State
+from .samples_state import SamplesState
 
 SEARCH_SECTIONS = [
     {
@@ -416,77 +416,13 @@ def _scenario_jump_card(
 
 
 def _code_example(code: str, *, copy_id: str, language: str = "python") -> rx.Component:
-    copied = State.samples_code_copied_id == copy_id
-    copy_button_top_offset = "0.8rem"
-    copy_button_right_offset = "0.95rem"
-
-    return rx.box(
-        rx.code_block(
-            code,
-            language=language,
-            show_line_numbers=True,
-            wrap_long_lines=False,
-            custom_style={"overflowX": "auto"},
-            width="100%",
-        ),
-        rx.button(
-            rx.box(
-                rx.icon(
-                    tag="clipboard_copy",
-                    size=20,
-                    color="currentColor",
-                    opacity=rx.cond(copied, "0", "1"),
-                    transform=rx.cond(copied, "scale(0.85)", "scale(1)"),
-                    transition="opacity 0.2s ease, transform 0.2s ease",
-                    position="absolute",
-                    top="0",
-                    left="0",
-                ),
-                rx.icon(
-                    tag="check",
-                    size=20,
-                    color="currentColor",
-                    opacity=rx.cond(copied, "1", "0"),
-                    transform=rx.cond(copied, "scale(1)", "scale(0.85)"),
-                    transition="opacity 0.2s ease, transform 0.2s ease",
-                    position="absolute",
-                    top="0",
-                    left="0",
-                ),
-                width="20px",
-                height="20px",
-                position="relative",
-                display="inline-block",
-            ),
-            on_click=State.copy_samples_code(code, copy_id),
-            variant="ghost",
-            cursor="pointer",
-            padding="0.4rem",
-            min_width="unset",
-            color=rx.cond(copied, ACCENT, TEXT_MUTED),
-            background=rx.color_mode_cond(
-                light="rgba(248, 249, 250, 0.92)",
-                dark="rgba(15, 20, 28, 0.88)",
-            ),
-            border=f"1px solid {BORDER_COLOR}",
-            border_radius="6px",
-            _hover={
-                "color": ACCENT,
-                "border": f"1px solid {ACCENT_GLOW}",
-                "background": rx.color_mode_cond(
-                    light="rgba(241, 243, 245, 0.98)",
-                    dark="rgba(20, 28, 38, 0.92)",
-                ),
-            },
-            aria_label="Copy code",
-            title="Copy code",
-            position="absolute",
-            top=copy_button_top_offset,
-            right=copy_button_right_offset,
-            z_index="2",
-        ),
-        position="relative",
-        width="100%",
+    return copyable_code_block(
+        code,
+        copied=SamplesState.code_copied_id == copy_id,
+        on_copy=SamplesState.copy_code(code, copy_id),
+        language=language,
+        show_line_numbers=True,
+        wrap_long_lines=False,
     )
 
 

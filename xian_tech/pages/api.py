@@ -5,6 +5,7 @@ from ..components.common import (
     linked_heading,
     page_layout,
     section,
+    section_action_links,
     section_panel,
     subsection,
 )
@@ -307,33 +308,11 @@ def api_page() -> rx.Component:
                             color=TEXT_PRIMARY,
                             weight="bold",
                         ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("RPC Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.cometbft.com/main/rpc",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="scroll_text", size=18),
-                                    rx.text("JSON-RPC Spec", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.cometbft.com/v0.38/spec/rpc/",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [
+                                {"label": "RPC Docs", "icon": "book_open", "href": "https://docs.cometbft.com/main/rpc"},
+                                {"label": "JSON-RPC Spec", "icon": "scroll_text", "href": "https://docs.cometbft.com/v0.38/spec/rpc/"},
+                            ]
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},

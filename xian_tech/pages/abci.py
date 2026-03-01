@@ -6,6 +6,7 @@ from ..components.common import (
     linked_heading,
     page_layout,
     section,
+    section_action_links,
     section_panel,
     subsection,
 )
@@ -121,45 +122,12 @@ def abci_page() -> rx.Component:
                 rx.vstack(
                         rx.flex(
                             linked_heading("ABCI", size="6", color=TEXT_PRIMARY, weight="bold"),
-                            rx.hstack(
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="github", size=18),
-                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://github.com/xian-technology/xian-abci",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="brain", size=18),
-                                        rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://deepwiki.com/xian-technology/xian-abci",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="book_open", size=18),
-                                        rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://docs.xian.technology/",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                spacing="4",
-                                align_items="center",
+                            section_action_links(
+                                [
+                                    {"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-abci"},
+                                    {"label": "DeepWiki", "icon": "brain", "href": "https://deepwiki.com/xian-technology/xian-abci"},
+                                    {"label": "Docs", "icon": "book_open", "href": "https://docs.xian.technology/"},
+                                ]
                             ),
                             direction={"base": "column", "md": "row"},
                             align_items={"base": "start", "md": "center"},

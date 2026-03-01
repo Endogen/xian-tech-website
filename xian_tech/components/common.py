@@ -1,5 +1,5 @@
 import re
-from typing import Any, Optional
+from typing import Any, Optional, TypedDict
 
 import reflex as rx
 
@@ -7,6 +7,7 @@ from ..data import NAV_LINKS
 from ..state import State
 from ..theme import (
     ACCENT,
+    ACCENT_GLOW,
     ACCENT_SOFT,
     BORDER_BRIGHT,
     BORDER_COLOR,
@@ -25,6 +26,19 @@ MD_MEDIA = "@media (min-width: 1024px)"
 NAV_DROPDOWN_LABELS = [link["label"] for link in NAV_LINKS if link.get("children")]
 HEADER_CONTROL_HEIGHT = "2.6rem"
 HEADER_CONTROL_RADIUS = "12px"
+
+
+class SectionActionLink(TypedDict, total=False):
+    """Config for a compact section action link."""
+
+    label: str
+    href: str
+    icon: str
+    is_external: bool
+    show_label: bool
+    show_label_from: str
+    icon_size: int
+    aria_label: str
 
 
 def _header_control_style() -> dict[str, Any]:
@@ -200,6 +214,52 @@ def text_with_inline_code(text: str, **text_kwargs: Any) -> rx.Component:
         else:
             parts.append(token)
     return rx.text(*parts, **text_kwargs)
+
+
+def section_action_links(
+    links: list[SectionActionLink],
+    *,
+    spacing: str = "4",
+    align_items: str = "center",
+    text_size: str = "3",
+) -> rx.Component:
+    """Render compact icon/action links for section headers.
+
+    Each link can define label/icon/url and responsive label visibility.
+    """
+
+    def action_link(link: SectionActionLink) -> rx.Component:
+        label = link["label"]
+        icon = link.get("icon", "link")
+        is_external = link.get("is_external", True)
+        show_label = link.get("show_label", True)
+        show_label_from = link.get("show_label_from", "md")
+
+        link_children: list[rx.Component] = [rx.icon(tag=icon, size=link.get("icon_size", 18))]
+        if show_label:
+            label_display: Any = "inline"
+            if show_label_from != "base":
+                label_display = rx.breakpoints(initial="none", **{show_label_from: "inline"})
+            link_children.append(rx.text(label, size=text_size, display=label_display))
+
+        return rx.link(
+            rx.hstack(
+                *link_children,
+                spacing="2",
+                align_items="center",
+            ),
+            href=link["href"],
+            is_external=is_external,
+            color=TEXT_MUTED,
+            _hover={"color": ACCENT},
+            aria_label=link.get("aria_label", label),
+        )
+
+    return rx.hstack(
+        *[action_link(link) for link in links],
+        spacing=spacing,
+        align_items=align_items,
+    )
 
 
 def section_panel(header: rx.Component, *children: rx.Component, **kwargs) -> rx.Component:
@@ -931,6 +991,99 @@ def code_block(code: str) -> rx.Component:
     )
 
 
+def copyable_code_block(
+    code: str,
+    *,
+    copied: rx.Var | bool = False,
+    on_copy: Any = None,
+    language: str = "python",
+    show_line_numbers: bool = True,
+    wrap_long_lines: bool = False,
+    copy_button_top: str = "0.8rem",
+    copy_button_right: str = "0.95rem",
+    copy_icon_size: int = 20,
+    copy_button_padding: str = "0.4rem",
+) -> rx.Component:
+    """Code block with a persistent top-right copy control and copy feedback state."""
+    on_copy_event = on_copy if on_copy is not None else rx.set_clipboard(code)
+    icon_size_px = f"{copy_icon_size}px"
+
+    return rx.box(
+        rx.code_block(
+            code,
+            language=language,
+            show_line_numbers=show_line_numbers,
+            wrap_long_lines=wrap_long_lines,
+            custom_style={"overflowX": "auto", "margin": "0"},
+            margin="0",
+            width="100%",
+        ),
+        rx.button(
+            rx.box(
+                rx.icon(
+                    tag="clipboard_copy",
+                    size=copy_icon_size,
+                    color="currentColor",
+                    opacity=rx.cond(copied, "0", "1"),
+                    transform=rx.cond(copied, "scale(0.85)", "scale(1)"),
+                    transition="opacity 0.2s ease, transform 0.2s ease",
+                    position="absolute",
+                    top="0",
+                    left="0",
+                ),
+                rx.icon(
+                    tag="check",
+                    size=copy_icon_size,
+                    color="currentColor",
+                    opacity=rx.cond(copied, "1", "0"),
+                    transform=rx.cond(copied, "scale(1)", "scale(0.85)"),
+                    transition="opacity 0.2s ease, transform 0.2s ease",
+                    position="absolute",
+                    top="0",
+                    left="0",
+                ),
+                width=icon_size_px,
+                height=icon_size_px,
+                position="relative",
+                display="inline-block",
+            ),
+            on_click=on_copy_event,
+            variant="ghost",
+            cursor="pointer",
+            padding=copy_button_padding,
+            min_width="unset",
+            color=rx.cond(copied, ACCENT, TEXT_MUTED),
+            background=rx.color_mode_cond(
+                light="rgba(248, 249, 250, 0.92)",
+                dark="rgba(15, 20, 28, 0.88)",
+            ),
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="6px",
+            _hover={
+                "color": ACCENT,
+                "border": f"1px solid {ACCENT_GLOW}",
+                "background": rx.color_mode_cond(
+                    light="rgba(241, 243, 245, 0.98)",
+                    dark="rgba(20, 28, 38, 0.92)",
+                ),
+            },
+            aria_label="Copy code",
+            title="Copy code",
+            position="absolute",
+            top=copy_button_top,
+            right=copy_button_right,
+            z_index="2",
+        ),
+        style={
+            "& > pre": {
+                "margin": "0 !important",
+            },
+        },
+        position="relative",
+        width="100%",
+    )
+
+
 def hover_icon_chip(icon: str, *, size: int = 28) -> rx.Component:
     """Icon chip tuned for the card watermark hover effect."""
     return rx.box(
@@ -1648,6 +1801,7 @@ def page_layout(*children: rx.Component) -> rx.Component:
 
 
 __all__ = [
+    "copyable_code_block",
     "command_palette",
     "command_palette_button",
     "code_block",
@@ -1660,6 +1814,7 @@ __all__ = [
     "nav_link",
     "page_layout",
     "section",
+    "section_action_links",
     "section_panel",
     "subsection",
     "terminal_prompt",

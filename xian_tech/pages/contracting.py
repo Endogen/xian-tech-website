@@ -6,6 +6,7 @@ from ..components.common import (
     linked_heading,
     page_layout,
     section,
+    section_action_links,
     section_panel,
     subsection,
 )
@@ -462,45 +463,20 @@ def contracting_page() -> rx.Component:
                 rx.vstack(
                         rx.flex(
                             linked_heading("Contracting Engine", size="6", color=TEXT_PRIMARY, weight="bold"),
-                            rx.hstack(
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="github", size=18),
-                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://github.com/xian-technology/xian-contracting",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="brain", size=18),
-                                        rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://deepwiki.com/xian-technology/xian-contracting",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="book_open", size=18),
-                                        rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://docs.xian.technology",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                spacing="4",
-                                align_items="center",
+                            section_action_links(
+                                [
+                                    {
+                                        "label": "Repo",
+                                        "icon": "github",
+                                        "href": "https://github.com/xian-technology/xian-contracting",
+                                    },
+                                    {
+                                        "label": "DeepWiki",
+                                        "icon": "brain",
+                                        "href": "https://deepwiki.com/xian-technology/xian-contracting",
+                                    },
+                                    {"label": "Docs", "icon": "book_open", "href": "https://docs.xian.technology"},
+                                ]
                             ),
                             direction={"base": "column", "md": "row"},
                             align_items={"base": "start", "md": "center"},
@@ -628,21 +604,14 @@ def contracting_page() -> rx.Component:
                 rx.vstack(
                         rx.flex(
                             linked_heading("Contracting AI Guide", size="6", color=TEXT_PRIMARY, weight="bold"),
-                            rx.hstack(
-                                rx.link(
-                                    rx.hstack(
-                                        rx.icon(tag="github", size=18),
-                                        rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                        spacing="2",
-                                        align_items="center",
-                                    ),
-                                    href="https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
-                                    is_external=True,
-                                    color=TEXT_MUTED,
-                                    _hover={"color": ACCENT},
-                                ),
-                                spacing="4",
-                                align_items="center",
+                            section_action_links(
+                                [
+                                    {
+                                        "label": "Repo",
+                                        "icon": "github",
+                                        "href": "https://github.com/xian-technology/xian-ai-guides/blob/main/contracting-guide.md",
+                                    }
+                                ]
                             ),
                             direction={"base": "column", "md": "row"},
                             align_items={"base": "start", "md": "center"},

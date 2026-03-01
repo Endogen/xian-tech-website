@@ -6,6 +6,7 @@ from ..components.common import (
     linked_heading,
     page_layout,
     section,
+    section_action_links,
     section_panel,
     subsection,
     text_with_inline_code,
@@ -21,6 +22,7 @@ from ..theme import (
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
+from .tooling_state import ToolingState
 
 SDK_INSTALL_COMMAND = "pip install xian-py"
 SDK_WALLET_EXAMPLE = """from xian_py import Wallet
@@ -184,8 +186,8 @@ def _sdk_install_card() -> rx.Component:
                         tag="clipboard_copy",
                         size=18,
                         color="currentColor",
-                        opacity=rx.cond(State.sdk_install_copied, "0", "1"),
-                        transform=rx.cond(State.sdk_install_copied, "scale(0.85)", "scale(1)"),
+                        opacity=rx.cond(ToolingState.sdk_install_copied, "0", "1"),
+                        transform=rx.cond(ToolingState.sdk_install_copied, "scale(0.85)", "scale(1)"),
                         transition="opacity 0.2s ease, transform 0.2s ease",
                         position="absolute",
                         top="0",
@@ -195,8 +197,8 @@ def _sdk_install_card() -> rx.Component:
                         tag="check",
                         size=18,
                         color="currentColor",
-                        opacity=rx.cond(State.sdk_install_copied, "1", "0"),
-                        transform=rx.cond(State.sdk_install_copied, "scale(1)", "scale(0.85)"),
+                        opacity=rx.cond(ToolingState.sdk_install_copied, "1", "0"),
+                        transform=rx.cond(ToolingState.sdk_install_copied, "scale(1)", "scale(0.85)"),
                         transition="opacity 0.2s ease, transform 0.2s ease",
                         position="absolute",
                         top="0",
@@ -207,12 +209,12 @@ def _sdk_install_card() -> rx.Component:
                     position="relative",
                     display="inline-block",
                 ),
-                on_click=State.copy_sdk_install_command,
+                on_click=ToolingState.copy_sdk_install_command,
                 variant="ghost",
                 cursor="pointer",
                 padding="0.35rem",
                 background_color="transparent",
-                color=rx.cond(State.sdk_install_copied, ACCENT, TEXT_MUTED),
+                color=rx.cond(ToolingState.sdk_install_copied, ACCENT, TEXT_MUTED),
                 border="none",
                 _hover={"color": ACCENT, "background_color": "transparent"},
                 aria_label="Copy install command",
@@ -293,45 +295,12 @@ def tooling_page() -> rx.Component:
                             color=TEXT_PRIMARY,
                             weight="bold",
                         ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="brain", size=18),
-                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.technology",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [
+                                {"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-py"},
+                                {"label": "DeepWiki", "icon": "brain", "href": "https://deepwiki.com/xian-technology/xian-py"},
+                                {"label": "Docs", "icon": "book_open", "href": "https://docs.xian.technology"},
+                            ]
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -494,17 +463,14 @@ def tooling_page() -> rx.Component:
                                 line_height="1.7",
                                 width="100%",
                             ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
+                            section_action_links(
+                                [
+                                    {
+                                        "label": "Repo",
+                                        "icon": "github",
+                                        "href": "https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
+                                    }
+                                ]
                             ),
                             direction={"base": "column", "md": "row"},
                             align_items={"base": "start", "md": "center"},
@@ -572,45 +538,12 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("Python SDK", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="brain", size=18),
-                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.technology",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [
+                                {"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-py"},
+                                {"label": "DeepWiki", "icon": "brain", "href": "https://deepwiki.com/xian-technology/xian-py"},
+                                {"label": "Docs", "icon": "book_open", "href": "https://docs.xian.technology"},
+                            ]
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -771,45 +704,12 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("Xian Linter", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-linter",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="brain", size=18),
-                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-linter",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://pypi.org/project/xian-linter/",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [
+                                {"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-linter"},
+                                {"label": "DeepWiki", "icon": "brain", "href": "https://deepwiki.com/xian-technology/xian-linter"},
+                                {"label": "Docs", "icon": "book_open", "href": "https://pypi.org/project/xian-linter/"},
+                            ]
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -889,45 +789,12 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("MCP Server", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-mcp-server",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="brain", size=18),
-                                    rx.text("DeepWiki", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://deepwiki.com/xian-technology/xian-mcp-server",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://modelcontextprotocol.io",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [
+                                {"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-mcp-server"},
+                                {"label": "DeepWiki", "icon": "brain", "href": "https://deepwiki.com/xian-technology/xian-mcp-server"},
+                                {"label": "Docs", "icon": "book_open", "href": "https://modelcontextprotocol.io"},
+                            ]
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -1039,17 +906,8 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("AI Guides", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.link(
-                            rx.hstack(
-                                rx.icon(tag="github", size=18),
-                                rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                spacing="2",
-                                align_items="center",
-                            ),
-                            href="https://github.com/xian-technology/xian-ai-guides",
-                            is_external=True,
-                            color=TEXT_MUTED,
-                            _hover={"color": ACCENT},
+                        section_action_links(
+                            [{"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-ai-guides"}],
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
@@ -1108,21 +966,8 @@ def tooling_page() -> rx.Component:
                 rx.vstack(
                     rx.flex(
                         linked_heading("Agent Skills", size="6", color=TEXT_PRIMARY, weight="bold"),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-skills",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
+                        section_action_links(
+                            [{"label": "Repo", "icon": "github", "href": "https://github.com/xian-technology/xian-ai-skills"}],
                         ),
                         direction={"base": "column", "md": "row"},
                         align_items={"base": "start", "md": "center"},
