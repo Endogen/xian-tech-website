@@ -50,10 +50,10 @@ TEAM_MEMBERS = [
         ],
     },
     {
-        "name": "Riley Chen",
+        "name": "\"Crosschainer\"",
         "role": "Ecosystem & Partnerships",
         "bio": "Supports builders, partners, and operators shipping production applications on Xian.",
-        "image": "/xian.jpg",
+        "image": "/crosschainer.png",
         "socials": [
             {"icon": "linkedin", "href": "https://www.linkedin.com", "label": "LinkedIn"},
             {"icon": "github", "href": "https://github.com", "label": "GitHub"},
