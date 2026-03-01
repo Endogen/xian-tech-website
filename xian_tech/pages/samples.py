@@ -8,6 +8,7 @@ from ..components.common import (
     section,
     section_panel,
     subsection,
+    text_with_inline_code,
 )
 from ..theme import (
     ACCENT,
@@ -343,7 +344,12 @@ print({"transfer_count": len(transfer_history), "balance": latest_balance})'''
 def _bullet_item(text: str) -> rx.Component:
     return rx.hstack(
         rx.icon(tag="check", size=16, color=ACCENT),
-        rx.text(text, size="3", color=TEXT_MUTED, line_height="1.6"),
+        text_with_inline_code(
+            text,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.6",
+        ),
         spacing="2",
         align_items="start",
     )
@@ -362,7 +368,12 @@ def _ordered_step_item(step: int, text: str) -> rx.Component:
             background=ACCENT_SOFT,
             border_radius="999px",
         ),
-        rx.text(text, size="3", color=TEXT_MUTED, line_height="1.6"),
+        text_with_inline_code(
+            text,
+            size="3",
+            color=TEXT_MUTED,
+            line_height="1.6",
+        ),
         spacing="2",
         align_items="start",
     )
@@ -503,47 +514,12 @@ def samples_page() -> rx.Component:
         section(
             section_panel(
                 rx.vstack(
-                    rx.flex(
-                        linked_heading(
-                            "Scenario 1: Reliable Transfer Confirmation",
-                            anchor_id="scenario-transfer-confirmation",
-                            size="6",
-                            color=TEXT_PRIMARY,
-                            weight="bold",
-                        ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-network/xian-py",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
-                        ),
-                        direction={"base": "column", "md": "row"},
-                        align_items={"base": "start", "md": "center"},
-                        justify="between",
-                        gap="0.75rem",
-                        width="100%",
+                    linked_heading(
+                        "Scenario 1: Reliable Transfer Confirmation",
+                        anchor_id="scenario-transfer-confirmation",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
                     ),
                     rx.text(
                         "This scenario covers a full transfer lifecycle: submit the transfer, poll for final tx status, "
@@ -567,8 +543,8 @@ def samples_page() -> rx.Component:
                         ),
                         rx.vstack(
                             _ordered_step_item(1, "Create wallet + client once per workflow."),
-                            _ordered_step_item(2, "Submit via `send(...)` and require a successful response."),
-                            _ordered_step_item(3, "If a hash exists, poll `get_tx(...)` until success/fail/timeout."),
+                            _ordered_step_item(2, "Submit via `send` and require a successful response."),
+                            _ordered_step_item(3, "If a hash exists, poll `get_tx` until success/fail/timeout."),
                             _ordered_step_item(4, "Retry only while status is unresolved, not on hard failures."),
                             _ordered_step_item(5, "Return one final object your app can log and persist."),
                             spacing="2",
@@ -669,7 +645,7 @@ def samples_page() -> rx.Component:
                         rx.vstack(
                             _ordered_step_item(1, "Simulate the call with exact contract/function/kwargs."),
                             _ordered_step_item(2, "Read pre-state to define expected delta."),
-                            _ordered_step_item(3, "Submit with `send_tx(..., synchronous=True)`."),
+                            _ordered_step_item(3, "Submit with `send_tx` and `synchronous=True`."),
                             _ordered_step_item(4, "Check receipt if a hash is returned."),
                             _ordered_step_item(5, "Assert post-state matches expected value."),
                             spacing="2",
@@ -712,47 +688,12 @@ def samples_page() -> rx.Component:
         section(
             section_panel(
                 rx.vstack(
-                    rx.flex(
-                        linked_heading(
-                            "Scenario 3: BDS Retrieval and Pagination",
-                            anchor_id="scenario-bds-retrieval",
-                            size="6",
-                            color=TEXT_PRIMARY,
-                            weight="bold",
-                        ),
-                        rx.hstack(
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="github", size=18),
-                                    rx.text("Repo", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://github.com/xian-technology/xian-ai-guides/blob/main/bds_graphql_schema.json",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            rx.link(
-                                rx.hstack(
-                                    rx.icon(tag="book_open", size=18),
-                                    rx.text("Docs", size="3", display=rx.breakpoints(initial="none", md="inline")),
-                                    spacing="2",
-                                    align_items="center",
-                                ),
-                                href="https://docs.xian.technology",
-                                is_external=True,
-                                color=TEXT_MUTED,
-                                _hover={"color": ACCENT},
-                            ),
-                            spacing="4",
-                            align_items="center",
-                        ),
-                        direction={"base": "column", "md": "row"},
-                        align_items={"base": "start", "md": "center"},
-                        justify="between",
-                        gap="0.75rem",
-                        width="100%",
+                    linked_heading(
+                        "Scenario 3: BDS Retrieval and Pagination",
+                        anchor_id="scenario-bds-retrieval",
+                        size="6",
+                        color=TEXT_PRIMARY,
+                        weight="bold",
                     ),
                     rx.text(
                         "This scenario shows how to read transfer history and state snapshots from BDS GraphQL, with cursor pagination "
