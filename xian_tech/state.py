@@ -83,6 +83,7 @@ class State(rx.State):
     image_lightbox_src: str = ""
     image_lightbox_alt: str = ""
     sdk_install_copied: bool = False
+    samples_code_copied_id: str = ""
     roadmap_loading: bool = False
     roadmap_error: str = ""
     roadmap_columns: list[RoadmapColumn] = []
@@ -194,6 +195,16 @@ class State(rx.State):
         yield rx.set_clipboard("pip install xian-py")
         await asyncio.sleep(1.4)
         self.sdk_install_copied = False
+
+    async def copy_samples_code(self, code: str, code_id: str):
+        """Copy a samples code block and flash copy feedback on that block."""
+        self.samples_code_copied_id = ""
+        yield
+        self.samples_code_copied_id = code_id
+        yield rx.set_clipboard(code)
+        await asyncio.sleep(1.2)
+        if self.samples_code_copied_id == code_id:
+            self.samples_code_copied_id = ""
 
     async def load_roadmap(self):
         """Load the Fizzy roadmap board into state."""

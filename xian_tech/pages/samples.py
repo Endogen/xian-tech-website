@@ -14,9 +14,11 @@ from ..theme import (
     ACCENT,
     ACCENT_GLOW,
     ACCENT_SOFT,
+    BORDER_COLOR,
     TEXT_MUTED,
     TEXT_PRIMARY,
 )
+from ..state import State
 
 SEARCH_SECTIONS = [
     {
@@ -413,13 +415,77 @@ def _scenario_jump_card(
     )
 
 
-def _code_example(code: str, *, language: str = "python") -> rx.Component:
-    return rx.code_block(
-        code,
-        language=language,
-        show_line_numbers=True,
-        wrap_long_lines=False,
-        custom_style={"overflowX": "auto"},
+def _code_example(code: str, *, copy_id: str, language: str = "python") -> rx.Component:
+    copied = State.samples_code_copied_id == copy_id
+    copy_button_top_offset = "0.8rem"
+    copy_button_right_offset = "0.95rem"
+
+    return rx.box(
+        rx.code_block(
+            code,
+            language=language,
+            show_line_numbers=True,
+            wrap_long_lines=False,
+            custom_style={"overflowX": "auto"},
+            width="100%",
+        ),
+        rx.button(
+            rx.box(
+                rx.icon(
+                    tag="clipboard_copy",
+                    size=20,
+                    color="currentColor",
+                    opacity=rx.cond(copied, "0", "1"),
+                    transform=rx.cond(copied, "scale(0.85)", "scale(1)"),
+                    transition="opacity 0.2s ease, transform 0.2s ease",
+                    position="absolute",
+                    top="0",
+                    left="0",
+                ),
+                rx.icon(
+                    tag="check",
+                    size=20,
+                    color="currentColor",
+                    opacity=rx.cond(copied, "1", "0"),
+                    transform=rx.cond(copied, "scale(1)", "scale(0.85)"),
+                    transition="opacity 0.2s ease, transform 0.2s ease",
+                    position="absolute",
+                    top="0",
+                    left="0",
+                ),
+                width="20px",
+                height="20px",
+                position="relative",
+                display="inline-block",
+            ),
+            on_click=State.copy_samples_code(code, copy_id),
+            variant="ghost",
+            cursor="pointer",
+            padding="0.4rem",
+            min_width="unset",
+            color=rx.cond(copied, ACCENT, TEXT_MUTED),
+            background=rx.color_mode_cond(
+                light="rgba(248, 249, 250, 0.92)",
+                dark="rgba(15, 20, 28, 0.88)",
+            ),
+            border=f"1px solid {BORDER_COLOR}",
+            border_radius="6px",
+            _hover={
+                "color": ACCENT,
+                "border": f"1px solid {ACCENT_GLOW}",
+                "background": rx.color_mode_cond(
+                    light="rgba(241, 243, 245, 0.98)",
+                    dark="rgba(20, 28, 38, 0.92)",
+                ),
+            },
+            aria_label="Copy code",
+            title="Copy code",
+            position="absolute",
+            top=copy_button_top_offset,
+            right=copy_button_right_offset,
+            z_index="2",
+        ),
+        position="relative",
         width="100%",
     )
 
@@ -587,9 +653,9 @@ def samples_page() -> rx.Component:
                             gap="0.75rem",
                             wrap="wrap",
                         ),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_SYNC), value="sync", width="100%"),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_ASYNC), value="async", width="100%"),
-                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_WS_TRACKING), value="ws", width="100%"),
+                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_SYNC, copy_id="scenario-transfer-sync"), value="sync", width="100%"),
+                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_ASYNC, copy_id="scenario-transfer-async"), value="async", width="100%"),
+                        rx.tabs.content(_code_example(SCENARIO_TRANSFER_WS_TRACKING, copy_id="scenario-transfer-ws"), value="ws", width="100%"),
                         default_value="sync",
                         width="100%",
                         min_width="0",
@@ -680,7 +746,7 @@ def samples_page() -> rx.Component:
                 ),
                 subsection(
                     "Code",
-                    _code_example(SCENARIO_CONTRACT_GUARDRAILS),
+                    _code_example(SCENARIO_CONTRACT_GUARDRAILS, copy_id="scenario-contract-guardrails"),
                     id="scenario-contract-call-guardrails-code",
                 ),
             )
@@ -753,7 +819,7 @@ def samples_page() -> rx.Component:
                 ),
                 subsection(
                     "Code",
-                    _code_example(SCENARIO_BDS_RETRIEVAL),
+                    _code_example(SCENARIO_BDS_RETRIEVAL, copy_id="scenario-bds-retrieval"),
                     id="scenario-bds-retrieval-code",
                 ),
             )
