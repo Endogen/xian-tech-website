@@ -69,47 +69,54 @@ SEARCH_SECTIONS = [
 ]
 
 # Scenario 1: store data on chain.
-STORE_DATA_STEP_1 = '''owner = Variable()
+STORE_DATA_STEP_1 = '''# Persistent contract state.
+owner = Variable()
 records = Hash(default_value='')'''
 
-STORE_DATA_STEP_2 = '''@construct
+STORE_DATA_STEP_2 = '''# Runs once on deployment.
+@construct
 def seed():
     owner.set(ctx.caller)'''
 
-STORE_DATA_STEP_3 = '''@export
+STORE_DATA_STEP_3 = '''# Saves or overwrites a value by key.
+@export
 def save(key: str, value: str):
     assert len(key) > 0, 'key required'
     records[key] = value'''
 
-STORE_DATA_STEP_4 = '''@export
+STORE_DATA_STEP_4 = '''# Reads the current value for a key.
+@export
 def read(key: str):
     return records[key]'''
 
-STORE_DATA_FULL = '''owner = Variable()
+STORE_DATA_FULL = '''# Stage 1: Declare persistent state.
+owner = Variable()
 records = Hash(default_value='')
 
-
+# Stage 2: Initialize once on deployment.
 @construct
 def seed():
     owner.set(ctx.caller)
 
-
+# Stage 3: Write path.
 @export
 def save(key: str, value: str):
     assert len(key) > 0, 'key required'
     records[key] = value
 
-
+# Stage 4: Read path.
 @export
 def read(key: str):
     return records[key]'''
 
 # Scenario 2: token from scratch (XSC0001 derived).
-TOKEN_STEP_1 = '''balances = Hash(default_value=0)
+TOKEN_STEP_1 = '''# Core token storage.
+balances = Hash(default_value=0)
 approvals = Hash(default_value=0)
 metadata = Hash()'''
 
-TOKEN_STEP_2 = '''@construct
+TOKEN_STEP_2 = '''# Initialize token metadata and initial supply.
+@construct
 def seed():
     metadata['token_name'] = 'Tutorial Token'
     metadata['token_symbol'] = 'TUT'
@@ -118,11 +125,12 @@ def seed():
     metadata['operator'] = ctx.caller
     balances[ctx.caller] = 1_000_000'''
 
-TOKEN_STEP_3 = '''@export
+TOKEN_STEP_3 = '''# Standard read endpoint.
+@export
 def balance_of(account: str):
     return balances[account]
 
-
+# Direct transfer between holders.
 @export
 def transfer(amount: float, to: str):
     assert amount > 0, 'amount must be positive'
@@ -130,12 +138,13 @@ def transfer(amount: float, to: str):
     balances[ctx.caller] -= amount
     balances[to] += amount'''
 
-TOKEN_STEP_4 = '''@export
+TOKEN_STEP_4 = '''# Allow another address/contract to spend on your behalf.
+@export
 def approve(amount: float, to: str):
     assert amount >= 0, 'amount must be non-negative'
     approvals[ctx.caller, to] = amount
 
-
+# Spend from `main_account` using allowance.
 @export
 def transfer_from(amount: float, to: str, main_account: str):
     assert amount > 0, 'amount must be positive'
@@ -145,16 +154,18 @@ def transfer_from(amount: float, to: str, main_account: str):
     balances[main_account] -= amount
     balances[to] += amount'''
 
-TOKEN_STEP_5 = '''@export
+TOKEN_STEP_5 = '''# Restricted metadata updates for operator/governance.
+@export
 def change_metadata(key: str, value):
     assert ctx.caller == metadata['operator'], 'operator only'
     metadata[key] = value'''
 
-TOKEN_FULL = '''balances = Hash(default_value=0)
+TOKEN_FULL = '''# Stage 1: Core token storage.
+balances = Hash(default_value=0)
 approvals = Hash(default_value=0)
 metadata = Hash()
 
-
+# Stage 2: Initialize metadata and supply.
 @construct
 def seed():
     metadata['token_name'] = 'Tutorial Token'
@@ -164,12 +175,12 @@ def seed():
     metadata['operator'] = ctx.caller
     balances[ctx.caller] = 1_000_000
 
-
+# Stage 3: Read holder balance.
 @export
 def balance_of(account: str):
     return balances[account]
 
-
+# Stage 4: Direct transfers.
 @export
 def transfer(amount: float, to: str):
     assert amount > 0, 'amount must be positive'
@@ -177,13 +188,13 @@ def transfer(amount: float, to: str):
     balances[ctx.caller] -= amount
     balances[to] += amount
 
-
+# Stage 5: Grant delegated spending allowance.
 @export
 def approve(amount: float, to: str):
     assert amount >= 0, 'amount must be non-negative'
     approvals[ctx.caller, to] = amount
 
-
+# Stage 6: Spend via allowance.
 @export
 def transfer_from(amount: float, to: str, main_account: str):
     assert amount > 0, 'amount must be positive'
@@ -193,7 +204,7 @@ def transfer_from(amount: float, to: str, main_account: str):
     balances[main_account] -= amount
     balances[to] += amount
 
-
+# Stage 7: Operator-managed metadata changes.
 @export
 def change_metadata(key: str, value):
     assert ctx.caller == metadata['operator'], 'operator only'
@@ -202,6 +213,7 @@ def change_metadata(key: str, value):
 # Scenario 3: multisig.
 MULTISIG_STEP_1 = '''import importlib
 
+# Core multisig state.
 owners = Hash(default_value=False)
 required_approvals = Variable()
 proposal_count = Variable()
@@ -209,7 +221,8 @@ proposals = Hash(default_value=None)
 approvals = Hash(default_value=False)
 approval_totals = Hash(default_value=0)'''
 
-MULTISIG_STEP_2 = '''@construct
+MULTISIG_STEP_2 = '''# Configure owners and approval threshold at deployment.
+@construct
 def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
     assert required >= 2, 'required must be >= 2'
     owners[owner_a] = True
@@ -218,9 +231,10 @@ def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
     required_approvals.set(required)
     proposal_count.set(0)'''
 
-MULTISIG_STEP_3 = '''@export
+MULTISIG_STEP_3 = '''# Create a transfer proposal and auto-approve by proposer.
+@export
 def propose_transfer(token_contract: str, to: str, amount: float):
-    _assert_owner()
+    assert_owner()
     assert amount > 0, 'amount must be positive'
 
     proposal_id = proposal_count.get()
@@ -237,9 +251,10 @@ def propose_transfer(token_contract: str, to: str, amount: float):
     approval_totals[proposal_id] = 1
     return proposal_id'''
 
-MULTISIG_STEP_4 = '''@export
+MULTISIG_STEP_4 = '''# Add one owner approval and execute when threshold is reached.
+@export
 def approve_transfer(proposal_id: int):
-    _assert_owner()
+    assert_owner()
     proposal = proposals[proposal_id]
     assert proposal is not None, 'unknown proposal'
     assert proposal['executed'] is False, 'already executed'
@@ -249,9 +264,10 @@ def approve_transfer(proposal_id: int):
     approval_totals[proposal_id] += 1
 
     if approval_totals[proposal_id] >= required_approvals.get():
-        _execute_transfer(proposal_id)'''
+        execute_transfer(proposal_id)'''
 
-MULTISIG_STEP_5 = '''def _execute_transfer(proposal_id: int):
+MULTISIG_STEP_5 = '''# Internal execution step that performs the token transfer.
+def execute_transfer(proposal_id: int):
     proposal = proposals[proposal_id]
     token = importlib.import_module(proposal['token_contract'])
     token.transfer(amount=proposal['amount'], to=proposal['to'])
@@ -261,6 +277,7 @@ MULTISIG_STEP_5 = '''def _execute_transfer(proposal_id: int):
 
 MULTISIG_FULL = '''import importlib
 
+# Stage 1: Core multisig state.
 owners = Hash(default_value=False)
 required_approvals = Variable()
 proposal_count = Variable()
@@ -268,11 +285,11 @@ proposals = Hash(default_value=None)
 approvals = Hash(default_value=False)
 approval_totals = Hash(default_value=0)
 
-
-def _assert_owner():
+# Stage 2: Shared owner check.
+def assert_owner():
     assert owners[ctx.caller], 'owner only'
 
-
+# Stage 3: Configure owners and threshold.
 @construct
 def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
     assert required >= 2, 'required must be >= 2'
@@ -282,10 +299,10 @@ def seed(owner_a: str, owner_b: str, owner_c: str, required: int = 2):
     required_approvals.set(required)
     proposal_count.set(0)
 
-
+# Stage 4: Propose transfer.
 @export
 def propose_transfer(token_contract: str, to: str, amount: float):
-    _assert_owner()
+    assert_owner()
     assert amount > 0, 'amount must be positive'
 
     proposal_id = proposal_count.get()
@@ -302,10 +319,10 @@ def propose_transfer(token_contract: str, to: str, amount: float):
     approval_totals[proposal_id] = 1
     return proposal_id
 
-
+# Stage 5: Approve and auto-execute on threshold.
 @export
 def approve_transfer(proposal_id: int):
-    _assert_owner()
+    assert_owner()
     proposal = proposals[proposal_id]
     assert proposal is not None, 'unknown proposal'
     assert proposal['executed'] is False, 'already executed'
@@ -315,10 +332,10 @@ def approve_transfer(proposal_id: int):
     approval_totals[proposal_id] += 1
 
     if approval_totals[proposal_id] >= required_approvals.get():
-        _execute_transfer(proposal_id)
+        execute_transfer(proposal_id)
 
-
-def _execute_transfer(proposal_id: int):
+# Stage 6: Execute transfer from this contract balance.
+def execute_transfer(proposal_id: int):
     proposal = proposals[proposal_id]
     token = importlib.import_module(proposal['token_contract'])
     token.transfer(amount=proposal['amount'], to=proposal['to'])
@@ -326,108 +343,116 @@ def _execute_transfer(proposal_id: int):
     proposal['executed'] = True
     proposals[proposal_id] = proposal
 
-
+# Optional read helper for clients/UI.
 @export
 def get_proposal(proposal_id: int):
     return proposals[proposal_id]'''
 
 # Scenario 4: upgradable router.
-UPGRADE_V1 = '''count = Variable()
+UPGRADE_V1 = '''# Implementation v1 state.
+count = Variable()
 
-
+# Initialize v1 storage.
 @construct
 def seed():
     count.set(0)
 
-
+# v1 behavior: increment by provided step.
 @export
 def increment(step: int = 1):
     count.set(count.get() + step)
     return count.get()
 
-
+# Return current value.
 @export
 def current():
     return count.get()'''
 
-UPGRADE_V2 = '''count = Variable()
+UPGRADE_V2 = '''# Implementation v2 state.
+count = Variable()
 
-
+# Initialize v2 storage.
 @construct
 def seed():
     count.set(0)
 
-
+# v2 behavior: same interface, different logic.
 @export
 def increment(step: int = 1):
     count.set(count.get() + (step * 2))
     return count.get()
 
-
+# Return current value.
 @export
 def current():
     return count.get()'''
 
 UPGRADE_ROUTER_STEP_1 = '''import importlib
 
+# Router state: admin + active implementation target.
 admin = Variable()
 active_contract = Variable()'''
 
-UPGRADE_ROUTER_STEP_2 = '''@construct
+UPGRADE_ROUTER_STEP_2 = '''# Set initial implementation at deployment.
+@construct
 def seed(initial_contract: str = 'con_counter_v1'):
     admin.set(ctx.caller)
     active_contract.set(initial_contract)'''
 
-UPGRADE_ROUTER_STEP_3 = '''@export
+UPGRADE_ROUTER_STEP_3 = '''# Forward write calls to the active implementation.
+@export
 def increment(step: int = 1):
     target = importlib.import_module(active_contract.get())
     return target.increment(step=step)
 
-
+# Forward read calls to the active implementation.
 @export
 def current():
     target = importlib.import_module(active_contract.get())
     return target.current()'''
 
-UPGRADE_ROUTER_STEP_4 = '''@export
+UPGRADE_ROUTER_STEP_4 = '''# Admin-only upgrade switch.
+@export
 def set_active_contract(contract: str):
     assert ctx.caller == admin.get(), 'admin only'
     active_contract.set(contract)'''
 
-UPGRADE_ROUTER_STEP_5 = '''@export
+UPGRADE_ROUTER_STEP_5 = '''# Visibility helper for clients and tooling.
+@export
 def get_active_contract():
     return active_contract.get()'''
 
 UPGRADE_ROUTER_FULL = '''import importlib
 
+# Stage 1: Router state.
 admin = Variable()
 active_contract = Variable()
 
-
+# Stage 2: Initialize with v1 target.
 @construct
 def seed(initial_contract: str = 'con_counter_v1'):
     admin.set(ctx.caller)
     active_contract.set(initial_contract)
 
-
+# Stage 3: Forward write calls to active target.
 @export
 def increment(step: int = 1):
     target = importlib.import_module(active_contract.get())
     return target.increment(step=step)
 
-
+# Stage 4: Forward read calls to active target.
 @export
 def current():
     target = importlib.import_module(active_contract.get())
     return target.current()
 
-
+# Stage 5: Admin-controlled implementation switch.
 @export
 def set_active_contract(contract: str):
     assert ctx.caller == admin.get(), 'admin only'
     active_contract.set(contract)
 
-
+# Stage 6: Expose active implementation.
 @export
 def get_active_contract():
     return active_contract.get()'''
@@ -617,14 +642,38 @@ def tutorials_page() -> rx.Component:
                     line_height="1.7",
                     width="100%",
                 ),
-                section_action_links(
-                    [
-                        {
-                            "label": "Contracting Source",
-                            "icon": "github",
-                            "href": "https://github.com/xian-technology/xian-contracting/tree/Endogen-patch-1/src/contracting",
-                        }
-                    ],
+                rx.box(
+                    rx.hstack(
+                        rx.icon(tag="triangle_alert", size=18, color=ACCENT),
+                        rx.text(
+                            "Before diving into these tutorials, make sure you understand the basics of Xian contracting.",
+                            size="3",
+                            color=TEXT_MUTED,
+                            line_height="1.6",
+                            width="100%",
+                        ),
+                        spacing="2",
+                        align_items="start",
+                        width="100%",
+                    ),
+                    rx.link(
+                        rx.hstack(
+                            rx.icon(tag="book_open", size=16),
+                            rx.text("Read the contracting docs", size="3"),
+                            spacing="2",
+                            align_items="center",
+                        ),
+                        href="https://docs.xian.technology",
+                        is_external=True,
+                        color=ACCENT,
+                        _hover={"textDecoration": "underline"},
+                    ),
+                    spacing="2",
+                    padding="1rem 1.25rem",
+                    background=ACCENT_SOFT,
+                    border=f"1px solid {ACCENT_GLOW}",
+                    border_radius="10px",
+                    width="100%",
                 ),
                 spacing="6",
                 align_items="start",
